@@ -7,7 +7,7 @@ package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.util.Iterator;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 import org.testng.annotations.AfterClass;
@@ -48,13 +48,11 @@ public class RemoteDatabaseNGTest {
     /**
      * Test of print method, of class RemoteDatabase.
      * @throws java.io.FileNotFoundException
-     * @throws java.net.URISyntaxException
-     * @throws org.harctoolbox.remotelocator.NotFoundException
      */
     @Test
-    public void testPrint() throws IOException, URISyntaxException, NotFoundException {
+    public void testPrint() throws IOException {
         System.out.println("print");
-        RemoteDatabase.setBase("..");
+        RemoteDatabase.setBaseDir("..");
         RemoteDatabase instance = new RemoteDatabase();
         instance.add(girrLibBaseDir);
 //        instance.add(RemoteKind.cvs, irdbBaseDir);
@@ -69,12 +67,12 @@ public class RemoteDatabaseNGTest {
      * @throws org.harctoolbox.remotelocator.NotFoundException
      */
     @Test
-    public void testGet() throws NotFoundException, URISyntaxException, IOException {
+    public void testGet() throws NotFoundException {
         System.out.println("get");
         String manufacturer = "Philips";
         String deviceClass = "tv";
         String remoteName = "philips_37pfl9603";
-        RemoteDatabase.setBase("..");
+        RemoteDatabase.setBaseDir("..");
         RemoteDatabase instance = new RemoteDatabase();
         instance.add(RemoteKind.girr, "../Girr/src/test/girr", "../GirrLib/Girr");
         RemoteLink result = instance.get(manufacturer, deviceClass, remoteName);
@@ -91,9 +89,9 @@ public class RemoteDatabaseNGTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testAddCsv() throws IOException, URISyntaxException, NotFoundException {
+    public void testAddCsv() throws IOException {
         System.out.println("addCsv");
-        RemoteDatabase.setBase(irdbBaseDir);
+        RemoteDatabase.setBaseDir(irdbBaseDir);
         RemoteDatabase instance = new RemoteDatabase();
         //instance.add("Girr/src/test/girr", "GirrLib/Girr");
         instance.add(RemoteKind.cvs, irdbBaseDir);
@@ -106,10 +104,10 @@ public class RemoteDatabaseNGTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testAddLirc() throws IOException, URISyntaxException, NotFoundException {
+    public void testAddLirc() throws IOException {
         System.out.println("addLirc");
 
-        RemoteDatabase.setBase(lircBaseDir);
+        RemoteDatabase.setBaseDir(lircBaseDir);
         RemoteDatabase instance = new RemoteDatabase();
         //instance.add("Girr/src/test/girr", "GirrLib/Girr");
         instance.add(RemoteKind.lirc, lircBaseDir);
@@ -125,7 +123,8 @@ public class RemoteDatabaseNGTest {
         System.out.println("iterator");
         RemoteDatabase instance = new RemoteDatabase("../Girr/src/test/girr");
         int cnt = 0;
-        for (ManufacturerDeviceClasses mfr : instance) {
+        for (Iterator<ManufacturerDeviceClasses> it = instance.iterator(); it.hasNext();) {
+            it.next();
             cnt++;
         }
         assertEquals(cnt, 4);

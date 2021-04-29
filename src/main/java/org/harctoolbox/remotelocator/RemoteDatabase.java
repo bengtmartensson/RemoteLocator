@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,7 +46,6 @@ import org.harctoolbox.ircore.ThisCannotHappenException;
 import org.harctoolbox.xml.XmlExport;
 import org.harctoolbox.xml.XmlUtils;
 import static org.harctoolbox.xml.XmlUtils.DEFAULT_CHARSETNAME;
-import static org.harctoolbox.xml.XmlUtils.XML_BASE_ATTRIBUTE_NAME;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -56,72 +55,84 @@ import org.xml.sax.SAXException;
  */
 public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDeviceClasses>, Serializable {
 
-    private final static Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
-    public final static String UNKNOWN = "unknown";
-    public final static String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
-    public final static String FORMATVERSION_ATTRIBUTE_NAME = "formatVersion";
-    public final static String FORMAT_VERSION = "0.1";
-    //private static File baseDir = new File(System.getProperty("user.dir"));
-    private static URI base = workingDirectoryAsURI();
+    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+    public static final String UNKNOWN = "unknown";
+    public static final String FILE_SCHEME_NAME = "file";
+    public static final String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
+    public static final String FORMATVERSION_ATTRIBUTE_NAME = "formatVersion";
+    public static final String FORMAT_VERSION = "0.1";
+    private static Path baseDir = Paths.get(System.getProperty("user.dir"));
+    //private static URI base = workingDirectoryAsURI();
     private static final int INITIAL_CAPACITY = 64;
-    private static final String FILE_SCHEME_NAME = "file";
+    private static final String BASEDIR_ATTRIBUTE_NAME = "baseDir";
 
-    private static URI workingDirectoryAsURI() {
-        try {
-            return new URI(FILE_SCHEME_NAME, new File(System.getProperty("user.dir")).getCanonicalPath(), null);
-        } catch (IOException | URISyntaxException ex) {
-            return null;
-        }
-    }
+//    private static URI workingDirectoryAsURI() {
+//        try {
+//            return new URI(FILE_SCHEME_NAME, new File(System.getProperty("user.dir")).getCanonicalPath(), null);
+//        } catch (IOException | URISyntaxException ex) {
+//            return null;
+//        }
+//    }
 
     static String mkKey(String manufacturer) {
         return (manufacturer == null || manufacturer.isEmpty()) ? UNKNOWN : manufacturer.toLowerCase(Locale.US);
     }
 
-    static String relativize(String url) {
-        try {
-            URI u = new URI(url);
-            //URI u = new URI(FILE_SCHEME_NAME, url, null);
-            return base.relativize(u).toString();
-        } catch (URISyntaxException ex) {
-            return url;
-        }
-    }
-
-//    /**
-//     * @return the baseDir
-//     */
-//    public static File getBaseDir() {
-//        return baseDir;
+//    static URL relativize(URL url) {
+//        try {
+//            URI u = url.toURI();
+//            //URI u = new URI(FILE_SCHEME_NAME, url, null);
+//            return base.relativize(u).toURL();
+//        } catch (URISyntaxException | MalformedURLException ex) {
+//            return url;
+//        }
 //    }
 
     /**
-     * @return the base
+     * @return the baseDir
      */
-    public static URI getBase() {
-        return base;
+    public static Path getBaseDir() {
+        return baseDir;
     }
 
-    /**
-     * @param aBase the base to set
-     */
-    public static void setBase(URI aBase) {
-        base = aBase;
-//        String scheme = base.getScheme();
-//        baseDir = scheme != null && scheme.equals(FILE_SCHEME_NAME) ? new File(aBase.getSchemeSpecificPart()) : null;
+//    /**
+//     * @return the base
+//     */
+//    public static URI getBase() {
+//        return base;
+//    }
+
+//    /**
+//     * @param aBase the base to set
+//     */
+//    public static void setBase(URI aBase) {
+//        base = aBase;
+////        String scheme = base.getScheme();
+////        baseDir = scheme != null && scheme.equals(FILE_SCHEME_NAME) ? new File(aBase.getSchemeSpecificPart()) : null;
+//    }
+
+//    static void setBase(String string) throws URISyntaxException, IOException {
+//        setBase(new URI(string));
+////        URI uri = new URI(string);
+////        if (uri.getScheme() == null)
+////            setBase(new File(string));
+////        else
+////            setBase(uri);
+//    }
+
+    public static void setBaseDir(Path newBaseDir) {
+        baseDir = newBaseDir;
     }
 
-    static void setBase(String string) throws URISyntaxException, IOException {
-        setBase(new URI(string));
-//        URI uri = new URI(string);
-//        if (uri.getScheme() == null)
-//            setBase(new File(string));
-//        else
-//            setBase(uri);
+    public static void setBaseDir(String newBaseDir) {
+        baseDir = Paths.get(newBaseDir);
     }
+    //    URI relativize(URI uri) {
+//        return base.relativize(uri);
+//    }
 
-    static void setBase(File baseDir) throws URISyntaxException, IOException {
-        setBase(new URI(FILE_SCHEME_NAME, baseDir.getCanonicalPath(), null));
+    static Path relativize(Path path) {
+        return baseDir.relativize(path);
     }
 
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
@@ -148,9 +159,6 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
         this(RemoteKind.girr, files);
     }
 
-    URI relativize(URI uri) {
-        return base.relativize(uri);
-    }
 
     public void sort(Comparator<? super Named> comparator) {
         List<ManufacturerDeviceClasses> list = new ArrayList<>(manufacturers.values());
@@ -178,8 +186,8 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
     public Element toElement(Document document) {
         Element element = document.createElement(REMOTEDATABASE_ELEMENT_NAME);
         element.setAttribute(FORMATVERSION_ATTRIBUTE_NAME, FORMAT_VERSION);
-        if (base != null)
-            element.setAttribute(XML_BASE_ATTRIBUTE_NAME, base.toString());
+        if (baseDir != null)
+            element.setAttribute(BASEDIR_ATTRIBUTE_NAME, baseDir.toString());
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));
         return element;
@@ -246,16 +254,16 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
             logger.log(Level.WARNING, "Funny file {0}", file.toString());
     }
 
-    public void add(RemoteSet remoteSet, String url) {
+    public void add(RemoteSet remoteSet, String path) {
         for (Remote remote : remoteSet) {
             String xpath = "/" + REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
-            add(remote, url, xpath);
+            add(remote, path, xpath);
         }
     }
 
-    public void add(Remote remote, String url, String xpath) {
+    public void add(Remote remote, String path, String xpath) {
         ManufacturerDeviceClasses manufacturerTypes = getOrCreate(remote.getManufacturer());
-        manufacturerTypes.add(remote, url, xpath);
+        manufacturerTypes.add(remote, path, xpath);
     }
 
     private void add(Element element, String path) throws GirrException {

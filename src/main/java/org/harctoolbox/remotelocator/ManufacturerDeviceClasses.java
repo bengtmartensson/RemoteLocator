@@ -83,9 +83,9 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         }
     }
 
-    void add(Remote remote, String url, String xpath) {
+    void add(Remote remote, String path, String xpath) {
         DeviceClassRemotes deviceClass = getOrCreate(remote.getDeviceClass());
-        deviceClass.add(remote, url, xpath);
+        deviceClass.add(remote, path, xpath);
     }
 
     private DeviceClassRemotes getOrCreate(String deviceClass) {

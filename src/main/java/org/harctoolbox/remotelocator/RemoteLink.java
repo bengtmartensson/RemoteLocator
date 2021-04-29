@@ -2,14 +2,14 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
 import static org.harctoolbox.girr.XmlStatic.COMMENT_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.MODEL_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
-import org.harctoolbox.ircore.ThisCannotHappenException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 public final class RemoteLink implements Named, Serializable {
 
     public static final String REMOTELINK_ELEMENT_NAME = "remoteLink";
-    public static final String URL_ELEMENT_NAME = "url";
+    public static final String PATH_ELEMENT_NAME = "path";
     public static final String XPATH_ATTRIBUTE_NAME = "xpath";
     public static final String KIND_ATTRIBUTE_NAME = "kind";
 
@@ -29,17 +29,9 @@ public final class RemoteLink implements Named, Serializable {
         element.setAttribute(attributeName, value);
     }
 
-    private static String mkUrl(File dir, String remote) {
-//        try {
-            return new File(dir, remote).toString();
-//        } catch (IOException ex) {
-//            throw new ThisCannotHappenException();
-//        }
-    }
-
     private final RemoteKind kind;
     private final String remoteName;
-    private final String url;
+    private final Path path; // not serializable
     private final String xpath;
 
 
@@ -48,10 +40,10 @@ public final class RemoteLink implements Named, Serializable {
     private final String model;
     private final String origRemote;
 
-    public RemoteLink(RemoteKind kind, String remoteName, String url, String xpath, String comment, String displayName, String model, String origRemote) {
+    public RemoteLink(RemoteKind kind, String remoteName, Path path, String xpath, String comment, String displayName, String model, String origRemote) {
         this.kind = kind;
         this.remoteName = remoteName;
-        this.url = url;
+        this.path = RemoteDatabase.relativize(path);
         this.xpath = xpath;
         this.comment = comment;
         this.displayName = displayName;
@@ -59,16 +51,20 @@ public final class RemoteLink implements Named, Serializable {
         this.origRemote = origRemote;
     }
 
-    public RemoteLink(RemoteKind kind, String remoteName, String url) {
-        this(kind, remoteName, url, null, null, null, null, null);
+    public RemoteLink(RemoteKind kind, String remoteName, String path) {
+        this(kind, remoteName, Paths.get(path), null, null, null, null, null);
     }
 
-    public RemoteLink(Remote remote, String url, String xpath) {
-        this(RemoteKind.girr, remote.getName(), url, xpath, remote.getComment(), remote.getDisplayName(), remote.getModel(), remote.getRemoteName());
+    public RemoteLink(Remote remote, Path path, String xpath) {
+        this(RemoteKind.girr, remote.getName(), path, xpath, remote.getComment(), remote.getDisplayName(), remote.getModel(), remote.getRemoteName());
     }
 
     RemoteLink(RemoteKind kind, File dir, String remote) {
-        this(kind, remote, mkUrl(dir, remote), null, null, null, null, null);
+        this(kind, remote, new File(dir, remote).toPath(), null, null, null, null, null);
+    }
+
+    RemoteLink(Remote remote, String path, String xpath) {
+        this(remote, Paths.get(path), xpath);
     }
 
     @Override
@@ -76,8 +72,8 @@ public final class RemoteLink implements Named, Serializable {
         return remoteName;
     }
 
-    public String getUrl() {
-        return url;
+    public Path getPath() {
+        return path;
     }
 
     public String getXpath() {
@@ -87,8 +83,8 @@ public final class RemoteLink implements Named, Serializable {
     public Element toElement(Document document) {
         Element element = document.createElement(REMOTELINK_ELEMENT_NAME);
         element.setAttribute(NAME_ATTRIBUTE_NAME, remoteName);
-        String shortUri = RemoteDatabase.relativize(url);
-        element.setAttribute(URL_ELEMENT_NAME, shortUri);
+        //String shortUri = RemoteDatabase.relativize(path).toString();
+        element.setAttribute(PATH_ELEMENT_NAME, path.toString());
         setAttributeIfNonNull(element, KIND_ATTRIBUTE_NAME, kind.name());
         setAttributeIfNonNull(element, XPATH_ATTRIBUTE_NAME, xpath);
         setAttributeIfNonNull(element, COMMENT_ATTRIBUTE_NAME, comment);
