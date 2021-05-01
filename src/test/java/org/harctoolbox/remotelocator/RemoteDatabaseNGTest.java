@@ -21,10 +21,10 @@ import org.testng.annotations.Test;
  * @author bengt
  */
 public class RemoteDatabaseNGTest {
-    private static final String lircBaseDir = "../../lirc/lirc-remotes/remotes";
-    private static final String irdbBaseDir = "../irdb/codes";
-    private static final String girrLibBaseDir = "../GirrLib/Girr";
-    private static final String girrTestBaseDir = "../Girr/src/test/girr";
+    private static final File localLircBaseDir = new File("../../lirc/lirc-remotes/remotes");
+    private static final File localIrdbBaseDir = new File("../irdb/codes");
+    private static final File localGirrLibBaseDir = new File("../GirrLib/Girr");
+    private static final File localGirrTestBaseDir = new File("../Girr/src/test/girr");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -46,35 +46,19 @@ public class RemoteDatabaseNGTest {
     }
 
     /**
-     * Test of print method, of class RemoteDatabase.
-     * @throws java.io.FileNotFoundException
-     */
-    @Test
-    public void testPrint() throws IOException {
-        System.out.println("print");
-        RemoteDatabase.setBaseDir("..");
-        RemoteDatabase instance = new RemoteDatabase();
-        instance.add(girrLibBaseDir);
-//        instance.add(RemoteKind.cvs, irdbBaseDir);
-//        instance.add(RemoteKind.lirc, lircBaseDir);
-        instance.sort();
-
-        instance.print(new File("out.xml"));
-    }
-
-    /**
      * Test of get method, of class RemoteDatabase.
      * @throws org.harctoolbox.remotelocator.NotFoundException
+     * @throws java.io.IOException
      */
     @Test
-    public void testGet() throws NotFoundException {
+    public void testGet() throws NotFoundException, IOException {
         System.out.println("get");
         String manufacturer = "Philips";
         String deviceClass = "tv";
         String remoteName = "philips_37pfl9603";
-        RemoteDatabase.setBaseDir("..");
         RemoteDatabase instance = new RemoteDatabase();
-        instance.add(RemoteKind.girr, "../Girr/src/test/girr", "../GirrLib/Girr");
+        instance.add(RemoteKind.girr, null, null, localGirrTestBaseDir);
+        instance.print("testgirr.xml");
         RemoteLink result = instance.get(manufacturer, deviceClass, remoteName);
         assertEquals(result.getComment(), "Full HD");
         try {
@@ -91,11 +75,7 @@ public class RemoteDatabaseNGTest {
     @Test
     public void testAddCsv() throws IOException {
         System.out.println("addCsv");
-        RemoteDatabase.setBaseDir(irdbBaseDir);
-        RemoteDatabase instance = new RemoteDatabase();
-        //instance.add("Girr/src/test/girr", "GirrLib/Girr");
-        instance.add(RemoteKind.cvs, irdbBaseDir);
-        instance.sort();
+        RemoteDatabase instance = RemoteDatabase.scrapIrdb(localIrdbBaseDir);
         instance.print("irdb.xml");
     }
 
@@ -106,22 +86,19 @@ public class RemoteDatabaseNGTest {
     @Test
     public void testAddLirc() throws IOException {
         System.out.println("addLirc");
-
-        RemoteDatabase.setBaseDir(lircBaseDir);
-        RemoteDatabase instance = new RemoteDatabase();
-        //instance.add("Girr/src/test/girr", "GirrLib/Girr");
-        instance.add(RemoteKind.lirc, lircBaseDir);
-        instance.sort();
+        RemoteDatabase instance = RemoteDatabase.scrapLirc(localLircBaseDir);
         instance.print("lirc.xml");
     }
 
     /**
      * Test of iterator method, of class RemoteDatabase.
+     * @throws java.io.IOException
      */
     @Test
-    public void testIterator() {
+    public void testIterator() throws IOException {
         System.out.println("iterator");
-        RemoteDatabase instance = new RemoteDatabase("../Girr/src/test/girr");
+        RemoteDatabase instance = new RemoteDatabase();
+        instance.add(RemoteKind.girr, localGirrTestBaseDir);
         int cnt = 0;
         for (Iterator<ManufacturerDeviceClasses> it = instance.iterator(); it.hasNext();) {
             it.next();
@@ -132,13 +109,12 @@ public class RemoteDatabaseNGTest {
 
     /**
      * Test of addRecursive method, of class RemoteDatabase.
+     * @throws java.io.IOException
      */
     @Test
-    public void testAddRecursive() {
+    public void testAddGirrRecursive() throws IOException {
         System.out.println("addRecursive");
-        File file = new File("../Girr/src/test/girr");
-        RemoteDatabase instance = new RemoteDatabase();
-        instance.addRecursive(file);
-
+        RemoteDatabase instance = RemoteDatabase.scrapGirr(localGirrLibBaseDir);
+        instance.print("girr.xml");
     }
 }

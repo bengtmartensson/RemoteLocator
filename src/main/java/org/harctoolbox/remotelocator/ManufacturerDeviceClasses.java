@@ -1,7 +1,9 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,10 +20,6 @@ import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- *
- * @author bengt
- */
 public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceClassRemotes>, Serializable {
 
     private final static Logger logger = Logger.getLogger(ManufacturerDeviceClasses.class.getName());
@@ -60,32 +58,32 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         return deviceClasses.values().iterator();
     }
 
-    void add(RemoteKind kind, File dir) {
+    void add(RemoteKind kind, URI uri, File baseDir, File dir) throws IOException {
         if (!(dir.isDirectory() && dir.canRead())) {
+            // Non-fatal; there may lie junk files around
             logger.log(Level.WARNING, "{0} is not a readable directory", dir);
             return;
         }
 
         if (kind.hasDeviceClasses()) {
             String[] list = dir.list();
-            if (list == null) {
-                logger.log(Level.WARNING, "Directory {0} could not be read", dir);
-                return;
-            }
+            if (list == null)
+                // Something is wrong, so this is fatal
+                throw new IOException(dir + " could not be read");
 
             for (String deviceClass : list) {
                 DeviceClassRemotes devices = getOrCreate(deviceClass);
-                devices.add(kind, new File(dir, deviceClass));
+                devices.add(kind, uri, baseDir, new File(dir, deviceClass));
             }
         } else {
             DeviceClassRemotes devices = getOrCreate(UNKNOWN);
-            devices.add(kind, dir);
+            devices.add(kind, uri, baseDir, dir);
         }
     }
 
-    void add(Remote remote, String path, String xpath) {
+    void add(Remote remote, URI baseUri, File baseDir, File path, String xpath) {
         DeviceClassRemotes deviceClass = getOrCreate(remote.getDeviceClass());
-        deviceClass.add(remote, path, xpath);
+        deviceClass.add(remote, baseUri, baseDir, path, xpath);
     }
 
     private DeviceClassRemotes getOrCreate(String deviceClass) {

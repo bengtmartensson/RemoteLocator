@@ -13,4 +13,8 @@ public enum RemoteKind {
     public boolean recurse() {
         return this == girr;
     }
+
+    public String suffix() {
+        return this == lirc ? "?format=raw" : "";
+    }
 }

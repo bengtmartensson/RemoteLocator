@@ -2,6 +2,7 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,10 +18,6 @@ import org.harctoolbox.girr.Remote;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- *
- * @author bengt
- */
 public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
 
@@ -56,8 +53,8 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         return element;
     }
 
-    void add(Remote remote, String path, String xpath) {
-        RemoteLink remoteLink = new RemoteLink(remote, path, xpath);
+    void add(Remote remote, URI baseUri, File baseDir, File path, String xpath) {
+        RemoteLink remoteLink = new RemoteLink(remote, baseUri, baseDir, path, xpath);
         add(remoteLink);
     }
 
@@ -86,14 +83,15 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         }
     }
 
-    void add(RemoteKind kind, File dir) {
+    void add(RemoteKind kind, URI uri, File baseDir, File dir) {
         if (! (dir.isDirectory() && dir.canRead())) {
+            // Can be junk file, non-fatal
             logger.log(Level.WARNING, "File {0} not a readable directory, ignored.", dir);
             return;
         }
         String[] array = dir.list();
 
         for (String remote : array)
-            add(new RemoteLink(kind, dir, remote));
+            add(new RemoteLink(kind, uri, baseDir, dir, remote));
     }
 }
