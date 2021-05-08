@@ -2,6 +2,8 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -9,20 +11,35 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.validation.Schema;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
+import org.harctoolbox.girr.RemoteSet;
 import static org.harctoolbox.girr.XmlStatic.COMMENT_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.MODEL_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.ThisCannotHappenException;
+import org.harctoolbox.jirc.ConfigFile;
 import static org.harctoolbox.remotelocator.RemoteDatabase.FILE_SCHEME_NAME;
+import org.harctoolbox.xml.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
  */
 public final class RemoteLink implements Named, Serializable {
+    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
 
     public static final String REMOTELINK_ELEMENT_NAME = "remoteLink";
     public static final String PATH_ELEMENT_NAME = "path";
@@ -40,9 +57,9 @@ public final class RemoteLink implements Named, Serializable {
     }
 
     private final RemoteKind kind;
-    private final String remoteName;
+    private String remoteName;
     private final File path;
-    private final String xpath;
+    private String xpath;
     private final URL url;
 
 
@@ -54,7 +71,23 @@ public final class RemoteLink implements Named, Serializable {
     public RemoteLink(RemoteKind kind, URI baseUri, File baseDir, String remoteName, File path, String xpath, String comment, String displayName, String model, String origRemote) {
         try {
             this.kind = kind;
-            this.remoteName = remoteName;
+            switch (kind) {
+                case irdb:
+                    try {
+                        Remote remote = Irdb.parse(path, null, null);
+                        this.remoteName = remote.getName();
+                    } catch (IOException ex) {
+                        logger.log(Level.WARNING, ex.getLocalizedMessage());
+                        this.remoteName = remoteName;
+                    }
+                    break;
+                case lirc:
+                    this.remoteName = remoteName.endsWith(".lircd.conf") ? remoteName.substring(0, remoteName.length() - 11) : remoteName;
+                    break;
+
+                default:
+                    this.remoteName = remoteName;
+            }
             if (baseDir != null) {
                 Path baseDirPath = Paths.get(baseDir.getPath());
                 Path localPath = Paths.get(path.getPath());
@@ -64,10 +97,13 @@ public final class RemoteLink implements Named, Serializable {
             }
             this.xpath = xpath;
             if (baseUri != null) {
-                URI uri = new URI(FILE_SCHEME_NAME, this.path.toString() + kind.suffix(), null);
-                String escapedPath = uri.toString().substring(5);
-                uri = new URI(escapedPath);
-                url = baseUri.resolve(uri).toURL();
+                if (path != null) {
+                    URI uri = new URI(FILE_SCHEME_NAME, this.path.toString() + kind.suffix(), null);
+                    String escapedPath = uri.toString().substring(5);
+                    uri = new URI(escapedPath);
+                    url = baseUri.resolve(uri).toURL();
+                } else
+                    url = baseUri.toURL();
             } else {
                 url = null;
             }
@@ -88,6 +124,19 @@ public final class RemoteLink implements Named, Serializable {
         this(kind, uri, baseDir, remote, new File(dir, remote), null, null, null, null, null);
     }
 
+    public Remote getRemote(String manufacturer, String deviceClass) throws IOException {
+        switch (kind) {
+            case irdb:
+                return Irdb.parse(this, manufacturer, deviceClass);
+            case girr:
+                return getGirrRemote(manufacturer, deviceClass);
+            case lirc:
+                return getLircRemote(manufacturer, deviceClass);
+            default:
+                return null;
+        }
+    }
+
     @Override
     public String getName() {
         return remoteName;
@@ -104,7 +153,7 @@ public final class RemoteLink implements Named, Serializable {
     public Element toElement(Document document) {
         Element element = document.createElement(REMOTELINK_ELEMENT_NAME);
         element.setAttribute(NAME_ATTRIBUTE_NAME, remoteName);
-        element.setAttribute(PATH_ELEMENT_NAME, path.toString());
+        setAttributeIfNonNull(element, PATH_ELEMENT_NAME, path);
         setAttributeIfNonNull(element, KIND_ATTRIBUTE_NAME, kind.name());
         setAttributeIfNonNull(element, XPATH_ATTRIBUTE_NAME, xpath);
         setAttributeIfNonNull(element, COMMENT_ATTRIBUTE_NAME, comment);
@@ -155,4 +204,29 @@ public final class RemoteLink implements Named, Serializable {
         return origRemote;
     }
 
+    public URL getUrl() {
+        return url;
+    }
+
+    private Remote getGirrRemote(String manufacturer, String deviceClass) throws IOException {
+        try {
+            Document doc = path.canRead() ? XmlUtils.openXmlFile(path, (Schema) null, false, false)
+                    : XmlUtils.openXmlStream(url.openStream(), (Schema) null, false, false);
+//            InputSource inputSource = new InputSource(inputStream);
+            //XPathFactory factory = XPathFactory.newInstance();
+            XPath xpathy = XPathFactory.newInstance().newXPath();
+            NodeList str = (NodeList) xpathy.compile(xpath).evaluate(doc, XPathConstants.NODESET);
+            Element el = (Element) str.item(0);
+            return new Remote(el, "remote");
+        } catch (XPathExpressionException | SAXException | GirrException ex) {
+            logger.log(Level.WARNING, ex.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    private Remote getLircRemote(String manufacturer, String deviceClass) throws IOException {
+        RemoteSet remoteSet = path.canRead() ? ConfigFile.parseConfig(path, IrCoreUtils.EXTENDED_LATIN1_NAME, true, null, true)
+                : ConfigFile.parseConfig(new InputStreamReader(url.openStream()), IrCoreUtils.EXTENDED_LATIN1_NAME, true, null, true);
+        return remoteSet.iterator().hasNext() ? remoteSet.iterator().next() : null;
+    }
 }

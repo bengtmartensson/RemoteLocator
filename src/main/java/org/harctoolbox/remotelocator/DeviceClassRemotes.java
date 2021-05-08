@@ -61,8 +61,17 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     void add(RemoteLink remoteLink) {
         String key = RemoteDatabase.mkKey(remoteLink.getName());
         if (remoteLinks.containsKey(key)) {
-            logger.log(Level.WARNING, "Remote {0} already present, skipping", key); // TODO
-            return;
+            //logger.log(Level.WARNING, "Remote {0} already present, skipping", key); // TODO
+            //return;
+            int number = 1;
+            while (true) {
+                String actualKey = key + "$" + Integer.toString(number);
+                if (! remoteLinks.containsKey(actualKey)) {
+                    key = actualKey;
+                    break;
+                } else
+                    number++;
+            }
         }
         remoteLinks.put(key, remoteLink);
     }
@@ -79,7 +88,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         Collections.sort(list, comparator);
         remoteLinks.clear();
         for (RemoteLink link : list) {
-            remoteLinks.put(link.getName(), link);
+            remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);
         }
     }
 

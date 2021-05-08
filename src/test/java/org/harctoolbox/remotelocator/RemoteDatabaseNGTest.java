@@ -8,6 +8,8 @@ package org.harctoolbox.remotelocator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import org.harctoolbox.girr.Remote;
+import org.harctoolbox.xml.XmlUtils;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 import org.testng.annotations.AfterClass;
@@ -15,6 +17,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -68,13 +71,54 @@ public class RemoteDatabaseNGTest {
         }
     }
 
+    @Test
+    public void testGetRemote() throws NotFoundException, IOException {
+        System.out.println("getRemote");
+        String manufacturer = "Yamaha";
+        String deviceClass = "unknown_rx-cx800";
+        String remoteName = "Protocol=nec1,device=122";
+        RemoteDatabase instance = RemoteDatabase.scrapIrdb(localIrdbBaseDir);
+        Remote result = instance.getRemote(manufacturer, deviceClass, remoteName);
+        Document doc = result.toDocument(null, null, null, false, true, true, false, false);
+        XmlUtils.printDOM(new File("yamaha.girr"), doc);
+    }
+
+    @Test
+    public void testGetRemoteGirr() throws NotFoundException, IOException {
+        System.out.println("getRemoteGirr");
+        String manufacturer = "unknown";
+        String deviceClass = "unknown";
+        String remoteName = "oppo";
+        RemoteDatabase instance = new RemoteDatabase();// RemoteDatabase.scrapGirr(localGirrLibBaseDir);
+        instance.add(RemoteKind.girr, null, null, localGirrLibBaseDir);
+        instance.print("x.xml");
+        Remote result = instance.getRemote(manufacturer, deviceClass, remoteName);
+        Document doc = result.toDocument(null, null, null, false, true, true, false, false);
+        XmlUtils.printDOM(new File("oppo.girr"), doc);
+    }
+
+    @Test
+    public void testGetRemoteLirc() throws IOException, NotFoundException {
+        System.out.println("getRemoteLirc");
+        String manufacturer = "Yamaha";
+        String deviceClass = "unknown";
+        String remoteName = "RX-V995";
+        RemoteDatabase instance = new RemoteDatabase();// RemoteDatabase.scrapGirr(localGirrLibBaseDir);
+        instance.add(RemoteKind.lirc, null, null, localLircBaseDir);
+        instance.sort();
+        instance.print("l.xml");
+        Remote result = instance.getRemote(manufacturer, deviceClass, remoteName);
+        Document doc = result.toDocument(null, null, null, false, true, true, false, false);
+        XmlUtils.printDOM(new File("y.girr"), doc);
+    }
+
     /**
      * Test of addCsv method, of class RemoteDatabase.
      * @throws java.io.IOException
      */
     @Test
-    public void testAddCsv() throws IOException {
-        System.out.println("addCsv");
+    public void testScrapIrdb() throws IOException {
+        System.out.println("scrapTrdb");
         RemoteDatabase instance = RemoteDatabase.scrapIrdb(localIrdbBaseDir);
         instance.print("irdb.xml");
     }
@@ -112,7 +156,7 @@ public class RemoteDatabaseNGTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testAddGirrRecursive() throws IOException {
+    public void testScrapGirr() throws IOException {
         System.out.println("addRecursive");
         RemoteDatabase instance = RemoteDatabase.scrapGirr(localGirrLibBaseDir);
         instance.print("girr.xml");

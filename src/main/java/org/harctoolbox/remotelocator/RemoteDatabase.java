@@ -25,9 +25,11 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,11 +41,15 @@ import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
 import org.harctoolbox.girr.RemoteSet;
+import static org.harctoolbox.girr.XmlStatic.CREATINGUSER_ATTRIBUTE_NAME;
+import static org.harctoolbox.girr.XmlStatic.CREATIONDATE_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.REMOTES_ELEMENT_NAME;
 import static org.harctoolbox.girr.XmlStatic.REMOTE_ELEMENT_NAME;
+import static org.harctoolbox.girr.XmlStatic.TITLE_ATTRIBUTE_NAME;
 import org.harctoolbox.ircore.ThisCannotHappenException;
-import org.harctoolbox.xml.XmlExport;
+import static org.harctoolbox.remotelocator.Irdb.IRDB_BASE_URI;
+import static org.harctoolbox.remotelocator.Jp1Master.JP1_XML;
 import org.harctoolbox.xml.XmlUtils;
 import static org.harctoolbox.xml.XmlUtils.DEFAULT_CHARSETNAME;
 import org.w3c.dom.Document;
@@ -53,9 +59,10 @@ import org.xml.sax.SAXException;
 /**
  *
  */
-public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDeviceClasses>, Serializable {
+public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>, Serializable {
 
     private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SCHEME_NAME = "file";
     public static final String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
@@ -64,18 +71,17 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
     private static final int INITIAL_CAPACITY = 64;
 
     public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
-    public static final String IRDB_BASE    = "https://raw.githubusercontent.com/probonopd/irdb/master/codes/";
     public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
 
     public static final URI LIRC_BASE_URI   = parseURI(LIRC_BASE);
-    public static final URI IRDB_BASE_URI   = parseURI(IRDB_BASE);
     public static final URI GIRRLIB_BASE_URI= parseURI(GIRRLIB_BASE);
+    public static final String dateFormatString = "yyyy-MM-dd_HH:mm:ss";
 
     static String mkKey(String manufacturer) {
         return (manufacturer == null || manufacturer.isEmpty()) ? UNKNOWN : manufacturer.toLowerCase(Locale.US);
     }
 
-    private static URI parseURI(String string) {
+    static URI parseURI(String string) {
         try {
             return new URI(string);
         } catch (URISyntaxException ex) {
@@ -91,7 +97,7 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
     }
 
     public static RemoteDatabase scrapIrdb(File baseDir) throws IOException {
-        return scrapRemotes(RemoteKind.cvs, IRDB_BASE_URI, baseDir,  baseDir);
+        return scrapRemotes(RemoteKind.irdb, IRDB_BASE_URI, baseDir,  baseDir);
     }
 
     public static RemoteDatabase scrapLirc(File baseDir) throws IOException {
@@ -100,6 +106,23 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
 
     public static RemoteDatabase scrapGirr(File baseDir) throws IOException {
         return scrapRemotes(RemoteKind.girr, GIRRLIB_BASE_URI, baseDir,  baseDir);
+    }
+
+    public static RemoteDatabase scrapJp1(File xmlFile) throws SAXException, IOException {
+        return Jp1Master.scrapJp1(xmlFile);
+    }
+
+    public static void main(String[] args) {
+        try {
+            RemoteDatabase remoteDatabase = scrapJp1(new File(JP1_XML));
+            remoteDatabase.add(RemoteKind.girr, GIRRLIB_BASE_URI, new File("../GirrLib/Girr"), new File("../GirrLib/Girr"));
+            remoteDatabase.add(RemoteKind.irdb, IRDB_BASE_URI, new File("../irdb/codes"), new File("../irdb/codes"));
+            remoteDatabase.add(RemoteKind.lirc, LIRC_BASE_URI, new File("../../lirc/lirc-remotes/remotes"), new File("../../lirc/lirc-remotes/remotes"));
+            remoteDatabase.sort();
+            remoteDatabase.print(new File("all.xml"));
+        } catch (IOException | SAXException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
@@ -114,7 +137,7 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
         manufacturers.clear();
         for (ManufacturerDeviceClasses manuf : list) {
             manuf.sort(comparator);
-            manufacturers.put(manuf.getName(), manuf);
+            manufacturers.put(mkKey(manuf.getName()), manuf);
         }
     }
 
@@ -122,7 +145,6 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
         sort(new Named.CompareNameCaseInsensitive());
     }
 
-    @Override
     public Document toDocument() {
         Document document = XmlUtils.newDocument(false);
         Element element = toElement(document);
@@ -130,10 +152,19 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
         return document;
     }
 
-    @Override
     public Element toElement(Document document) {
+        return toElement(document, null, null, null);
+    }
+
+    public Element toElement(Document document, String title, String creatingUser, String createdDate) {
         Element element = document.createElement(REMOTEDATABASE_ELEMENT_NAME);
         element.setAttribute(FORMATVERSION_ATTRIBUTE_NAME, FORMAT_VERSION);
+        if (title != null && !title.isEmpty())
+            element.setAttribute(TITLE_ATTRIBUTE_NAME, title);
+        String creator = (creatingUser != null) ? creatingUser : System.getProperty("user.name");
+        element.setAttribute(CREATINGUSER_ATTRIBUTE_NAME, creator);
+        String date = (createdDate != null) ? createdDate : (new SimpleDateFormat(dateFormatString)).format(new Date());
+        element.setAttribute(CREATIONDATE_ATTRIBUTE_NAME, date);
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));
         return element;
@@ -169,7 +200,7 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
      * @throws java.io.FileNotFoundException
      */
     public void print(String file) throws IOException {
-        print (new File(file));
+        print(new File(file));
     }
 
     @Override
@@ -197,7 +228,7 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
 
     public void add(RemoteSet remoteSet, URI baseUri, File baseDir, File file) {
         for (Remote remote : remoteSet) {
-            String xpath = "/" + REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
+            String xpath = REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
             add(remote, baseUri, baseDir, file, xpath);
         }
     }
@@ -245,11 +276,21 @@ public final class RemoteDatabase implements XmlExport, Iterable<ManufacturerDev
         }
     }
 
+    void put(String manufacturer, String deviceClass, RemoteLink remoteLink) {
+        ManufacturerDeviceClasses manufacturerTypes = getOrCreate(manufacturer);
+        manufacturerTypes.put(deviceClass, remoteLink);
+    }
+
     public RemoteLink get(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
         ManufacturerDeviceClasses manufact = manufacturers.get(manufacturer.toLowerCase(Locale.US));
         if (manufact == null)
             throw new NotFoundException("Manufacturer " + manufacturer + " unknown.");
         return manufact.get(deviceClass, remoteName);
+    }
+
+    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException {
+        RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
+        return remoteLink.getRemote(manufacturer, deviceClass);
     }
 
     private ManufacturerDeviceClasses getOrCreate(String manufacturer) {

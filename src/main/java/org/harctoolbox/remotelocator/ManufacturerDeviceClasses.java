@@ -109,8 +109,13 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         deviceClasses.clear();
         for (DeviceClassRemotes dev : list) {
             dev.sort(comparator);
-            deviceClasses.put(dev.getName(), dev);
+            deviceClasses.put(RemoteDatabase.mkKey(dev.getName()), dev);
         }
+    }
+
+    void put(String deviceClass, RemoteLink remoteLink) {
+        DeviceClassRemotes devCls = getOrCreate(deviceClass);
+        devCls.add(remoteLink);
     }
 
     public static class CompareNameCaseInsensitive implements Comparator<ManufacturerDeviceClasses>, Serializable {
