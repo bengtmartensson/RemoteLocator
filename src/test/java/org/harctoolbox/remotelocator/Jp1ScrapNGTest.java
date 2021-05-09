@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
  *
  * @author bengt
  */
-public class Jp1MasterNGTest {
+public class Jp1ScrapNGTest {
 
     private static final File jp1XmlFile = new File("src/test/jp1/jp1-master-1.16.fods");
 
@@ -25,7 +25,7 @@ public class Jp1MasterNGTest {
     public static void tearDownClass() throws Exception {
     }
 
-    public Jp1MasterNGTest() {
+    public Jp1ScrapNGTest() {
     }
 
     @BeforeMethod
@@ -37,24 +37,24 @@ public class Jp1MasterNGTest {
     }
 
     /**
-     * Test of scrap method, of class Jp1Master.
+     * Test of scrap method, of class Jp1Scrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = Jp1Master.scrap(jp1XmlFile);
+        RemoteDatabase result = Jp1Scrap.scrap(jp1XmlFile);
         result.print("output/jp1.xml");
     }
 
     /**
-     * Test of getRemote method, of class Jp1Master.
+     * Test of getRemote method, of class Jp1Scrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testGetUrl() throws Exception {
         System.out.println("getRemote");
-        Jp1Master instance = new Jp1Master();
+        Jp1Scrap instance = new Jp1Scrap();
         instance.add(jp1XmlFile);
         String name = "Oppo Sonica DAC";
         URL url = instance.getUrl("Oppo", "digital stbs", name);

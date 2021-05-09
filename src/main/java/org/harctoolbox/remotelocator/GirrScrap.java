@@ -22,23 +22,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class Girr extends Scrapable {
-    private static final Logger logger = Logger.getLogger(Girr.class.getName());
+public class GirrScrap extends Scrapable {
+    private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
     public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
     public static final URI GIRRLIB_BASE_URI= parseURI(GIRRLIB_BASE);
     private static final String GIRR_NAME = "girr";
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
-        Girr girr = new Girr();
+        GirrScrap girr = new GirrScrap();
         return girr.scrapSort(dir);
     }
 
-    public Girr() {
+    public GirrScrap() {
         super();
     }
 
-    public Girr(RemoteDatabase remoteDatabase) {
+    public GirrScrap(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
     }
 
@@ -75,7 +75,7 @@ public class Girr extends Scrapable {
             } catch (IOException | SAXException ex) {
                 logger.log(Level.WARNING, "Could not read file {0}; {1}", new Object[]{file.toString(), ex.getLocalizedMessage()});
             } catch (GirrException ex) {
-                Logger.getLogger(Girr.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GirrScrap.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else
             logger.log(Level.WARNING, "Unknown file {0}", file.toString());

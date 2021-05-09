@@ -38,13 +38,13 @@ public abstract class Scrapable {
     static Scrapable mkScrapable(RemoteKind kind) {
         switch (kind) {
             case irdb:
-                return new Irdb(null);
+                return new IrdbScrap(null);
             case girr:
-                return new Girr(null);
+                return new GirrScrap(null);
             case lirc:
-                return new Lirc(null);
+                return new LircScrap(null);
             case jp1:
-                return new Jp1Master(null);
+                return new Jp1Scrap(null);
             default:
                 return null;
         }

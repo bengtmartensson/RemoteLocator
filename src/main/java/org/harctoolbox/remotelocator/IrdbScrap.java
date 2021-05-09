@@ -20,9 +20,9 @@ import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Remote;
 import org.xml.sax.SAXException;
 
-public final class Irdb extends Scrapable {
+public final class IrdbScrap extends Scrapable {
 
-    private static final Logger logger = Logger.getLogger(Irdb.class.getName());
+    private static final Logger logger = Logger.getLogger(IrdbScrap.class.getName());
 
     /**
      * There is to my knowledge not an official character set for IRDB;
@@ -36,7 +36,7 @@ public final class Irdb extends Scrapable {
     private static final String IRDB_NAME = "irdb";
 
     public static RemoteDatabase scrap(File baseDir) throws IOException, SAXException {
-        Irdb irdb = new Irdb();
+        IrdbScrap irdb = new IrdbScrap();
         return irdb.scrapSort(baseDir);
     }
 
@@ -125,11 +125,11 @@ public final class Irdb extends Scrapable {
         return remoteName.toString();
     }
 
-    Irdb(RemoteDatabase remoteDatabase) {
+    IrdbScrap(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
     }
 
-    Irdb() {
+    IrdbScrap() {
         super();
     }
 

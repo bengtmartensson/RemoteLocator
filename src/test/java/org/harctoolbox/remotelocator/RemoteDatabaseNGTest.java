@@ -38,9 +38,9 @@ public class RemoteDatabaseNGTest {
 
     public RemoteDatabaseNGTest() throws IOException, SAXException {
         remoteDatabase = new RemoteDatabase();
-        new Girr(remoteDatabase).add(localGirrLibBaseDir);
-        new Lirc(remoteDatabase).add(localLircBaseDir);
-        new Irdb(remoteDatabase).add(localIrdbBaseDir);
+        new GirrScrap(remoteDatabase).add(localGirrLibBaseDir);
+        new LircScrap(remoteDatabase).add(localLircBaseDir);
+        new IrdbScrap(remoteDatabase).add(localIrdbBaseDir);
         remoteDatabase.sort();
     }
 
@@ -64,7 +64,7 @@ public class RemoteDatabaseNGTest {
         String deviceClass = "tv";
         String remoteName = "philips_37pfl9603";
         RemoteDatabase instance = new RemoteDatabase();
-        Girr girr = new Girr(instance);
+        GirrScrap girr = new GirrScrap(instance);
         girr.add(new File("../GirrLib/Girr"));
         RemoteLink result = instance.get(manufacturer, deviceClass, remoteName);
         assertEquals(result.getComment(), "dfdklfkd");
@@ -83,7 +83,7 @@ public class RemoteDatabaseNGTest {
     public void testIterator() throws Exception {
         System.out.println("iterator");
         RemoteDatabase instance = new RemoteDatabase();
-        Girr girr = new Girr(instance);
+        GirrScrap girr = new GirrScrap(instance);
         girr.add(new File("../Girr/src/test/girr"));
         int cnt = 0;
         for (Iterator<ManufacturerDeviceClasses> it = instance.iterator(); it.hasNext();) {

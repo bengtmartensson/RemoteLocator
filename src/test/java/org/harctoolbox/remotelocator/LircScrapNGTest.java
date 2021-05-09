@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  *
  * @author bengt
  */
-public class LircNGTest {
+public class LircScrapNGTest {
     private static final File localLircBaseDir = new File("../../lirc/lirc-remotes/remotes");
 
     @BeforeClass
@@ -22,7 +22,7 @@ public class LircNGTest {
     public static void tearDownClass() throws Exception {
     }
 
-    public LircNGTest() {
+    public LircScrapNGTest() {
     }
 
     @BeforeMethod
@@ -34,13 +34,13 @@ public class LircNGTest {
     }
 
     /**
-     * Test of scrap method, of class Lirc.
+     * Test of scrap method, of class LircScrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = Lirc.scrap(localLircBaseDir);
+        RemoteDatabase result = LircScrap.scrap(localLircBaseDir);
         result.print("output/lirc.xml");
     }
 }

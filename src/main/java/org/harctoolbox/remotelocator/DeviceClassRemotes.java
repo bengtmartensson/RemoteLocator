@@ -98,10 +98,10 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         List<RemoteLink> list = new ArrayList<>(remoteLinks.values());
         try {
             System.out.println(this.deviceClass);
-        Collections.sort(list, comparator);
+            Collections.sort(list, comparator);
         } catch (NullPointerException ex) {
-                ex.printStackTrace();
-                }
+            ex.printStackTrace();
+        }
         remoteLinks.clear();
         for (RemoteLink link : list) {
             remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);

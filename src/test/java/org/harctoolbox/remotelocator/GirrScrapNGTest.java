@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GirrNGTest {
+public class GirrScrapNGTest {
     private static final File localGirrLibBaseDir = new File("../GirrLib/Girr");
     private static final File localGirrTestBaseDir = new File("../Girr/src/test/girr");
 
@@ -21,7 +21,7 @@ public class GirrNGTest {
     public static void tearDownClass() throws Exception {
     }
 
-    public GirrNGTest() {
+    public GirrScrapNGTest() {
     }
 
     @BeforeMethod
@@ -33,38 +33,38 @@ public class GirrNGTest {
     }
 
     /**
-     * Test of scrap method, of class Girr.
+     * Test of scrap method, of class GirrScrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = Girr.scrap(localGirrLibBaseDir);
+        RemoteDatabase result = GirrScrap.scrap(localGirrLibBaseDir);
         result.print("output/girr.xml");
     }
 
     /**
-     * Test of add method, of class Girr.
+     * Test of add method, of class GirrScrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testAdd_File() throws Exception {
         System.out.println("add");
         RemoteDatabase remoteDatabase = new RemoteDatabase();
-        Girr instance = new Girr(remoteDatabase);
+        GirrScrap instance = new GirrScrap(remoteDatabase);
         instance.add(localGirrLibBaseDir);
         instance.add(localGirrTestBaseDir);
         remoteDatabase.print("output/allgirr.xml");
     }
 
     /**
-     * Test of getRemote method, of class Girr.
+     * Test of getRemote method, of class GirrScrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testGetRemote() throws Exception {
         System.out.println("getRemote");
-        Girr instance = new Girr();
+        GirrScrap instance = new GirrScrap();
         instance.add(localGirrLibBaseDir);
         String name = "coolstream_neo";
         Remote remote = instance.getRemote("Coolstream", "sat", name);

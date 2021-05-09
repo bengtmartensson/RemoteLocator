@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
 import static org.harctoolbox.girr.XmlStatic.COMMENT_ATTRIBUTE_NAME;
-import static org.harctoolbox.girr.XmlStatic.MODEL_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
 import org.harctoolbox.ircore.ThisCannotHappenException;
 import static org.harctoolbox.remotelocator.RemoteDatabase.FILE_SCHEME_NAME;

@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author bengt
  */
-public class IrdbNGTest {
+public class IrdbScrapNGTest {
     private static final File localIrdbBaseDir = new File("../irdb/codes");
 
     @BeforeClass
@@ -27,7 +27,7 @@ public class IrdbNGTest {
     public static void tearDownClass() throws Exception {
     }
 
-    public IrdbNGTest() {
+    public IrdbScrapNGTest() {
     }
 
     @BeforeMethod
@@ -39,19 +39,19 @@ public class IrdbNGTest {
     }
 
     /**
-     * Test of scrap method, of class Irdb.
+     * Test of scrap method, of class IrdbScrap.
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXException
      */
     @Test
     public void testScrap() throws IOException, SAXException {
         System.out.println("scrap");
-        RemoteDatabase instance = Irdb.scrap(localIrdbBaseDir);
+        RemoteDatabase instance = IrdbScrap.scrap(localIrdbBaseDir);
         instance.print("output/irdb.xml");
     }
 
     /**
-     * Test of parse method, of class Irdb.
+     * Test of parse method, of class IrdbScrap.
      * @throws java.io.IOException
      */
     @Test
@@ -61,20 +61,20 @@ public class IrdbNGTest {
         //File path = new File("../irdb/codes/BnK Components/Tuner_preamp/11,79.csv");
         String manufacturer = "Trabbi";
         String deviceType = "Tractor";
-        Remote result = Irdb.parse(path, manufacturer, deviceType);
+        Remote result = IrdbScrap.parse(path, manufacturer, deviceType);
         XmlUtils.printDOM(new File ("output/yamaha.girr"), result.toDocument(null, null, null, false, true, true, false, false));
     }
 
     /**
-     * Test of getRemote method, of class Irdb.
+     * Test of getRemote method, of class IrdbScrap.
      * @throws java.lang.Exception
      */
     @Test
     public void testGetRemote() throws Exception {
         System.out.println("getRemote");
-        Irdb instance = new Irdb();
+        IrdbScrap instance = new IrdbScrap();
         instance.add(localIrdbBaseDir);
-        String name = Irdb.mkName("RC6", 4, 0);
+        String name = IrdbScrap.mkName("RC6", 4, 0);
         Remote remote = instance.getRemote("Yamaha", "DVD", name);
         remote.print("output/yamaha-dvd.girr");
         String firstcommand = remote.getCommands().keySet().iterator().next();

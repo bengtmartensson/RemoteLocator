@@ -12,22 +12,22 @@ import org.harctoolbox.jirc.ConfigFile;
 import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
 import org.xml.sax.SAXException;
 
-public class Lirc extends Scrapable {
-    private static final Logger logger = Logger.getLogger(Girr.class.getName());
+public class LircScrap extends Scrapable {
+    private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
    public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
     public static final URI LIRC_BASE_URI   = parseURI(LIRC_BASE);
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
-        Lirc lirc = new Lirc();
+        LircScrap lirc = new LircScrap();
         return lirc.scrapSort(dir);
     }
 
-    private Lirc() {
+    private LircScrap() {
         super();
     }
 
-    Lirc(RemoteDatabase remoteDatabase) {
+    LircScrap(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
     }
 

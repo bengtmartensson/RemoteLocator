@@ -17,9 +17,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class Jp1Master extends Scrapable {
+public class Jp1Scrap extends Scrapable {
 
-    private static final Logger logger = Logger.getLogger(Jp1Master.class.getName());
+    private static final Logger logger = Logger.getLogger(Jp1Scrap.class.getName());
 
     private static final String TABLE_NAMESPACE_URI = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
     private static final String TEXT_NAMESPACE_URI = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
@@ -30,12 +30,12 @@ public class Jp1Master extends Scrapable {
 //            RemoteDatabase remoteDatabase = scrap(new File(JP1_XML));
 //            remoteDatabase.print("jp1.xml");
 //        } catch (IOException | SAXException ex) {
-//            Logger.getLogger(Jp1Master.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(Jp1Scrap.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
 
     public static RemoteDatabase scrap(File jp1XmlFile) throws IOException, SAXException {
-        Jp1Master jp1db = new Jp1Master();
+        Jp1Scrap jp1db = new Jp1Scrap();
         return jp1db.scrapSort(jp1XmlFile);
     }
 
@@ -50,15 +50,15 @@ public class Jp1Master extends Scrapable {
     }
 
     public static void add(RemoteDatabase remoteDatabase, File file) throws SAXException, IOException {
-        Jp1Master jp1 = new Jp1Master(remoteDatabase);
+        Jp1Scrap jp1 = new Jp1Scrap(remoteDatabase);
         jp1.add(file);
     }
 
-    public Jp1Master(RemoteDatabase remoteDatabase) {
+    public Jp1Scrap(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
     }
 
-    public Jp1Master() {
+    public Jp1Scrap() {
         super();
     }
 
