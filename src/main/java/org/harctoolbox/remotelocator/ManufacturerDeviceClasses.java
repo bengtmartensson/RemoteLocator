@@ -1,8 +1,8 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,28 +16,54 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
+import static org.harctoolbox.remotelocator.DeviceClassRemotes.DEVICECLASS_ELEMENT_NAME;
 import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
+import static org.harctoolbox.remotelocator.RemoteDatabase.mkKey;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceClassRemotes>, Serializable {
 
     private final static Logger logger = Logger.getLogger(ManufacturerDeviceClasses.class.getName());
 
-    private static final String MANUFACTURER_ELEMENT_NAME = "manufacturer";
-    private static final String MANUFACTURER_ATTRIBUTE_NAME = MANUFACTURER_ELEMENT_NAME;
+    static final String MANUFACTURER_ELEMENT_NAME = "manufacturer";
+    static final String MANUFACTURER_ATTRIBUTE_NAME = MANUFACTURER_ELEMENT_NAME;
     private static final int INITIAL_CAPACITY = 8;
 
-    private static String captitalize(String str) {
-        return str.substring(0, 1).toUpperCase(Locale.US) + str.substring(1);
-    }
-
+////    private static String captitalize(String str) {
+////        try {
+////        return str.substring(0, 1).toUpperCase(Locale.US) + str.substring(1);
+////        } catch (StringIndexOutOfBoundsException ex) {
+////            System.out.println(ex);
+////            return null;
+////        }
+////    }
+//
     private final String manufacturer;
     private final Map<String, DeviceClassRemotes> deviceClasses;
 
-    ManufacturerDeviceClasses(String key) {
-        this.manufacturer = key;
+    ManufacturerDeviceClasses(String mani) {
+        this.manufacturer = mani;
         this.deviceClasses = new LinkedHashMap<>(INITIAL_CAPACITY);
+    }
+
+    ManufacturerDeviceClasses(Element manifacturerElement) {
+        this(manifacturerElement.getAttribute(MANUFACTURER_ATTRIBUTE_NAME));
+        NodeList nodeList = manifacturerElement.getElementsByTagName(DEVICECLASS_ELEMENT_NAME);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element devElement = (Element) nodeList.item(i);
+            try {
+                DeviceClassRemotes dev = new DeviceClassRemotes(devElement);
+                add(dev);
+            } catch (MalformedURLException ex) {
+                logger.log(Level.WARNING, "Erroneous URL {0}", ex.getLocalizedMessage());
+            }
+        }
+    }
+
+    private void add(DeviceClassRemotes dev) {
+        deviceClasses.put(mkKey(dev.getName()), dev);
     }
 
     @Override
@@ -47,7 +73,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
 
     public Element toElement(Document document) {
         Element element = document.createElement(MANUFACTURER_ELEMENT_NAME);
-        element.setAttribute(MANUFACTURER_ATTRIBUTE_NAME, captitalize(manufacturer));
+        element.setAttribute(MANUFACTURER_ATTRIBUTE_NAME, manufacturer);
         for (DeviceClassRemotes type : this)
             element.appendChild(type.toElement(document));
         return element;
@@ -58,39 +84,39 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         return deviceClasses.values().iterator();
     }
 
-    void add(RemoteKind kind, URI uri, File baseDir, File dir) throws IOException {
-        if (!(dir.isDirectory() && dir.canRead())) {
-            // Non-fatal; there may lie junk files around
-            logger.log(Level.WARNING, "{0} is not a readable directory", dir);
-            return;
-        }
+//    void add(RemoteKind kind, URI uri, File baseDir, File dir) throws IOException {
+//        if (!(dir.isDirectory() && dir.canRead())) {
+//            // Non-fatal; there may lie junk files around
+//            logger.log(Level.WARNING, "{0} is not a readable directory", dir);
+//            return;
+//        }
+//
+//        if (kind.hasDeviceClasses()) {
+//            String[] list = dir.list();
+//            if (list == null)
+//                // Something is wrong, so this is fatal
+//                throw new IOException(dir + " could not be read");
+//
+//            for (String deviceClass : list) {
+//                DeviceClassRemotes devices = getOrCreate(deviceClass);
+//                devices.add(kind, uri, baseDir, new File(dir, deviceClass));
+//            }
+//        } else {
+//            DeviceClassRemotes devices = getOrCreate(UNKNOWN);
+//            devices.add(kind, uri, baseDir, dir);
+//        }
+//    }
 
-        if (kind.hasDeviceClasses()) {
-            String[] list = dir.list();
-            if (list == null)
-                // Something is wrong, so this is fatal
-                throw new IOException(dir + " could not be read");
-
-            for (String deviceClass : list) {
-                DeviceClassRemotes devices = getOrCreate(deviceClass);
-                devices.add(kind, uri, baseDir, new File(dir, deviceClass));
-            }
-        } else {
-            DeviceClassRemotes devices = getOrCreate(UNKNOWN);
-            devices.add(kind, uri, baseDir, dir);
-        }
-    }
-
-    void add(Remote remote, URI baseUri, File baseDir, File path, String xpath) {
+    void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
         DeviceClassRemotes deviceClass = getOrCreate(remote.getDeviceClass());
-        deviceClass.add(remote, baseUri, baseDir, path, xpath);
+        deviceClass.add(kind, remote, baseUri, baseDir, path, xpath);
     }
 
-    private DeviceClassRemotes getOrCreate(String deviceClass) {
-        String key = RemoteDatabase.mkKey(deviceClass);
+    DeviceClassRemotes getOrCreate(String deviceClass) {
+        String key = mkKey(deviceClass);
         DeviceClassRemotes typeRemote = deviceClasses.get(key);
         if (typeRemote == null) {
-            typeRemote = new DeviceClassRemotes(key);
+            typeRemote = new DeviceClassRemotes((deviceClass == null || deviceClass.isEmpty()) ? UNKNOWN : deviceClass);
             deviceClasses.put(key, typeRemote);
         }
         return typeRemote;
@@ -107,6 +133,8 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         List<DeviceClassRemotes> list = new ArrayList<>(deviceClasses.values());
         Collections.sort(list, comparator);
         deviceClasses.clear();
+        if (manufacturer.equals("bnk components"))
+                System.out.println(">>> " + manufacturer);
         for (DeviceClassRemotes dev : list) {
             dev.sort(comparator);
             deviceClasses.put(RemoteDatabase.mkKey(dev.getName()), dev);
@@ -118,10 +146,29 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         devCls.add(remoteLink);
     }
 
-    public static class CompareNameCaseInsensitive implements Comparator<ManufacturerDeviceClasses>, Serializable {
-        @Override
-        public int compare(ManufacturerDeviceClasses o1, ManufacturerDeviceClasses o2) {
-            return o1.manufacturer.compareToIgnoreCase(o2.manufacturer);
-        }
+//    void addWithDevicesDir(URI uriBase, File baseDir, File file) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+//    void add(URI uriBase, File baseDir, File file) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+
+    public List<String> getDeviceClasses() {
+        List<String> result = new ArrayList<>(deviceClasses.size());
+        for (DeviceClassRemotes d : this)
+            result.add(d.getName());
+        return result;
     }
+
+    public DeviceClassRemotes getDeviceClass(String deviceClassName) {
+        return deviceClasses.get(RemoteDatabase.mkKey(deviceClassName));
+    }
+
+//    public static class CompareNameCaseInsensitive implements Comparator<ManufacturerDeviceClasses>, Serializable {
+//        @Override
+//        public int compare(ManufacturerDeviceClasses o1, ManufacturerDeviceClasses o2) {
+//            return o1.manufacturer.compareToIgnoreCase(o2.manufacturer);
+//        }
+//    }
 }

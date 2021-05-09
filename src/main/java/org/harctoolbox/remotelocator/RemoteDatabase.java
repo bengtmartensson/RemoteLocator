@@ -21,10 +21,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,25 +35,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.harctoolbox.girr.GirrException;
+import javax.xml.validation.Schema;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
-import org.harctoolbox.girr.RemoteSet;
 import static org.harctoolbox.girr.XmlStatic.CREATINGUSER_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.CREATIONDATE_ATTRIBUTE_NAME;
-import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
-import static org.harctoolbox.girr.XmlStatic.REMOTES_ELEMENT_NAME;
-import static org.harctoolbox.girr.XmlStatic.REMOTE_ELEMENT_NAME;
 import static org.harctoolbox.girr.XmlStatic.TITLE_ATTRIBUTE_NAME;
 import org.harctoolbox.ircore.ThisCannotHappenException;
-import static org.harctoolbox.remotelocator.Irdb.IRDB_BASE_URI;
-import static org.harctoolbox.remotelocator.Jp1Master.JP1_XML;
+import static org.harctoolbox.remotelocator.ManufacturerDeviceClasses.MANUFACTURER_ELEMENT_NAME;
 import org.harctoolbox.xml.XmlUtils;
 import static org.harctoolbox.xml.XmlUtils.DEFAULT_CHARSETNAME;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -70,65 +65,49 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public static final String FORMAT_VERSION = "0.1";
     private static final int INITIAL_CAPACITY = 64;
 
-    public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
-    public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
-
-    public static final URI LIRC_BASE_URI   = parseURI(LIRC_BASE);
-    public static final URI GIRRLIB_BASE_URI= parseURI(GIRRLIB_BASE);
     public static final String dateFormatString = "yyyy-MM-dd_HH:mm:ss";
 
-    static String mkKey(String manufacturer) {
-        return (manufacturer == null || manufacturer.isEmpty()) ? UNKNOWN : manufacturer.toLowerCase(Locale.US);
+    static String mkKey(String string) {
+        return (string == null || string.isEmpty()) ? UNKNOWN : string.toLowerCase(Locale.US);
     }
 
-    static URI parseURI(String string) {
-        try {
-            return new URI(string);
-        } catch (URISyntaxException ex) {
-            throw new ThisCannotHappenException(ex);
-        }
-    }
-
-    private static RemoteDatabase scrapRemotes(RemoteKind kind, URI baseUri, File baseDir, File localDir) throws IOException {
-        RemoteDatabase instance = new RemoteDatabase();
-        instance.add(kind, baseUri, baseDir,  localDir);
-        instance.sort();
-        return instance;
-    }
-
-    public static RemoteDatabase scrapIrdb(File baseDir) throws IOException {
-        return scrapRemotes(RemoteKind.irdb, IRDB_BASE_URI, baseDir,  baseDir);
-    }
-
-    public static RemoteDatabase scrapLirc(File baseDir) throws IOException {
-        return scrapRemotes(RemoteKind.lirc, LIRC_BASE_URI, baseDir,  baseDir);
-    }
-
-    public static RemoteDatabase scrapGirr(File baseDir) throws IOException {
-        return scrapRemotes(RemoteKind.girr, GIRRLIB_BASE_URI, baseDir,  baseDir);
-    }
-
-    public static RemoteDatabase scrapJp1(File xmlFile) throws SAXException, IOException {
-        return Jp1Master.scrapJp1(xmlFile);
-    }
-
-    public static void main(String[] args) {
-        try {
-            RemoteDatabase remoteDatabase = scrapJp1(new File(JP1_XML));
-            remoteDatabase.add(RemoteKind.girr, GIRRLIB_BASE_URI, new File("../GirrLib/Girr"), new File("../GirrLib/Girr"));
-            remoteDatabase.add(RemoteKind.irdb, IRDB_BASE_URI, new File("../irdb/codes"), new File("../irdb/codes"));
-            remoteDatabase.add(RemoteKind.lirc, LIRC_BASE_URI, new File("../../lirc/lirc-remotes/remotes"), new File("../../lirc/lirc-remotes/remotes"));
-            remoteDatabase.sort();
-            remoteDatabase.print(new File("all.xml"));
-        } catch (IOException | SAXException ex) {
-            ex.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            RemoteDatabase remoteDatabase = new RemoteDatabase();
+//
+////            Jp1Master.add(remoteDatabase, new File(JP1_XML));
+////            Girr.add(remoteDatabase, new File("../GirrLib/Girr"));
+////            remoteDatabase.add(RemoteKind.girr, GIRRLIB_BASE_URI, new File("../GirrLib/Girr"), new File("../GirrLib/Girr"));
+////            remoteDatabase.add(RemoteKind.irdb, IRDB_BASE_URI, new File("../irdb/codes"), new File("../irdb/codes"));
+////            remoteDatabase.add(RemoteKind.lirc, LIRC_BASE_URI, new File("../../lirc/lirc-remotes/remotes"), new File("../../lirc/lirc-remotes/remotes"));
 
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
 
     public RemoteDatabase() {
         manufacturers = new LinkedHashMap<>(INITIAL_CAPACITY);
+    }
+
+    public RemoteDatabase(File file) throws IOException, SAXException {
+        this(XmlUtils.openXmlFile(file, (Schema) null, false, true));
+    }
+
+    public RemoteDatabase(Reader reader) throws IOException, SAXException {
+        this(XmlUtils.openXmlReader(reader, (Schema) null, false, true));
+    }
+
+    public RemoteDatabase(Document document) {
+        this(document.getDocumentElement());
+    }
+
+    public RemoteDatabase(Element root) {
+        this();
+        NodeList nodeList = root.getElementsByTagName(MANUFACTURER_ELEMENT_NAME);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element manufacturerElement = (Element) nodeList.item(i);
+            ManufacturerDeviceClasses manufacturer = new ManufacturerDeviceClasses(manufacturerElement);
+            add(manufacturer);
+        }
+
     }
 
     public void sort(Comparator<? super Named> comparator) {
@@ -137,7 +116,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         manufacturers.clear();
         for (ManufacturerDeviceClasses manuf : list) {
             manuf.sort(comparator);
-            manufacturers.put(mkKey(manuf.getName()), manuf);
+            add(manuf);
         }
     }
 
@@ -208,72 +187,74 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return manufacturers.values().iterator();
     }
 
-    public void addRecursive(URI uriBase, File baseDir, File file) throws IOException {
-        if (file.isDirectory()) {
-            String[] files = file.list();
-            if (files == null)
-                throw new IOException("Cannot read directory " + file);
+//    public void addRecursive(URI uriBase, File baseDir, File file) throws IOException {
+//        if (file.isDirectory()) {
+//            String[] files = file.list();
+//            if (files == null)
+//                throw new IOException("Cannot read directory " + file);
+//
+//            for (String f : files)
+//                addRecursive(uriBase, baseDir, new File(file, f));
+//        } else if (file.isFile() /*&& ! ignoreByExtension(path)*/) {
+//            try {
+//                add(XmlUtils.openXmlFile(file), uriBase, baseDir, file);
+//            } catch (IOException | SAXException | GirrException ex) {
+//                logger.log(Level.WARNING, "Could not read file {0}; {1}", new Object[]{file.toString(), ex.getLocalizedMessage()});
+//            }
+//        } else
+//            logger.log(Level.WARNING, "Unknown file {0}", file.toString());
+//    }
 
-            for (String f : files)
-                addRecursive(uriBase, baseDir, new File(file, f));
-        } else if (file.isFile() /*&& ! ignoreByExtension(path)*/) {
-            try {
-                add(XmlUtils.openXmlFile(file), uriBase, baseDir, file);
-            } catch (IOException | SAXException | GirrException ex) {
-                logger.log(Level.WARNING, "Could not read file {0}; {1}", new Object[]{file.toString(), ex.getLocalizedMessage()});
-            }
-        } else
-            logger.log(Level.WARNING, "Unknown file {0}", file.toString());
-    }
+//    public void add(RemoteSet remoteSet, URI baseUri, File baseDir, File file) {
+//        for (Remote remote : remoteSet) {
+//            String xpath = REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
+//            add(RemoteKind.girr, remote, baseUri, baseDir, file, xpath);
+//        }
+//    }
 
-    public void add(RemoteSet remoteSet, URI baseUri, File baseDir, File file) {
-        for (Remote remote : remoteSet) {
-            String xpath = REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
-            add(remote, baseUri, baseDir, file, xpath);
-        }
-    }
+//    public void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File file, String xpath) {
+//        ManufacturerDeviceClasses manufacturerTypes = getOrCreate(remote.getManufacturer());
+//        manufacturerTypes.add(kind, remote, baseUri, baseDir, file, xpath);
+//    }
 
-    public void add(Remote remote, URI baseUri, File baseDir, File file, String xpath) {
-        ManufacturerDeviceClasses manufacturerTypes = getOrCreate(remote.getManufacturer());
-        manufacturerTypes.add(remote, baseUri, baseDir, file, xpath);
-    }
+//    private void add(Element element, URI baseUri, File baseDir, File file) throws GirrException {
+//        switch (element.getTagName()) {
+//            case REMOTES_ELEMENT_NAME:
+//                RemoteSet remoteSet = new RemoteSet(element, file.toString());
+//                add(remoteSet, baseUri, baseDir, file);
+//                break;
+//            case REMOTE_ELEMENT_NAME:
+//                Remote remote = new Remote(element, file.toString());
+//                add(RemoteKind.girr, remote, baseUri, baseDir, file, "/" + REMOTE_ELEMENT_NAME);
+//                break;
+//            default:
+//                logger.log(Level.INFO, "File  {0} ignored, since its top level element is {1}", new Object[]{file, element.getTagName()});
+//        }
+//    }
 
-    private void add(Element element, URI baseUri, File baseDir, File file) throws GirrException {
-        switch (element.getTagName()) {
-            case REMOTES_ELEMENT_NAME:
-                RemoteSet remoteSet = new RemoteSet(element, file.toString());
-                add(remoteSet, baseUri, baseDir, file);
-                break;
-            case REMOTE_ELEMENT_NAME:
-                Remote remote = new Remote(element, file.toString());
-                add(remote, baseUri, baseDir, file, "/" + REMOTE_ELEMENT_NAME);
-                break;
-            default:
-                logger.log(Level.INFO, "File  {0} ignored, since its top level element is {1}", new Object[]{file, element.getTagName()});
-        }
-    }
 
-    private void add(Document document, URI baseUri, File baseDir, File file) throws GirrException {
-        add(document.getDocumentElement(), baseUri, baseDir, file);
-    }
 
-    void add(RemoteKind kind, File file) throws IOException {
-        add(kind, null, null, file);
-    }
+//    void add(RemoteKind kind, File file) throws IOException {
+//        add(kind, null, null, file);
+//    }
 
-    void add(RemoteKind kind, URI uriBase, File baseDir, File file) throws IOException {
-        if (kind.recurse()) {
-            addRecursive(uriBase, baseDir, file);
-        } else {
-            if (!(file.isDirectory() && file.canRead()))
-                throw new IOException(file + " is not a readable directory");
+//    void add(RemoteKind kind, URI uriBase, File baseDir, File file) throws IOException {
+//        if (kind.recurse()) {
+//            addRecursive(uriBase, baseDir, file);
+//        } else {
+//            if (!(file.isDirectory() && file.canRead()))
+//                throw new IOException(file + " is not a readable directory");
+//
+//            String[] manufacturerArray = file.list();
+//            for (String manufacturer : manufacturerArray) {
+//                ManufacturerDeviceClasses manufacturerTypes = getOrCreate(manufacturer);
+//                manufacturerTypes.add(kind, uriBase, baseDir, new File(file, manufacturer));
+//            }
+//        }
+//    }
 
-            String[] manufacturerArray = file.list();
-            for (String manufacturer : manufacturerArray) {
-                ManufacturerDeviceClasses manufacturerTypes = getOrCreate(manufacturer);
-                manufacturerTypes.add(kind, uriBase, baseDir, new File(file, manufacturer));
-            }
-        }
+    private void add(ManufacturerDeviceClasses manifacturer) {
+        manufacturers.put(mkKey(manifacturer.getName()), manifacturer);
     }
 
     void put(String manufacturer, String deviceClass, RemoteLink remoteLink) {
@@ -293,14 +274,37 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return remoteLink.getRemote(manufacturer, deviceClass);
     }
 
-    private ManufacturerDeviceClasses getOrCreate(String manufacturer) {
+    public List<String> getManufacturers() {
+        List<String> result = new ArrayList<>(manufacturers.size());
+        for (ManufacturerDeviceClasses m : this)
+            result.add(m.getName());
+        return result;
+    }
+
+    public List<String> getDeviceTypes(String manufacturer) {
+        ManufacturerDeviceClasses m = manufacturers.get(mkKey(manufacturer));
+        return m.getDeviceClasses();
+    }
+
+    public List<String> getRemotes(String manufacturer, String deviceType) {
+        ManufacturerDeviceClasses m = manufacturers.get(mkKey(manufacturer));
+        DeviceClassRemotes d = m.getDeviceClass(deviceType);
+        return d.getRemotes();
+    }
+
+    ManufacturerDeviceClasses getOrCreate(String manufacturer) {
         String key = mkKey(manufacturer);
 
         ManufacturerDeviceClasses mt = manufacturers.get(key);
         if (mt == null) {
-            mt = new ManufacturerDeviceClasses(key);
+            mt = new ManufacturerDeviceClasses((manufacturer == null || manufacturer.isEmpty()) ? UNKNOWN : manufacturer);
             manufacturers.put(key, mt);
         }
         return mt;
+    }
+
+    public URL getUrl(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
+        RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
+        return remoteLink.getUrl();
     }
 }

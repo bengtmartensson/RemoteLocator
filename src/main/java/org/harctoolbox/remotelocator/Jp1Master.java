@@ -2,12 +2,14 @@ package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.validation.Schema;
+import org.harctoolbox.girr.Remote;
 import org.harctoolbox.xml.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,26 +17,26 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author bengt
- */
-public class Jp1Master {
+public class Jp1Master extends Scrapable {
 
     private static final Logger logger = Logger.getLogger(Jp1Master.class.getName());
-    public  static final String JP1_XML = "/home/bengt/jp1/jp1-master/jp1-master-1.16.fods";
+
     private static final String TABLE_NAMESPACE_URI = "urn:oasis:names:tc:opendocument:xmlns:table:1.0";
     private static final String TEXT_NAMESPACE_URI = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+    private static final String JP1_NAME = "jp1";
 
+//    public static void main(String[] args) {
+//        try {
+//            RemoteDatabase remoteDatabase = scrap(new File(JP1_XML));
+//            remoteDatabase.print("jp1.xml");
+//        } catch (IOException | SAXException ex) {
+//            Logger.getLogger(Jp1Master.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
-    public static void main(String[] args) {
-        try {
-            RemoteDatabase remoteDatabase = scrapJp1(new File(JP1_XML));
-            remoteDatabase.sort();
-            remoteDatabase.print("jp1.xml");
-        } catch (IOException | SAXException ex) {
-            Logger.getLogger(Jp1Master.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static RemoteDatabase scrap(File jp1XmlFile) throws IOException, SAXException {
+        Jp1Master jp1db = new Jp1Master();
+        return jp1db.scrapSort(jp1XmlFile);
     }
 
     private static String getTextContent(Node node) {
@@ -47,16 +49,17 @@ public class Jp1Master {
         return nodeList.item(0).getTextContent().trim();
     }
 
-    public static RemoteDatabase scrapJp1(File file) throws SAXException, IOException {
-        Jp1Master jp1Master = new Jp1Master();
-        jp1Master.scrap(file);
-        return jp1Master.remoteDatabase;
+    public static void add(RemoteDatabase remoteDatabase, File file) throws SAXException, IOException {
+        Jp1Master jp1 = new Jp1Master(remoteDatabase);
+        jp1.add(file);
     }
 
-    private final RemoteDatabase remoteDatabase;
+    public Jp1Master(RemoteDatabase remoteDatabase) {
+        super(remoteDatabase);
+    }
 
-    private Jp1Master() {
-        this.remoteDatabase = new RemoteDatabase();
+    public Jp1Master() {
+        super();
     }
 
     private void processRow(Element row) {
@@ -96,14 +99,35 @@ public class Jp1Master {
         remoteDatabase.put(manufacturer, deviceClass, remoteLink);
     }
 
-    private void scrap(Document document) {
+    private void add(Document document) {
         NodeList rows = document.getElementsByTagNameNS(TABLE_NAMESPACE_URI, "table-row");
         logger.log(Level.INFO, "Found {0} rows.", rows.getLength());
         for (int i = 0; i < rows.getLength(); i++)
             processRow((Element) rows.item(i));
     }
 
-    private void scrap(File file) throws SAXException, IOException {
-        scrap(XmlUtils.openXmlFile(file, (Schema) null, true, false));
+    @Override
+    public void add(File file) throws SAXException, IOException {
+        add(XmlUtils.openXmlFile(file, (Schema) null, true, false));
+    }
+
+    @Override
+    public String getName() {
+        return JP1_NAME;
+    }
+
+//    @Override
+//    public RemoteKind getKind() {
+//        return RemoteKind.jp1;
+//    }
+
+//    @Override
+//    RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+
+    @Override
+    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

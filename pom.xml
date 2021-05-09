@@ -225,14 +225,18 @@
                     </execution>
                 </executions>
             </plugin-->
-
-            <!-- Binary tarballs from src/assembly*/ files. -->
-            <!--plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.harctoolbox.remotelocator.RemoteDatabase</mainClass> <!-- does not interpolate variables -->
+                        </manifest>
+                    </archive>
                     <descriptors>
+                        <descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
                         <descriptor>src/assembly/target.xml</descriptor>
                     </descriptors>
                 </configuration>
@@ -247,7 +251,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -429,8 +433,13 @@
         </dependency>
         <dependency>
             <groupId>org.harctoolbox</groupId>
-            <artifactId>Girr</artifactId>
+            <artifactId>Jirc</artifactId>
             <version>2.2.10-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.harctoolbox</groupId>
+            <artifactId>IrpTransmogrifier</artifactId>
+            <version>1.2.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

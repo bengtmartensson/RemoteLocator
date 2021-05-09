@@ -2,6 +2,7 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,18 +12,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
+import static org.harctoolbox.remotelocator.RemoteLink.REMOTELINK_ELEMENT_NAME;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
-    private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
+//    private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
 
-    private static final String DEVICECLASS_ELEMENT_NAME = "deviceClass";
-    private static final String DEVICECLASS_ATTRIBUTE_NAME = DEVICECLASS_ELEMENT_NAME;
+    static final String DEVICECLASS_ELEMENT_NAME = "deviceClass";
+    static final String DEVICECLASS_ATTRIBUTE_NAME = DEVICECLASS_ELEMENT_NAME;
     private static final int INITIAL_CAPACITY = 8;
 
     private final String deviceClass;
@@ -31,6 +32,16 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     DeviceClassRemotes(String key) {
         deviceClass = key;
         remoteLinks = new LinkedHashMap<>(INITIAL_CAPACITY);
+    }
+
+    DeviceClassRemotes(Element devElement) throws MalformedURLException {
+        this(devElement.getAttribute(DEVICECLASS_ATTRIBUTE_NAME));
+        NodeList nodeList = devElement.getElementsByTagName(REMOTELINK_ELEMENT_NAME);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Element remoteLinkElement = (Element) nodeList.item(i);
+            RemoteLink remoteLink = new RemoteLink(remoteLinkElement);
+            add(remoteLink);
+        }
     }
 
     @Override
@@ -53,8 +64,8 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         return element;
     }
 
-    void add(Remote remote, URI baseUri, File baseDir, File path, String xpath) {
-        RemoteLink remoteLink = new RemoteLink(remote, baseUri, baseDir, path, xpath);
+    void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
+        RemoteLink remoteLink = new RemoteLink(kind, remote, baseUri, baseDir, path, xpath);
         add(remoteLink);
     }
 
@@ -85,22 +96,34 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
 
     public void sort(Comparator<? super Named> comparator) {
         List<RemoteLink> list = new ArrayList<>(remoteLinks.values());
+        try {
+            System.out.println(this.deviceClass);
         Collections.sort(list, comparator);
+        } catch (NullPointerException ex) {
+                ex.printStackTrace();
+                }
         remoteLinks.clear();
         for (RemoteLink link : list) {
             remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);
         }
     }
 
-    void add(RemoteKind kind, URI uri, File baseDir, File dir) {
-        if (! (dir.isDirectory() && dir.canRead())) {
-            // Can be junk file, non-fatal
-            logger.log(Level.WARNING, "File {0} not a readable directory, ignored.", dir);
-            return;
-        }
-        String[] array = dir.list();
+//    void add(RemoteKind kind, URI uri, File baseDir, File dir) {
+//        if (! (dir.isDirectory() && dir.canRead())) {
+//            // Can be junk file, non-fatal
+//            logger.log(Level.WARNING, "File {0} not a readable directory, ignored.", dir);
+//            return;
+//        }
+//        String[] array = dir.list();
+//
+//        for (String remote : array)
+//            add(new RemoteLink(kind, uri, baseDir, dir, remote));
+//    }
 
-        for (String remote : array)
-            add(new RemoteLink(kind, uri, baseDir, dir, remote));
+    public List<String> getRemotes() {
+        List<String> result = new ArrayList<>(remoteLinks.size());
+        for (RemoteLink r : this)
+            result.add(r.getName());
+        return result;
     }
 }

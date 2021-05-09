@@ -6,7 +6,8 @@ public enum RemoteKind {
     irdb,
     lirc,
     rmdu,
-    txt;
+    txt,
+    jp1;
 
     public boolean hasDeviceClasses() {
         return this != lirc;
