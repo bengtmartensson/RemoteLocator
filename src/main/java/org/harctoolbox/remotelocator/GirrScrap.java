@@ -47,20 +47,10 @@ public class GirrScrap extends Scrapable {
         return GIRR_NAME;
     }
 
-//    @Override
-//    public RemoteKind getKind() {
-//        return RemoteKind.girr;
-//    }
-
     @Override
     public void add(File dir) throws IOException, SAXException {
         addRecursive(GIRRLIB_BASE_URI, dir, dir);
     }
-
-//    @Override
-//    RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
 
     private void addRecursive(URI uriBase, File baseDir, File file) throws IOException {
         if (file.isDirectory()) {
@@ -116,16 +106,7 @@ public class GirrScrap extends Scrapable {
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
         try {
             Document document = XmlUtils.openXmlReader(reader, null, false, true);
-//
-//    }
-//} private Remote getGirrRemote(String manufacturer, String deviceClass) throws IOException {
-//        try {
-//            Document doc = path.canRead() ? XmlUtils.openXmlFile(path, (Schema) null, false, false)
-//                    : XmlUtils.openXmlStream(url.openStream(), (Schema) null, false, false);
-////            InputSource inputSource = new InputSource(inputStream);
-//            //XPathFactory factory = XPathFactory.newInstance();
             XPath xpathy = XPathFactory.newInstance().newXPath();
-
             NodeList str = (NodeList) xpathy.compile(xpath).evaluate(document, XPathConstants.NODESET);
             Element el = (Element) str.item(0);
             return new Remote(el, "remote");

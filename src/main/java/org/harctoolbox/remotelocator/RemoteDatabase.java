@@ -71,16 +71,6 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return (string == null || string.isEmpty()) ? UNKNOWN : string.toLowerCase(Locale.US);
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            RemoteDatabase remoteDatabase = new RemoteDatabase();
-//
-////            Jp1Master.add(remoteDatabase, new File(JP1_XML));
-////            Girr.add(remoteDatabase, new File("../GirrLib/Girr"));
-////            remoteDatabase.add(RemoteKind.girr, GIRRLIB_BASE_URI, new File("../GirrLib/Girr"), new File("../GirrLib/Girr"));
-////            remoteDatabase.add(RemoteKind.irdb, IRDB_BASE_URI, new File("../irdb/codes"), new File("../irdb/codes"));
-////            remoteDatabase.add(RemoteKind.lirc, LIRC_BASE_URI, new File("../../lirc/lirc-remotes/remotes"), new File("../../lirc/lirc-remotes/remotes"));
-
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
 
     public RemoteDatabase() {
@@ -186,72 +176,6 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public Iterator<ManufacturerDeviceClasses> iterator() {
         return manufacturers.values().iterator();
     }
-
-//    public void addRecursive(URI uriBase, File baseDir, File file) throws IOException {
-//        if (file.isDirectory()) {
-//            String[] files = file.list();
-//            if (files == null)
-//                throw new IOException("Cannot read directory " + file);
-//
-//            for (String f : files)
-//                addRecursive(uriBase, baseDir, new File(file, f));
-//        } else if (file.isFile() /*&& ! ignoreByExtension(path)*/) {
-//            try {
-//                add(XmlUtils.openXmlFile(file), uriBase, baseDir, file);
-//            } catch (IOException | SAXException | GirrException ex) {
-//                logger.log(Level.WARNING, "Could not read file {0}; {1}", new Object[]{file.toString(), ex.getLocalizedMessage()});
-//            }
-//        } else
-//            logger.log(Level.WARNING, "Unknown file {0}", file.toString());
-//    }
-
-//    public void add(RemoteSet remoteSet, URI baseUri, File baseDir, File file) {
-//        for (Remote remote : remoteSet) {
-//            String xpath = REMOTES_ELEMENT_NAME + "/" + REMOTE_ELEMENT_NAME + "[@" + NAME_ATTRIBUTE_NAME + "=\'" + remote.getName() + "\']";
-//            add(RemoteKind.girr, remote, baseUri, baseDir, file, xpath);
-//        }
-//    }
-
-//    public void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File file, String xpath) {
-//        ManufacturerDeviceClasses manufacturerTypes = getOrCreate(remote.getManufacturer());
-//        manufacturerTypes.add(kind, remote, baseUri, baseDir, file, xpath);
-//    }
-
-//    private void add(Element element, URI baseUri, File baseDir, File file) throws GirrException {
-//        switch (element.getTagName()) {
-//            case REMOTES_ELEMENT_NAME:
-//                RemoteSet remoteSet = new RemoteSet(element, file.toString());
-//                add(remoteSet, baseUri, baseDir, file);
-//                break;
-//            case REMOTE_ELEMENT_NAME:
-//                Remote remote = new Remote(element, file.toString());
-//                add(RemoteKind.girr, remote, baseUri, baseDir, file, "/" + REMOTE_ELEMENT_NAME);
-//                break;
-//            default:
-//                logger.log(Level.INFO, "File  {0} ignored, since its top level element is {1}", new Object[]{file, element.getTagName()});
-//        }
-//    }
-
-
-
-//    void add(RemoteKind kind, File file) throws IOException {
-//        add(kind, null, null, file);
-//    }
-
-//    void add(RemoteKind kind, URI uriBase, File baseDir, File file) throws IOException {
-//        if (kind.recurse()) {
-//            addRecursive(uriBase, baseDir, file);
-//        } else {
-//            if (!(file.isDirectory() && file.canRead()))
-//                throw new IOException(file + " is not a readable directory");
-//
-//            String[] manufacturerArray = file.list();
-//            for (String manufacturer : manufacturerArray) {
-//                ManufacturerDeviceClasses manufacturerTypes = getOrCreate(manufacturer);
-//                manufacturerTypes.add(kind, uriBase, baseDir, new File(file, manufacturer));
-//            }
-//        }
-//    }
 
     private void add(ManufacturerDeviceClasses manifacturer) {
         manufacturers.put(mkKey(manifacturer.getName()), manifacturer);

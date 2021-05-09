@@ -49,7 +49,6 @@ public abstract class Scrapable {
                 return null;
         }
     }
-    //abstract RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException;
 
     public static Remote getRemoteStatic(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
         Scrapable scrapable = mkScrapable(remoteLink.getKind());
@@ -111,14 +110,7 @@ public abstract class Scrapable {
         return remoteDatabase.getUrl(manufacturer, deviceClass, remoteName);
     }
 
-    // TODO: nuke
-//    RemoteDatabase getRemoteDatabase() {
-//        return remoteDatabase;
-//    }
-
     public abstract String getName();
-
-//    public abstract RemoteKind getKind(); // TODO: nuke
 
     public abstract void add(File file) throws IOException, SAXException;
 

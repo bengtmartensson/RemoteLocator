@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 public class LircScrap extends Scrapable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
-   public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
+    public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
     public static final URI LIRC_BASE_URI   = parseURI(LIRC_BASE);
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
@@ -35,11 +35,6 @@ public class LircScrap extends Scrapable {
     public String getName() {
         return "lirc";
     }
-
-//    @Override
-//    public RemoteKind getKind() {
-//        return RemoteKind.lirc;
-//    }
 
     @Override
     public void add(File dir) throws IOException {
@@ -81,25 +76,10 @@ public class LircScrap extends Scrapable {
             String name = remote.endsWith(".lircd.conf") ? remote.substring(0, remote.length() - 11) : remote;
             Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
             Remote rem = new Remote(metaData, path.getPath(), null, null, null, null);
-//            try {
             RemoteLink remoteLink = new RemoteLink(RemoteKind.lirc, rem, uri, baseDir, path);//newRemoteLink(rem, uri, baseDir, dir); //uri, baseDir, dir, remote));
             devices.add(remoteLink);
-//            } catch (IOException ex) {
-//                logger.log(Level.WARNING, "Error in {0}, ignoring", path.getPath());
-//            }
         }
     }
-
-//    @Override
-//    RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException {
-//        return new RemoteLink(RemoteKind.lirc, remote, uri, baseDir, file);
-//    }
-
-//    private Remote getRemote(File path, String manufacturer, String deviceClass) throws IOException {
-//        RemoteSet remoteSet = path.canRead() ? ConfigFile.parseConfig(path, IrCoreUtils.EXTENDED_LATIN1_NAME, true, null, true)
-//                 ConfigFile.parseConfig(new InputStreamReader(url.openStream()), IrCoreUtils.EXTENDED_LATIN1_NAME, true, null, true);
-//        return remoteSet.iterator().hasNext() ? remoteSet.iterator().next() : null;
-//    }
 
     @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {

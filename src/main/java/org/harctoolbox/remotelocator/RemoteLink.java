@@ -1,4 +1,3 @@
-
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -55,75 +54,10 @@ public final class RemoteLink implements Named, Serializable {
 //    private final String model;
 //    private final String origRemote;
 
-//    /*
-//    public RemoteLink(RemoteKind kind, URI baseUri, File baseDir, String remoteName, File path, String xpath, String comment, String displayName, String model, String origRemote) {
-//        try {
-//            this.kind = kind;
-//            switch (kind) {
-//                case irdb:
-//                    try {
-//                        Remote remote = Irdb.parse(path, null, null);
-//                        this.remoteName = remote.getName();
-//                    } catch (IOException ex) {
-//                        logger.log(Level.WARNING, ex.getLocalizedMessage());
-//                        this.remoteName = remoteName;
-//                    }
-//                    break;
-//                case lirc:
-//                    this.remoteName = remoteName.endsWith(".lircd.conf") ? remoteName.substring(0, remoteName.length() - 11) : remoteName;
-//                    break;
-//
-//                default:
-//                    this.remoteName = remoteName;
-//            }
-//            if (baseDir != null) {
-//                Path baseDirPath = Paths.get(baseDir.getPath());
-//                Path localPath = Paths.get(path.getPath());
-//                this.path = baseDirPath.relativize(localPath).toFile();
-//            } else {
-//                this.path = path;
-//            }
-//            this.xpath = xpath;
-//            if (baseUri != null) {
-//                if (path != null) {
-//                    URI uri = new URI(FILE_SCHEME_NAME, this.path.toString() + kind.suffix(), null);
-//                    String escapedPath = uri.toString().substring(5);
-//                    uri = new URI(escapedPath);
-//                    url = baseUri.resolve(uri).toURL();
-//                } else
-//                    url = baseUri.toURL();
-//            } else {
-//                url = null;
-//            }
-//            this.comment = comment;
-//            this.displayName = displayName;
-//            this.model = model;
-//            this.origRemote = origRemote;
-//        } catch (URISyntaxException | MalformedURLException ex) {
-//            throw new ThisCannotHappenException(ex);
-//        }
-//    }*/
-
     public RemoteLink(RemoteKind kind, URI baseUri, File baseDir, String name, File file, String xpath, String comment, String displayName, String model, String origRemote) {
         try {
             this.kind = kind;
-//            switch (kind) {
-//                case irdb:
-//                    try {
-//                        Remote remote = Irdb.parse(path, null, null);
-//                        this.remoteName = remote.getName();
-//                    } catch (IOException ex) {
-//                        logger.log(Level.WARNING, ex.getLocalizedMessage());
-//                        this.remoteName = remoteName;
-//                    }
-//                    break;
-//                case lirc:
-//                    this.remoteName = remoteName.endsWith(".lircd.conf") ? remoteName.substring(0, remoteName.length() - 11) : remoteName;
-//                    break;
-//
-//                default:
-                    this.name = name;
-//            }
+            this.name = name;
             if (baseDir != null) {
                 Path baseDirPath = Paths.get(baseDir.getPath());
                 Path localPath = Paths.get(file.getPath());

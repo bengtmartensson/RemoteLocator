@@ -1,4 +1,3 @@
-
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -107,18 +106,6 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
             remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);
         }
     }
-
-//    void add(RemoteKind kind, URI uri, File baseDir, File dir) {
-//        if (! (dir.isDirectory() && dir.canRead())) {
-//            // Can be junk file, non-fatal
-//            logger.log(Level.WARNING, "File {0} not a readable directory, ignored.", dir);
-//            return;
-//        }
-//        String[] array = dir.list();
-//
-//        for (String remote : array)
-//            add(new RemoteLink(kind, uri, baseDir, dir, remote));
-//    }
 
     public List<String> getRemotes() {
         List<String> result = new ArrayList<>(remoteLinks.size());

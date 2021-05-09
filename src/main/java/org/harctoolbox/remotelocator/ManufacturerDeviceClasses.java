@@ -31,15 +31,6 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     static final String MANUFACTURER_ATTRIBUTE_NAME = MANUFACTURER_ELEMENT_NAME;
     private static final int INITIAL_CAPACITY = 8;
 
-////    private static String captitalize(String str) {
-////        try {
-////        return str.substring(0, 1).toUpperCase(Locale.US) + str.substring(1);
-////        } catch (StringIndexOutOfBoundsException ex) {
-////            System.out.println(ex);
-////            return null;
-////        }
-////    }
-//
     private final String manufacturer;
     private final Map<String, DeviceClassRemotes> deviceClasses;
 
@@ -84,29 +75,6 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         return deviceClasses.values().iterator();
     }
 
-//    void add(RemoteKind kind, URI uri, File baseDir, File dir) throws IOException {
-//        if (!(dir.isDirectory() && dir.canRead())) {
-//            // Non-fatal; there may lie junk files around
-//            logger.log(Level.WARNING, "{0} is not a readable directory", dir);
-//            return;
-//        }
-//
-//        if (kind.hasDeviceClasses()) {
-//            String[] list = dir.list();
-//            if (list == null)
-//                // Something is wrong, so this is fatal
-//                throw new IOException(dir + " could not be read");
-//
-//            for (String deviceClass : list) {
-//                DeviceClassRemotes devices = getOrCreate(deviceClass);
-//                devices.add(kind, uri, baseDir, new File(dir, deviceClass));
-//            }
-//        } else {
-//            DeviceClassRemotes devices = getOrCreate(UNKNOWN);
-//            devices.add(kind, uri, baseDir, dir);
-//        }
-//    }
-
     void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
         DeviceClassRemotes deviceClass = getOrCreate(remote.getDeviceClass());
         deviceClass.add(kind, remote, baseUri, baseDir, path, xpath);
@@ -146,14 +114,6 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         devCls.add(remoteLink);
     }
 
-//    void addWithDevicesDir(URI uriBase, File baseDir, File file) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    void add(URI uriBase, File baseDir, File file) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
     public List<String> getDeviceClasses() {
         List<String> result = new ArrayList<>(deviceClasses.size());
         for (DeviceClassRemotes d : this)
@@ -164,11 +124,4 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     public DeviceClassRemotes getDeviceClass(String deviceClassName) {
         return deviceClasses.get(RemoteDatabase.mkKey(deviceClassName));
     }
-
-//    public static class CompareNameCaseInsensitive implements Comparator<ManufacturerDeviceClasses>, Serializable {
-//        @Override
-//        public int compare(ManufacturerDeviceClasses o1, ManufacturerDeviceClasses o2) {
-//            return o1.manufacturer.compareToIgnoreCase(o2.manufacturer);
-//        }
-//    }
 }

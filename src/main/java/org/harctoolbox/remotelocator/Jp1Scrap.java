@@ -25,15 +25,6 @@ public class Jp1Scrap extends Scrapable {
     private static final String TEXT_NAMESPACE_URI = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
     private static final String JP1_NAME = "jp1";
 
-//    public static void main(String[] args) {
-//        try {
-//            RemoteDatabase remoteDatabase = scrap(new File(JP1_XML));
-//            remoteDatabase.print("jp1.xml");
-//        } catch (IOException | SAXException ex) {
-//            Logger.getLogger(Jp1Scrap.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-
     public static RemoteDatabase scrap(File jp1XmlFile) throws IOException, SAXException {
         Jp1Scrap jp1db = new Jp1Scrap();
         return jp1db.scrapSort(jp1XmlFile);
@@ -116,18 +107,8 @@ public class Jp1Scrap extends Scrapable {
         return JP1_NAME;
     }
 
-//    @Override
-//    public RemoteKind getKind() {
-//        return RemoteKind.jp1;
-//    }
-
-//    @Override
-//    RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-
     @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported due to the nature of JP1 files.");
     }
 }

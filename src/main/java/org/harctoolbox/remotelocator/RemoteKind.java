@@ -1,4 +1,3 @@
-
 package org.harctoolbox.remotelocator;
 
 public enum RemoteKind {
@@ -9,15 +8,8 @@ public enum RemoteKind {
     txt,
     jp1;
 
-    public boolean hasDeviceClasses() {
-        return this != lirc;
-    }
-
-    public boolean recurse() {
-        return this == girr;
-    }
-
-    public String suffix() {
+    // TODO: remove
+    String suffix() {
         return this == lirc ? "?format=raw" : "";
     }
 }

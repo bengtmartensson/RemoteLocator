@@ -148,8 +148,6 @@ public final class IrdbScrap extends Scrapable {
 
         String[] manufacturerArray = file.list();
         for (String manufacturer : manufacturerArray) {
-//            if (manufacturer.equals("Acesonic"))
-//                System.out.println("Acesonic");
             ManufacturerDeviceClasses manufacturerTypes = remoteDatabase.getOrCreate(manufacturer);
             addDevices(manufacturerTypes, uriBase, baseDir, new File(file, manufacturer), manufacturer);
         }
@@ -190,16 +188,6 @@ public final class IrdbScrap extends Scrapable {
             }
         }
     }
-
-//    @Override
-//    RemoteLink newRemoteLink(Remote remote, URI uri, File baseDir, File file) throws IOException {
-//        return new RemoteLink(RemoteKind.irdb, remote, uri, baseDir, file);
-//    }
-
-//    @Override
-//    public RemoteKind getKind() {
-//        return RemoteKind.irdb;
-//    }
 
     @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
