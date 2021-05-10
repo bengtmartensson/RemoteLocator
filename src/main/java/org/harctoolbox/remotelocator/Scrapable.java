@@ -2,24 +2,13 @@ package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Comparator;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
-import org.harctoolbox.ircore.ThisCannotHappenException;
 import org.xml.sax.SAXException;
 
 public abstract class Scrapable {
-
-    protected static URI parseURI(String string) {
-        try {
-            return new URI(string);
-        } catch (URISyntaxException ex) {
-            throw new ThisCannotHappenException(ex);
-        }
-    }
 
     protected static boolean isReadableDirectory(File file) {
         return file.isDirectory() && file.canRead();
@@ -77,5 +66,4 @@ public abstract class Scrapable {
     String formatUrl(String url) {
         return url;
     }
-
 }

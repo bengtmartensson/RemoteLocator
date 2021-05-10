@@ -16,7 +16,7 @@ public class LircScrap extends Girrable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
     public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
-    public static final URI LIRC_BASE_URI   = parseURI(LIRC_BASE);
+    public static final URI LIRC_BASE_URI   = URI.create(LIRC_BASE);
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
         LircScrap lirc = new LircScrap();

@@ -32,7 +32,7 @@ public final class IrdbScrap extends Girrable {
     //public static final String IRDB_BASE    = "https://raw.githubusercontent.com/probonopd/irdb/master/codes/";
     public static final String IRDB_BASE    = "https://cdn.jsdelivr.net/gh/probonopd/irdb@master/codes/";
 //    public static final String IRDB_URL     = "https://github.com/probonopd/irdb";
-    public static final URI IRDB_BASE_URI   = parseURI(IRDB_BASE);
+    public static final URI IRDB_BASE_URI   = URI.create(IRDB_BASE);
     private static final String IRDB_NAME = "irdb";
 
     public static RemoteDatabase scrap(File baseDir) throws IOException, SAXException {

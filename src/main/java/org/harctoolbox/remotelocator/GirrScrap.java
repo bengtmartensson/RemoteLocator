@@ -26,7 +26,7 @@ public class GirrScrap extends Girrable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
     public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
-    public static final URI GIRRLIB_BASE_URI= parseURI(GIRRLIB_BASE);
+    public static final URI GIRRLIB_BASE_URI= URI.create(GIRRLIB_BASE);
     private static final String GIRR_NAME = "girr";
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
