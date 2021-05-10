@@ -75,7 +75,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         return deviceClasses.values().iterator();
     }
 
-    void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
+    void add(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
         DeviceClassRemotes deviceClass = getOrCreate(remote.getDeviceClass());
         deviceClass.add(kind, remote, baseUri, baseDir, path, xpath);
     }

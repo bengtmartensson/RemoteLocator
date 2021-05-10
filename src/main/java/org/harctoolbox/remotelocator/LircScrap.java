@@ -76,7 +76,7 @@ public class LircScrap extends Girrable {
             String name = remote.endsWith(".lircd.conf") ? remote.substring(0, remote.length() - 11) : remote;
             Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
             Remote rem = new Remote(metaData, path.getPath(), null, null, null, null);
-            RemoteLink remoteLink = new RemoteLink(RemoteKind.lirc, rem, uri, baseDir, path);//newRemoteLink(rem, uri, baseDir, dir); //uri, baseDir, dir, remote));
+            RemoteLink remoteLink = new RemoteLink(ScrapKind.lirc, rem, uri, baseDir, path);//newRemoteLink(rem, uri, baseDir, dir); //uri, baseDir, dir, remote));
             devices.add(remoteLink);
         }
     }

@@ -63,7 +63,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         return element;
     }
 
-    void add(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
+    void add(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File path, String xpath) {
         RemoteLink remoteLink = new RemoteLink(kind, remote, baseUri, baseDir, path, xpath);
         add(remoteLink);
     }

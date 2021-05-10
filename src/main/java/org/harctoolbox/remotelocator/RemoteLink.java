@@ -42,7 +42,7 @@ public final class RemoteLink implements Named, Serializable {
         element.setAttribute(attributeName, value);
     }
 
-    private final RemoteKind kind;
+    private final ScrapKind kind;
     private String name;
     private final File file;
     private String xpath;
@@ -54,9 +54,9 @@ public final class RemoteLink implements Named, Serializable {
 //    private final String model;
 //    private final String origRemote;
 
-    public RemoteLink(RemoteKind kind, URI baseUri, File baseDir, String name, File file, String xpath, String comment, String displayName, String model, String origRemote) {
+    public RemoteLink(ScrapKind kind, URI baseUri, File baseDir, String name, File file, String xpath, String comment, String displayName, String model, String origRemote) {
         try {
-            Scrapable scrap = Scrapable.mkScrapable(kind);
+            Scrapable scrap = ScrapKind.mkScrapable(kind);
             this.kind = kind;
             this.name = name;
             if (baseDir != null) {
@@ -87,20 +87,20 @@ public final class RemoteLink implements Named, Serializable {
         }
     }
 
-    public RemoteLink(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File file, String xpath) {
+    public RemoteLink(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File file, String xpath) {
         this(kind, baseUri, baseDir, remote.getName(), file, xpath, remote.getComment(), remote.getDisplayName(), remote.getModel(), remote.getRemoteName());
     }
 
-    public RemoteLink(RemoteKind kind, Remote remote, URI baseUri, File baseDir, File file) {
+    public RemoteLink(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File file) {
         this(kind, remote, baseUri, baseDir, file, (String) null);
     }
 
-    RemoteLink(RemoteKind kind, URI uri, File baseDir, File dir, String remote) {
+    RemoteLink(ScrapKind kind, URI uri, File baseDir, File dir, String remote) {
         this(kind, uri, baseDir, remote, new File(dir, remote), null, null, null, null, null);
     }
 
     RemoteLink(Element remoteLinkElement) throws MalformedURLException {
-        kind = RemoteKind.valueOf(remoteLinkElement.getAttribute(KIND_ATTRIBUTE_NAME));
+        kind = ScrapKind.valueOf(remoteLinkElement.getAttribute(KIND_ATTRIBUTE_NAME));
         name = remoteLinkElement.getAttribute(NAME_ATTRIBUTE_NAME);
         file = new File(remoteLinkElement.getAttribute(PATH_ELEMENT_NAME));
         url = new URL(remoteLinkElement.getAttribute(URL_ATTRIBUTE_NAME));
@@ -145,7 +145,7 @@ public final class RemoteLink implements Named, Serializable {
     /**
      * @return the kind
      */
-    public RemoteKind getKind() {
+    public ScrapKind getKind() {
         return kind;
     }
 

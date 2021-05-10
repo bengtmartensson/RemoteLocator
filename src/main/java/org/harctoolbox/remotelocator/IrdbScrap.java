@@ -45,7 +45,7 @@ public final class IrdbScrap extends Girrable {
     }
 
     public static Remote parse(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        if (remoteLink.getKind() != RemoteKind.irdb)
+        if (remoteLink.getKind() != ScrapKind.irdb)
             return null;
 
         try (InputStream inputStream = remoteLink.getUrl().openStream(); InputStreamReader inputStreamReader = new InputStreamReader(inputStream, IRDB_CHARSET)) {
@@ -183,7 +183,7 @@ public final class IrdbScrap extends Girrable {
             File file = new File(dir, remoteName);
             Remote remote = parse(file, manufacturer, devices.getName());
             if (remote != null) {
-                RemoteLink remoteLink = new RemoteLink(RemoteKind.irdb, remote, uriBase, baseDir, file);
+                RemoteLink remoteLink = new RemoteLink(ScrapKind.irdb, remote, uriBase, baseDir, file);
                 devices.add(remoteLink);
             }
         }

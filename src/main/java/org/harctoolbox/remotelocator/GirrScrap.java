@@ -99,7 +99,7 @@ public class GirrScrap extends Girrable {
 
     private void add(Remote remote, URI baseUri, File baseDir, File file, String xpath) {
         ManufacturerDeviceClasses manufacturerTypes = remoteDatabase.getOrCreate(remote.getManufacturer());
-        manufacturerTypes.add(RemoteKind.girr, remote, baseUri, baseDir, file, xpath);
+        manufacturerTypes.add(ScrapKind.girr, remote, baseUri, baseDir, file, xpath);
     }
 
     @Override

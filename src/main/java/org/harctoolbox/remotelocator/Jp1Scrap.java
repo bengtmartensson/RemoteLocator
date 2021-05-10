@@ -70,7 +70,7 @@ public class Jp1Scrap extends Scrapable {
             logger.log(Level.WARNING, "Invalid URI: {0}, ignoring", arr[1]);
             return;
         }
-        String kind = getTextContent(cells.item(3)); // rmdu or txt
+        String kind = Jp1Scrap.JP1_NAME; //getTextContent(cells.item(3)); // rmdu or txt
         String deviceClass = getTextContent(cells.item(4));
         String manufacturer = getTextContent(cells.item(5));
         String name = getTextContent(cells.item(6));
@@ -84,7 +84,7 @@ public class Jp1Scrap extends Scrapable {
         String subdevice = getTextContent(cells.item(11));
         if (! subdevice.isEmpty())
             comment.append("; subdevice=").append(subdevice);
-        RemoteLink remoteLink = new RemoteLink(RemoteKind.valueOf(kind.toLowerCase(Locale.US)), uri, null, name, null, null, comment.toString(), null, null, null);
+        RemoteLink remoteLink = new RemoteLink(ScrapKind.valueOf(kind), uri, null, name, null, null, comment.toString(), null, null, null);
         remoteDatabase.put(manufacturer, deviceClass, remoteLink);
     }
 
