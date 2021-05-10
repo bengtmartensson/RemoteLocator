@@ -2,14 +2,12 @@ package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.validation.Schema;
-import org.harctoolbox.girr.Remote;
 import org.harctoolbox.xml.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,10 +103,5 @@ public class Jp1Scrap extends Scrapable {
     @Override
     public String getName() {
         return JP1_NAME;
-    }
-
-    @Override
-    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
-        throw new UnsupportedOperationException("Not supported due to the nature of JP1 files.");
     }
 }

@@ -1,18 +1,13 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Comparator;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
-import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.ThisCannotHappenException;
 import org.xml.sax.SAXException;
 
@@ -50,9 +45,12 @@ public abstract class Scrapable {
         }
     }
 
-    public static Remote getRemoteStatic(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        Scrapable scrapable = mkScrapable(remoteLink.getKind());
-        return scrapable.getRemote(remoteLink, manufacturer, deviceClass);
+    static Remote getRemoteStatic(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException, NotGirrableException {
+        Scrapable scrap = mkScrapable(remoteLink.getKind());
+        if (! (scrap instanceof Girrable))
+            throw new NotGirrableException();
+
+        return ((Girrable) scrap).getRemote(remoteLink, manufacturer, deviceClass);
     }
 
     /**
@@ -69,25 +67,6 @@ public abstract class Scrapable {
         this(new RemoteDatabase());
     }
 
-    public Remote getRemote(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        File file = remoteLink.getFile();
-        return file.canRead() ? getRemoteFile(remoteLink, manufacturer, deviceClass)
-                : getRemoteUrl(remoteLink, manufacturer, deviceClass);
-    }
-
-    private Remote getRemoteFile(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(remoteLink.getFile()), IrCoreUtils.EXTENDED_LATIN1);
-        return getRemote(reader, remoteLink.getFile().getPath(), remoteLink.getXpath(), manufacturer, deviceClass);
-    }
-
-    private Remote getRemoteUrl(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        URLConnection conn = remoteLink.getUrl().openConnection();
-        try (InputStream stream = conn.getInputStream()) {
-            InputStreamReader reader = new InputStreamReader(stream, IrCoreUtils.EXTENDED_LATIN1);
-            return getRemote(reader, remoteLink.getUrl().toString(), remoteLink.getXpath(), manufacturer, deviceClass);
-        }
-    }
-
     protected RemoteDatabase scrapSort(File file) throws IOException, SAXException {
         add(file);
         sort();
@@ -102,10 +81,6 @@ public abstract class Scrapable {
         remoteDatabase.sort(comparator);
     }
 
-    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException {
-        return remoteDatabase.getRemote(manufacturer, deviceClass, remoteName);
-    }
-
     public URL getUrl(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException {
         return remoteDatabase.getUrl(manufacturer, deviceClass, remoteName);
     }
@@ -114,5 +89,8 @@ public abstract class Scrapable {
 
     public abstract void add(File file) throws IOException, SAXException;
 
-    public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;
+    String formatUrl(String url) {
+        return url;
+    }
+
 }

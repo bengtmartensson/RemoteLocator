@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class GirrScrap extends Scrapable {
+public class GirrScrap extends Girrable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
     public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";

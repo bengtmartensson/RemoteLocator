@@ -20,7 +20,7 @@ import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Remote;
 import org.xml.sax.SAXException;
 
-public final class IrdbScrap extends Scrapable {
+public final class IrdbScrap extends Girrable {
 
     private static final Logger logger = Logger.getLogger(IrdbScrap.class.getName());
 

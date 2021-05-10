@@ -12,7 +12,7 @@ import org.harctoolbox.jirc.ConfigFile;
 import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
 import org.xml.sax.SAXException;
 
-public class LircScrap extends Scrapable {
+public class LircScrap extends Girrable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
     public static final String LIRC_BASE    = "https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/";
@@ -85,5 +85,10 @@ public class LircScrap extends Scrapable {
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
         RemoteSet remoteSet = ConfigFile.parseConfig(reader, source, true, null, true);
         return remoteSet.iterator().hasNext() ? remoteSet.iterator().next() : null;
+    }
+
+    @Override
+    String formatUrl(String url) {
+        return String.format("%1$s?format=raw", url);
     }
 }

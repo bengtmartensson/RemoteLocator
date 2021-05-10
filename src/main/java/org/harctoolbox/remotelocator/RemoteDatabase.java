@@ -193,7 +193,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return manufact.get(deviceClass, remoteName);
     }
 
-    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException {
+    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
         RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
         return remoteLink.getRemote(manufacturer, deviceClass);
     }

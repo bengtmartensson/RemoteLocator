@@ -56,6 +56,7 @@ public final class RemoteLink implements Named, Serializable {
 
     public RemoteLink(RemoteKind kind, URI baseUri, File baseDir, String name, File file, String xpath, String comment, String displayName, String model, String origRemote) {
         try {
+            Scrapable scrap = Scrapable.mkScrapable(kind);
             this.kind = kind;
             this.name = name;
             if (baseDir != null) {
@@ -68,7 +69,7 @@ public final class RemoteLink implements Named, Serializable {
             this.xpath = xpath;
             if (baseUri != null) {
                 if (file != null) {
-                    URI uri = new URI(FILE_SCHEME_NAME, this.file.toString() + kind.suffix(), null);
+                    URI uri = new URI(FILE_SCHEME_NAME, scrap.formatUrl(this.file.toString()), null);
                     String escapedPath = uri.toString().substring(5);
                     uri = new URI(escapedPath);
                     url = baseUri.resolve(uri).toURL();
@@ -110,7 +111,7 @@ public final class RemoteLink implements Named, Serializable {
 //        origRemote = remoteLinkElement.getAttribute(ORIGREMOTE_ATTRIBUTE_NAME);
     }
 
-    public Remote getRemote(String manufacturer, String deviceClass) throws IOException {
+    public Remote getRemote(String manufacturer, String deviceClass) throws IOException, NotGirrableException {
         return Scrapable.getRemoteStatic(this, manufacturer, deviceClass);
     }
 
