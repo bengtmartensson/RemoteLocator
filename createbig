@@ -1,0 +1,10 @@
+#!/bin/sh
+
+HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
+
+JAVA=java
+JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
+CONFIG=${HOME}/remotelist.xml
+
+cd $HOME
+exec "${JAVA}" -jar "${JAR}" -c "${CONFIG}" --sort --girrdir ../GirrLib/Girr --irdb ../irdb/codes --lirc ../../lirc/lirc-remotes --jp1 src/test/jp1/jp1-master-1.16.fods

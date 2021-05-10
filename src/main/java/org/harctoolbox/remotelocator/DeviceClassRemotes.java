@@ -96,7 +96,6 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     public void sort(Comparator<? super Named> comparator) {
         List<RemoteLink> list = new ArrayList<>(remoteLinks.values());
         try {
-            System.out.println(this.deviceClass);
             Collections.sort(list, comparator);
         } catch (NullPointerException ex) {
             ex.printStackTrace();

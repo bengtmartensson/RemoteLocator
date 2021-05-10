@@ -1,0 +1,10 @@
+#!/bin/sh
+
+HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
+
+JAVA=java
+JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
+CONFIG=http://www.harctoolbox.org/downloads/remotelist.xml
+
+cd $HOME
+exec "${JAVA}" -jar "${JAR}" -c "${CONFIG}" "$@"

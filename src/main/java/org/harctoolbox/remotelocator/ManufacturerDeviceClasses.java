@@ -101,8 +101,6 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         List<DeviceClassRemotes> list = new ArrayList<>(deviceClasses.values());
         Collections.sort(list, comparator);
         deviceClasses.clear();
-        if (manufacturer.equals("bnk components"))
-                System.out.println(">>> " + manufacturer);
         for (DeviceClassRemotes dev : list) {
             dev.sort(comparator);
             deviceClasses.put(RemoteDatabase.mkKey(dev.getName()), dev);

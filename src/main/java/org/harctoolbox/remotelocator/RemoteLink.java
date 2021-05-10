@@ -23,15 +23,15 @@ import org.w3c.dom.Element;
  *
  */
 public final class RemoteLink implements Named, Serializable {
-    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+    private static final Logger logger = Logger.getLogger(RemoteLink.class.getName());
 
     public static final String REMOTELINK_ELEMENT_NAME = "remoteLink";
     public static final String PATH_ELEMENT_NAME = "path";
     public static final String XPATH_ATTRIBUTE_NAME = "xpath";
     public static final String KIND_ATTRIBUTE_NAME = "kind";
     private static final String URL_ATTRIBUTE_NAME = "url";
-    private static final String DISPLAYNAME_ATTRIBUTE_NAME = "displayName";
-    private static final String ORIGREMOTE_ATTRIBUTE_NAME = "origRemote";
+//    private static final String DISPLAYNAME_ATTRIBUTE_NAME = "displayName";
+//    private static final String ORIGREMOTE_ATTRIBUTE_NAME = "origRemote";
 
     private static void setAttributeIfNonNull(Element element, String attributeName, Object object) {
         if (object == null)
@@ -105,7 +105,7 @@ public final class RemoteLink implements Named, Serializable {
         file = new File(remoteLinkElement.getAttribute(PATH_ELEMENT_NAME));
         url = new URL(remoteLinkElement.getAttribute(URL_ATTRIBUTE_NAME));
         xpath = remoteLinkElement.getAttribute(XPATH_ATTRIBUTE_NAME);
-        comment = null;//"remoteLinkElement.getAttribute(COMMENT_ATTRIBUTE_NAME)";
+        comment = remoteLinkElement.getAttribute(COMMENT_ATTRIBUTE_NAME);
 //        model = remoteLinkElement.getAttribute(MODEL_ATTRIBUTE_NAME);
 //        displayName = remoteLinkElement.getAttribute(DISPLAYNAME_ATTRIBUTE_NAME);
 //        origRemote = remoteLinkElement.getAttribute(ORIGREMOTE_ATTRIBUTE_NAME);

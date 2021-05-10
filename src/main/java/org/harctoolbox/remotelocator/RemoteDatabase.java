@@ -78,8 +78,16 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         manufacturers = new LinkedHashMap<>(INITIAL_CAPACITY);
     }
 
+    public RemoteDatabase(String thing) throws IOException, SAXException, FormatVersionMismatchException {
+        this(XmlUtils.openXmlUrlOrFile(thing, null, false, true));
+    }
+
     public RemoteDatabase(File file) throws IOException, SAXException, FormatVersionMismatchException {
         this(XmlUtils.openXmlFile(file, (Schema) null, false, true));
+    }
+
+    public RemoteDatabase(URL url) throws IOException, SAXException, FormatVersionMismatchException {
+        this(XmlUtils.openXmlUrl(url, null, false, true));
     }
 
     public RemoteDatabase(Reader reader) throws IOException, SAXException, FormatVersionMismatchException {
@@ -237,6 +245,10 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public URL getUrl(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
         RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
         return remoteLink.getUrl();
+    }
+
+    public boolean isEmpty() {
+        return manufacturers.isEmpty();
     }
 
     public static class FormatVersionMismatchException extends Exception {

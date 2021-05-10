@@ -232,7 +232,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.harctoolbox.remotelocator.RemoteDatabase</mainClass> <!-- does not interpolate variables -->
+                            <mainClass>org.harctoolbox.remotelocator.RemoteLocator</mainClass> <!-- does not interpolate variables -->
                         </manifest>
                     </archive>
                     <descriptors>

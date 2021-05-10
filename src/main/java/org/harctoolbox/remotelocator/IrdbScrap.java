@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
@@ -16,8 +17,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.girr.Command;
+import org.harctoolbox.girr.CommandSet;
 import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Remote;
+import org.harctoolbox.ircore.IrCoreException;
+import org.harctoolbox.irp.IrpException;
 import org.xml.sax.SAXException;
 
 public final class IrdbScrap extends Girrable {
@@ -34,6 +38,8 @@ public final class IrdbScrap extends Girrable {
 //    public static final String IRDB_URL     = "https://github.com/probonopd/irdb";
     public static final URI IRDB_BASE_URI   = URI.create(IRDB_BASE);
     private static final String IRDB_NAME = "irdb";
+    private static final String SILLY_IRDB_HEADER = "functionname,protocol,device,subdevice,function";
+
 
     public static RemoteDatabase scrap(File baseDir) throws IOException, SAXException {
         IrdbScrap irdb = new IrdbScrap();
@@ -124,6 +130,24 @@ public final class IrdbScrap extends Girrable {
             remoteName.append(",subdevice=").append(subdevice);
         return remoteName.toString();
     }
+
+    static void print(PrintStream out, Remote remote) throws IrpException, IrCoreException {
+        out.println(SILLY_IRDB_HEADER);
+        for (CommandSet cs : remote) {
+            for (Command c : cs) {
+                Map<String, Long> params = c.getParameters();
+                out.printf("%1$s,%2$s,%3$d,%4$d,%5$d", c.getName(), c.getProtocolName(), getNumber(params, "D"), getNumber(params, "S"), getNumber(params, "F"));
+                out.println();
+            }
+        }
+    }
+
+    static long getNumber(Map<String, Long>map, String name) {
+        Long value = map.get(name);
+        return value != null ? value : -1L;
+    }
+
+
 
     IrdbScrap(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
