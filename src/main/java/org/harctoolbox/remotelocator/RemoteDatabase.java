@@ -58,11 +58,12 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
 
+    private static final String DEFAULT_TITLE = "Database of downloadable remotes";
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SCHEME_NAME = "file";
     public static final String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
     public static final String FORMATVERSION_ATTRIBUTE_NAME = "formatVersion";
-    public static final String FORMAT_VERSION = "0.1";
+    public static final String FORMATVERSION = "0.1";
     private static final int INITIAL_CAPACITY = 64;
 
     public static final String dateFormatString = "yyyy-MM-dd_HH:mm:ss";
@@ -77,27 +78,30 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         manufacturers = new LinkedHashMap<>(INITIAL_CAPACITY);
     }
 
-    public RemoteDatabase(File file) throws IOException, SAXException {
+    public RemoteDatabase(File file) throws IOException, SAXException, FormatVersionMismatchException {
         this(XmlUtils.openXmlFile(file, (Schema) null, false, true));
     }
 
-    public RemoteDatabase(Reader reader) throws IOException, SAXException {
+    public RemoteDatabase(Reader reader) throws IOException, SAXException, FormatVersionMismatchException {
         this(XmlUtils.openXmlReader(reader, (Schema) null, false, true));
     }
 
-    public RemoteDatabase(Document document) {
+    public RemoteDatabase(Document document) throws FormatVersionMismatchException {
         this(document.getDocumentElement());
     }
 
-    public RemoteDatabase(Element root) {
+    public RemoteDatabase(Element root) throws FormatVersionMismatchException {
         this();
+        String actualVersion = root.getAttribute(FORMATVERSION_ATTRIBUTE_NAME);
+        if (!actualVersion.equals(FORMATVERSION))
+            throw new FormatVersionMismatchException(actualVersion);
+
         NodeList nodeList = root.getElementsByTagName(MANUFACTURER_ELEMENT_NAME);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element manufacturerElement = (Element) nodeList.item(i);
             ManufacturerDeviceClasses manufacturer = new ManufacturerDeviceClasses(manufacturerElement);
             add(manufacturer);
         }
-
     }
 
     public void sort(Comparator<? super Named> comparator) {
@@ -125,10 +129,13 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return toElement(document, null, null, null);
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     public Element toElement(Document document, String title, String creatingUser, String createdDate) {
         Element element = document.createElement(REMOTEDATABASE_ELEMENT_NAME);
-        element.setAttribute(FORMATVERSION_ATTRIBUTE_NAME, FORMAT_VERSION);
-        if (title != null && !title.isEmpty())
+        element.setAttribute(FORMATVERSION_ATTRIBUTE_NAME, FORMATVERSION);
+        if (title == null)
+            title = DEFAULT_TITLE;
+        if (!title.isEmpty())
             element.setAttribute(TITLE_ATTRIBUTE_NAME, title);
         String creator = (creatingUser != null) ? creatingUser : System.getProperty("user.name");
         element.setAttribute(CREATINGUSER_ATTRIBUTE_NAME, creator);
@@ -230,5 +237,12 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public URL getUrl(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
         RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
         return remoteLink.getUrl();
+    }
+
+    public static class FormatVersionMismatchException extends Exception {
+
+        FormatVersionMismatchException(String actualVersion) {
+            super("Format version mismatch, expeccted = " + FORMATVERSION + ", actual = " + actualVersion);
+        }
     }
 }

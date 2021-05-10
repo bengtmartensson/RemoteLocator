@@ -22,7 +22,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
 //    private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
 
     static final String DEVICECLASS_ELEMENT_NAME = "deviceClass";
-    static final String DEVICECLASS_ATTRIBUTE_NAME = DEVICECLASS_ELEMENT_NAME;
+    static final String DEVICECLASS_ATTRIBUTE_NAME = "name";
     private static final int INITIAL_CAPACITY = 8;
 
     private final String deviceClass;

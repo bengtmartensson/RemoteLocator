@@ -436,11 +436,6 @@
             <artifactId>Jirc</artifactId>
             <version>2.2.10-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.harctoolbox</groupId>
-            <artifactId>IrpTransmogrifier</artifactId>
-            <version>1.2.10-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <!--reporting>

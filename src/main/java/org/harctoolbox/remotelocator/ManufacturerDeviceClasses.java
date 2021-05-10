@@ -28,7 +28,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     private final static Logger logger = Logger.getLogger(ManufacturerDeviceClasses.class.getName());
 
     static final String MANUFACTURER_ELEMENT_NAME = "manufacturer";
-    static final String MANUFACTURER_ATTRIBUTE_NAME = MANUFACTURER_ELEMENT_NAME;
+    static final String MANUFACTURER_ATTRIBUTE_NAME = "name";
     private static final int INITIAL_CAPACITY = 8;
 
     private final String manufacturer;
