@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
 import static org.harctoolbox.remotelocator.DeviceClassRemotes.DEVICECLASS_ELEMENT_NAME;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_NAMESPACE;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_PREFIX;
 import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
 import static org.harctoolbox.remotelocator.RemoteDatabase.mkKey;
 import org.w3c.dom.Document;
@@ -41,7 +43,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
 
     ManufacturerDeviceClasses(Element manifacturerElement) {
         this(manifacturerElement.getAttribute(MANUFACTURER_ATTRIBUTE_NAME));
-        NodeList nodeList = manifacturerElement.getElementsByTagName(DEVICECLASS_ELEMENT_NAME);
+        NodeList nodeList = manifacturerElement.getElementsByTagNameNS(REMOTELOCATOR_NAMESPACE, DEVICECLASS_ELEMENT_NAME);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element devElement = (Element) nodeList.item(i);
             try {
@@ -63,7 +65,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     }
 
     public Element toElement(Document document) {
-        Element element = document.createElement(MANUFACTURER_ELEMENT_NAME);
+        Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + MANUFACTURER_ELEMENT_NAME);
         element.setAttribute(MANUFACTURER_ATTRIBUTE_NAME, manufacturer);
         for (DeviceClassRemotes type : this)
             element.appendChild(type.toElement(document));

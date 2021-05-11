@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
+import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
 import javax.xml.validation.Schema;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
@@ -46,6 +48,9 @@ import org.harctoolbox.ircore.ThisCannotHappenException;
 import static org.harctoolbox.remotelocator.ManufacturerDeviceClasses.MANUFACTURER_ELEMENT_NAME;
 import org.harctoolbox.xml.XmlUtils;
 import static org.harctoolbox.xml.XmlUtils.DEFAULT_CHARSETNAME;
+import static org.harctoolbox.xml.XmlUtils.SCHEMA_LOCATION_ATTRIBUTE_NAME;
+import static org.harctoolbox.xml.XmlUtils.W3C_SCHEMA_NAMESPACE_ATTRIBUTE_NAME;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -66,6 +71,31 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public static final String FORMATVERSION = "0.1";
     private static final int INITIAL_CAPACITY = 64;
 
+    /**
+     * Namespace URI
+     */
+    public static final String REMOTELOCATOR_NAMESPACE       = "http://www.harctoolbox.org/RemoteLocator";
+
+    /**
+     * Homepage URL.
+     */
+    public static final String REMOTELOCATOR_HOMEPAGE        = "https://github.com/bengtmartensson/RemoteLocator";
+
+    /**
+     * URL for schema file supporting name spaces.
+     */
+    public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "http://www.harctoolbox.org/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
+
+    /**
+     * Prefix for RemoteLocator.
+     */
+    public static final String REMOTELOCATOR_PREFIX = "rl";
+
+    /**
+     * Comment string pointing to RemoteLocator docu.
+     */
+    static final String REMOTELOCATOR_COMMENT = "This file is in the RemoteLocator format, see " + REMOTELOCATOR_HOMEPAGE;
+
     public static final String dateFormatString = "yyyy-MM-dd_HH:mm:ss";
 
     static String mkKey(String string) {
@@ -83,7 +113,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public RemoteDatabase(File file) throws IOException, SAXException, FormatVersionMismatchException {
-        this(XmlUtils.openXmlFile(file, (Schema) null, false, true));
+        this(XmlUtils.openXmlFile(file, (Schema) null, true, true));
     }
 
     public RemoteDatabase(URL url) throws IOException, SAXException, FormatVersionMismatchException {
@@ -104,7 +134,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         if (!actualVersion.equals(FORMATVERSION))
             throw new FormatVersionMismatchException(actualVersion);
 
-        NodeList nodeList = root.getElementsByTagName(MANUFACTURER_ELEMENT_NAME);
+        NodeList nodeList = root.getElementsByTagNameNS(REMOTELOCATOR_NAMESPACE, MANUFACTURER_ELEMENT_NAME);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element manufacturerElement = (Element) nodeList.item(i);
             ManufacturerDeviceClasses manufacturer = new ManufacturerDeviceClasses(manufacturerElement);
@@ -127,7 +157,20 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public Document toDocument() {
-        Document document = XmlUtils.newDocument(false);
+        Document document = XmlUtils.newDocument(true);
+//        if (stylesheetType != null && stylesheetUrl != null && !stylesheetUrl.isEmpty()) {
+//            ProcessingInstruction pi = document.createProcessingInstruction("xml-stylesheet",
+//                    "type=\"text/" + stylesheetType + "\" href=\"" + stylesheetUrl + "\"");
+//            document.appendChild(pi);
+//        }
+
+        // At least in some Java versions (https://bugs.openjdk.java.net/browse/JDK-7150637)
+        // there is no line feed before and after the comment.
+        // This is technically correct, but looks awful to the human reader.
+        // AFAIK, there is no clean way to fix this.
+        // Possibly works with some Java versions?
+        Comment comment = document.createComment(REMOTELOCATOR_COMMENT);
+        document.appendChild(comment);
         Element element = toElement(document);
         document.appendChild(element);
         return document;
@@ -139,7 +182,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     @SuppressWarnings("AssignmentToMethodParameter")
     public Element toElement(Document document, String title, String creatingUser, String createdDate) {
-        Element element = document.createElement(REMOTEDATABASE_ELEMENT_NAME);
+        Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + REMOTEDATABASE_ELEMENT_NAME);
         element.setAttribute(FORMATVERSION_ATTRIBUTE_NAME, FORMATVERSION);
         if (title == null)
             title = DEFAULT_TITLE;
@@ -151,6 +194,9 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         element.setAttribute(CREATIONDATE_ATTRIBUTE_NAME, date);
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));
+        element.setAttribute(W3C_SCHEMA_NAMESPACE_ATTRIBUTE_NAME, W3C_XML_SCHEMA_INSTANCE_NS_URI);
+        element.setAttribute(XMLNS_ATTRIBUTE + ":" + REMOTELOCATOR_PREFIX, REMOTELOCATOR_NAMESPACE);
+        element.setAttribute(SCHEMA_LOCATION_ATTRIBUTE_NAME, REMOTELOCATOR_NAMESPACE + " " + REMOTELOCATOR_SCHEMA_LOCATION_URI);
         return element;
     }
 

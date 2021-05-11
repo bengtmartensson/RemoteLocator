@@ -13,6 +13,8 @@ import java.util.Locale;
 import java.util.Map;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_NAMESPACE;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_PREFIX;
 import static org.harctoolbox.remotelocator.RemoteLink.REMOTELINK_ELEMENT_NAME;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,7 +37,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
 
     DeviceClassRemotes(Element devElement) throws MalformedURLException {
         this(devElement.getAttribute(DEVICECLASS_ATTRIBUTE_NAME));
-        NodeList nodeList = devElement.getElementsByTagName(REMOTELINK_ELEMENT_NAME);
+        NodeList nodeList = devElement.getElementsByTagNameNS(REMOTELOCATOR_NAMESPACE, REMOTELINK_ELEMENT_NAME);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Element remoteLinkElement = (Element) nodeList.item(i);
             RemoteLink remoteLink = new RemoteLink(remoteLinkElement);
@@ -54,7 +56,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     }
 
     public Element toElement(Document document) {
-        Element element = document.createElement(DEVICECLASS_ELEMENT_NAME);
+        Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + DEVICECLASS_ELEMENT_NAME);
         element.setAttribute(DEVICECLASS_ATTRIBUTE_NAME, deviceClass);
         for (RemoteLink remoteLink : this) {
             element.appendChild(remoteLink.toElement(document));

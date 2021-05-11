@@ -16,6 +16,8 @@ import static org.harctoolbox.girr.XmlStatic.COMMENT_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.NAME_ATTRIBUTE_NAME;
 import org.harctoolbox.ircore.ThisCannotHappenException;
 import static org.harctoolbox.remotelocator.RemoteDatabase.FILE_SCHEME_NAME;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_NAMESPACE;
+import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_PREFIX;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -129,7 +131,7 @@ public final class RemoteLink implements Named, Serializable {
     }
 
     public Element toElement(Document document) {
-        Element element = document.createElement(REMOTELINK_ELEMENT_NAME);
+        Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + REMOTELINK_ELEMENT_NAME);
         element.setAttribute(NAME_ATTRIBUTE_NAME, name);
         setAttributeIfNonNull(element, PATH_ELEMENT_NAME, file);
         setAttributeIfNonNull(element, KIND_ATTRIBUTE_NAME, kind.name());
