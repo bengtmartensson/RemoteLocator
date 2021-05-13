@@ -1,3 +1,20 @@
+/*
+Copyright (C) 2021 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -41,6 +58,16 @@ public abstract class Girrable extends Scrapable {
     public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
         return remoteDatabase.getRemote(manufacturer, deviceClass, remoteName);
     }
+    
+    public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
+        return remoteDatabase.getRemoteLink(manufacturer, deviceClass, remoteName);
+    }
 
     public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;
+
+    static class NotGirrableException extends Exception {
+
+        NotGirrableException() {
+        }
+    }
 }

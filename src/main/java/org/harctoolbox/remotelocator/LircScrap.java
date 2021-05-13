@@ -1,3 +1,20 @@
+/*
+Copyright (C) 2021 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -8,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.girr.Remote;
 import org.harctoolbox.girr.RemoteSet;
+import static org.harctoolbox.ircore.IrCoreUtils.EXTENDED_LATIN1_NAME;
 import org.harctoolbox.jirc.ConfigFile;
 import static org.harctoolbox.remotelocator.RemoteDatabase.UNKNOWN;
 import org.xml.sax.SAXException;
@@ -70,14 +88,21 @@ public class LircScrap extends Girrable {
         }
 
         String[] array = dir.list();
+        for (String filename : array) {
+            File path = new File(dir, filename);
+            //String name = filename.endsWith(".lircd.conf") ? filename.substring(0, filename.length() - 11) : filename;
+            try {
+                RemoteSet remoteSet = ConfigFile.parseConfig(path, EXTENDED_LATIN1_NAME, true, null, true);
+                for (Remote remote : remoteSet) {
 
-        for (String remote : array) {
-            File path = new File(dir, remote);
-            String name = remote.endsWith(".lircd.conf") ? remote.substring(0, remote.length() - 11) : remote;
-            Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
-            Remote rem = new Remote(metaData, path.getPath(), null, null, null, null);
-            RemoteLink remoteLink = new RemoteLink(ScrapKind.lirc, rem, uri, baseDir, path);//newRemoteLink(rem, uri, baseDir, dir); //uri, baseDir, dir, remote));
-            devices.add(remoteLink);
+                    //Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
+                    //Remote remote = new Remote(metaData, path.getPath(), null, null, null, null);
+                    RemoteLink remoteLink = new RemoteLink(ScrapKind.lirc, remote, uri, baseDir, path);
+                    devices.add(remoteLink);
+                }
+            } catch (IOException ex) {
+                logger.log(Level.WARNING, ex.getLocalizedMessage());
+            }
         }
     }
 

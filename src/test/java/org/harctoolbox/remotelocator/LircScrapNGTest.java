@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
  * @author bengt
  */
 public class LircScrapNGTest {
-    private static final File localLircBaseDir = new File("../../lirc/lirc-remotes/remotes");
+    private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -37,10 +37,11 @@ public class LircScrapNGTest {
      * Test of scrap method, of class LircScrap.
      * @throws java.lang.Exception
      */
-    @Test
+    // Takes pretty long (24s) (and consumes pretty much momory), so disabled by default
+    @Test(enabled = false)
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = LircScrap.scrap(localLircBaseDir);
+        RemoteDatabase result = LircScrap.scrap(LOCAL_LIRC_BASEDIR);
         result.print("output/lirc.xml");
     }
 }

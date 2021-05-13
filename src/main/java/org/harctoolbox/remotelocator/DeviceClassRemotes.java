@@ -1,3 +1,20 @@
+/*
+Copyright (C) 2021 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -11,6 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.harctoolbox.girr.Named;
 import org.harctoolbox.girr.Remote;
 import static org.harctoolbox.remotelocator.RemoteDatabase.REMOTELOCATOR_NAMESPACE;
@@ -21,7 +40,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
-//    private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
+    private final static Logger logger = Logger.getLogger(DeviceClassRemotes.class.getName());
 
     static final String DEVICECLASS_ELEMENT_NAME = "deviceClass";
     static final String DEVICECLASS_ATTRIBUTE_NAME = "name";
@@ -58,10 +77,9 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     public Element toElement(Document document) {
         Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + DEVICECLASS_ELEMENT_NAME);
         element.setAttribute(DEVICECLASS_ATTRIBUTE_NAME, deviceClass);
-        for (RemoteLink remoteLink : this) {
+        for (RemoteLink remoteLink : this)
             element.appendChild(remoteLink.toElement(document));
 
-        }
         return element;
     }
 
@@ -72,20 +90,21 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
 
     void add(RemoteLink remoteLink) {
         String key = RemoteDatabase.mkKey(remoteLink.getName());
+        String actualKey = key;
         if (remoteLinks.containsKey(key)) {
-            //logger.log(Level.WARNING, "Remote {0} already present, skipping", key); // TODO
-            //return;
             int number = 1;
             while (true) {
-                String actualKey = key + "$" + Integer.toString(number);
+                actualKey = key + "$" + Integer.toString(number);
                 if (! remoteLinks.containsKey(actualKey)) {
-                    key = actualKey;
+                    //key = actualKey;
                     break;
                 } else
                     number++;
             }
+            logger.log(Level.WARNING, "Remote {0} present several times", key);
+            //return;
         }
-        remoteLinks.put(key, remoteLink);
+        remoteLinks.put(actualKey, remoteLink);
     }
 
     RemoteLink get(String deviceClass, String remoteName) throws NotFoundException {
@@ -97,15 +116,11 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
 
     public void sort(Comparator<? super Named> comparator) {
         List<RemoteLink> list = new ArrayList<>(remoteLinks.values());
-        try {
-            Collections.sort(list, comparator);
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
-        }
+        Collections.sort(list, comparator);
         remoteLinks.clear();
-        for (RemoteLink link : list) {
+        list.forEach(link -> {
             remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);
-        }
+        });
     }
 
     public List<String> getRemotes() {

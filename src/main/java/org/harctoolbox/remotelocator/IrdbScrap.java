@@ -1,3 +1,20 @@
+/*
+Copyright (C) 2021 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox.remotelocator;
 
 import java.io.BufferedReader;
@@ -12,7 +29,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,9 +98,9 @@ public final class IrdbScrap extends Girrable {
                     continue;
                 }
                 String name = array[0];
-                String protocol = array[1].toLowerCase(Locale.US);
-                if (protocol.equals("nec")) // TODO: remove
-                    protocol = "nec1";
+                String protocol = array[1];
+                if (protocol.equalsIgnoreCase("nec")) // TODO: remove
+                    protocol = "NEC1";
                 try {
                     long device = Long.parseLong(array[2]);
                     long subdevice = Long.parseLong(array[3]);
@@ -103,8 +119,6 @@ public final class IrdbScrap extends Girrable {
                     commands.put(name, command);
                 } catch (NumberFormatException | GirrException | ArrayIndexOutOfBoundsException ex) {
                     logger.log(Level.WARNING, "Line {2} of {0}: {1}", new Object[]{source, ex.getLocalizedMessage(), lineno});
-//                    ex.printStackTrace();
-//                    System.exit(1);
                 }
             }
 

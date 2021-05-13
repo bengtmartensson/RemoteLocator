@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
  * @author bengt
  */
 public class IrdbScrapNGTest {
-    private static final File localIrdbBaseDir = new File("../irdb/codes");
+    private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -46,7 +46,7 @@ public class IrdbScrapNGTest {
     @Test
     public void testScrap() throws IOException, SAXException {
         System.out.println("scrap");
-        RemoteDatabase instance = IrdbScrap.scrap(localIrdbBaseDir);
+        RemoteDatabase instance = IrdbScrap.scrap(LOCAL_IRDB_BASEDIR);
         instance.print("output/irdb.xml");
     }
 
@@ -73,7 +73,7 @@ public class IrdbScrapNGTest {
     public void testGetRemote() throws Exception {
         System.out.println("getRemote");
         IrdbScrap instance = new IrdbScrap();
-        instance.add(localIrdbBaseDir);
+        instance.add(LOCAL_IRDB_BASEDIR);
         String name = IrdbScrap.mkName("RC6", 4, 0);
         Remote remote = instance.getRemote("Yamaha", "DVD", name);
         remote.print("output/yamaha-dvd.girr");

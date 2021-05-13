@@ -1,3 +1,20 @@
+/*
+Copyright (C) 2021 Bengt Martensson.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+*/
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -7,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.validation.Schema;
+import org.harctoolbox.girr.Remote;
 import org.harctoolbox.xml.XmlUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,7 +69,6 @@ public class Jp1Scrap extends Scrapable {
     }
 
     private void processRow(Element row) {
-
         if (!row.getAttributeNS(TABLE_NAMESPACE_URI, "style-name").equals("ro1"))
             return;
         NodeList cells = row.getElementsByTagNameNS(TABLE_NAMESPACE_URI, "table-cell");
@@ -69,29 +86,25 @@ public class Jp1Scrap extends Scrapable {
             logger.log(Level.WARNING, "Invalid URI: {0}, ignoring", arr[1]);
             return;
         }
-        String kind = Jp1Scrap.JP1_NAME; //getTextContent(cells.item(3)); // rmdu or txt
+        //String kind = Jp1Scrap.JP1_NAME; //getTextContent(cells.item(3)); // rmdu or txt
         String deviceClass = getTextContent(cells.item(4));
         String manufacturer = getTextContent(cells.item(5));
         String name = getTextContent(cells.item(6));
-        String protocolName = getTextContent(cells.item(9));
-        StringBuilder comment = new StringBuilder(32);
-        if (!protocolName.isEmpty())
-            comment.append("Protocol=").append(protocolName);
+        String protocol = getTextContent(cells.item(9));
+        String comment = null;//ew StringBuilder(32);
         String device = getTextContent(cells.item(10));
-        if (! device.isEmpty())
-            comment.append("; device=").append(device);
         String subdevice = getTextContent(cells.item(11));
-        if (! subdevice.isEmpty())
-            comment.append("; subdevice=").append(subdevice);
-        RemoteLink remoteLink = new RemoteLink(ScrapKind.valueOf(kind), uri, null, name, null, null, comment.toString(), null, null, null);
+        Remote remote = RemoteLink.mkRemote(name, comment, protocol, device, subdevice);
+        RemoteLink remoteLink = new RemoteLink(ScrapKind.jp1, remote, uri, null, null);
         remoteDatabase.put(manufacturer, deviceClass, remoteLink);
     }
 
     private void add(Document document) {
         NodeList rows = document.getElementsByTagNameNS(TABLE_NAMESPACE_URI, "table-row");
         logger.log(Level.INFO, "Found {0} rows.", rows.getLength());
-        for (int i = 0; i < rows.getLength(); i++)
+        for (int i = 0; i < rows.getLength(); i++) {
             processRow((Element) rows.item(i));
+        }
     }
 
     @Override

@@ -1,3 +1,6 @@
 target
 output
 nb*.xml
+girrlib.xml
+irdb.xml
+remotelocator.*

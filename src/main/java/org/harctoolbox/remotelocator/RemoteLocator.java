@@ -78,7 +78,7 @@ public class RemoteLocator {
         argumentParser = new JCommander(commandLineArgs);
         argumentParser.setProgramName(APP_NAME);
         argumentParser.setAllowAbbreviatedOptions(true);
-        argumentParser.setCaseSensitiveOptions(false);
+        argumentParser.setCaseSensitiveOptions(true);
 
         try {
             argumentParser.parse(args);
@@ -172,8 +172,9 @@ public class RemoteLocator {
     private static void processManufacturer() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (isQuestion(commandLineArgs.manufacturer)) {
             List<String> manufacturers = remoteDatabase.getManufacturers();
-            for (String m : manufacturers)
+            manufacturers.forEach(m -> {
                 out.println(m);
+            });
             return;
         }
         processDevices();
@@ -182,8 +183,9 @@ public class RemoteLocator {
     private static void processDevices() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (commandLineArgs.deviceClass == null || isQuestion(commandLineArgs.deviceClass)) {
             List<String> devices = remoteDatabase.getDeviceTypes(commandLineArgs.manufacturer);
-            for (String dc : devices)
+            devices.forEach(dc -> {
                 out.println(dc);
+            });
             return;
         }
         processRemotes();
@@ -192,8 +194,9 @@ public class RemoteLocator {
     private static void processRemotes() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (commandLineArgs.remoteNames.isEmpty() || isQuestion(commandLineArgs.remoteNames.get(0))) {
             List<String> remotes = remoteDatabase.getRemotes(commandLineArgs.manufacturer, commandLineArgs.deviceClass);
-            for (String r : remotes)
+            remotes.forEach(r -> {
                 out.println(r);
+            });
         } else
             processRemote();
     }
@@ -201,10 +204,10 @@ public class RemoteLocator {
     private static void processRemote() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (!commandLineArgs.doUrl && !commandLineArgs.browse) {
             try {
-                Remote remote = remoteDatabase.getRemote(commandLineArgs.manufacturer, commandLineArgs.deviceClass, commandLineArgs.remoteNames.get(0));
-                processRemote(remote);
+                RemoteLink remoteLink = remoteDatabase.getRemoteLink(commandLineArgs.manufacturer, commandLineArgs.deviceClass, commandLineArgs.remoteNames.get(0));
+                processRemoteLink(remoteLink);
                 return;
-            } catch (NotGirrableException ex) {
+            } catch (Girrable.NotGirrableException ex) {
                 logger.log(Level.WARNING, "Not girr-able, just giving the URL");
             }
         }
@@ -216,8 +219,15 @@ public class RemoteLocator {
             out.println(url.toString());
     }
 
-    private static void processRemote(Remote remote) throws GirrException, IrpException, IrCoreException {
+    private static void processRemoteLink(RemoteLink remoteLink) throws GirrException, IrpException, IrCoreException, IOException {
         boolean doneStuff = false;
+        Remote remote;
+        try {
+            remote = remoteLink.getRemote(commandLineArgs.manufacturer, commandLineArgs.deviceClass);
+        } catch (Girrable.NotGirrableException ex) {
+             System.err.println("Remote found, but can only be browsed.");
+             return;
+        }
         if (commandLineArgs.girr) {
             remote.print(out, true, true, true);
             doneStuff = true;
@@ -237,7 +247,7 @@ public class RemoteLocator {
             doneStuff = true;
         }
         if (!doneStuff) {
-            System.err.println("Remote found, but no output requested.");
+            System.err.println("Remote of type " + remoteLink.getKind() + " found; use --Girr, --pronto or --csv to get output requested.");
         }
     }
 

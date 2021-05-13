@@ -4,7 +4,12 @@ HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
 
 JAVA=java
 JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
-CONFIG=${HOME}/remotelist.xml
+CONFIG=${HOME}/remotelocator.xml
 
+rm "${CONFIG}"
 cd $HOME
-exec "${JAVA}" -jar "${JAR}" -c "${CONFIG}" --sort --girrdir ../GirrLib/Girr --irdb ../irdb/codes --lirc ../../lirc/lirc-remotes --jp1 src/test/jp1/jp1-master-1.16.fods
+exec time "${JAVA}" -jar "${JAR}" -.config "${CONFIG}" --sort \
+     --girrdir ../GirrLib/Girr \
+     --irdb ../irdb/codes \
+     --lirc ../../lirc/lirc-remotes/remotes \
+     --jp1 src/test/jp1/jp1-master-1.16.fods

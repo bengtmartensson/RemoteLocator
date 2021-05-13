@@ -35,7 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
 import javax.xml.validation.Schema;
@@ -61,7 +60,7 @@ import org.xml.sax.SAXException;
  */
 public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>, Serializable {
 
-    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+    //private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
 
     private static final String DEFAULT_TITLE = "Database of downloadable remotes";
     public static final String UNKNOWN = "unknown";
@@ -96,7 +95,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      */
     static final String REMOTELOCATOR_COMMENT = "This file is in the RemoteLocator format, see " + REMOTELOCATOR_HOMEPAGE;
 
-    public static final String dateFormatString = "yyyy-MM-dd_HH:mm:ss";
+    public static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
 
     static String mkKey(String string) {
         return (string == null || string.isEmpty()) ? UNKNOWN : string.toLowerCase(Locale.US);
@@ -109,19 +108,19 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public RemoteDatabase(String thing) throws IOException, SAXException, FormatVersionMismatchException {
-        this(XmlUtils.openXmlUrlOrFile(thing, null, false, true));
+        this(XmlUtils.openXmlUrlOrFile(thing, null, true, false));
     }
 
     public RemoteDatabase(File file) throws IOException, SAXException, FormatVersionMismatchException {
-        this(XmlUtils.openXmlFile(file, (Schema) null, true, true));
+        this(XmlUtils.openXmlFile(file, (Schema) null, true, false));
     }
 
     public RemoteDatabase(URL url) throws IOException, SAXException, FormatVersionMismatchException {
-        this(XmlUtils.openXmlUrl(url, null, false, true));
+        this(XmlUtils.openXmlUrl(url, null, true, false));
     }
 
     public RemoteDatabase(Reader reader) throws IOException, SAXException, FormatVersionMismatchException {
-        this(XmlUtils.openXmlReader(reader, (Schema) null, false, true));
+        this(XmlUtils.openXmlReader(reader, (Schema) null, true, false));
     }
 
     public RemoteDatabase(Document document) throws FormatVersionMismatchException {
@@ -146,10 +145,12 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         List<ManufacturerDeviceClasses> list = new ArrayList<>(manufacturers.values());
         Collections.sort(list, comparator);
         manufacturers.clear();
-        for (ManufacturerDeviceClasses manuf : list) {
+        list.stream().map(manuf -> {
             manuf.sort(comparator);
+            return manuf;
+        }).forEachOrdered(manuf -> {
             add(manuf);
-        }
+        });
     }
 
     public void sort() {
@@ -190,13 +191,15 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
             element.setAttribute(TITLE_ATTRIBUTE_NAME, title);
         String creator = (creatingUser != null) ? creatingUser : System.getProperty("user.name");
         element.setAttribute(CREATINGUSER_ATTRIBUTE_NAME, creator);
-        String date = (createdDate != null) ? createdDate : (new SimpleDateFormat(dateFormatString)).format(new Date());
+        String date = (createdDate != null) ? createdDate : (new SimpleDateFormat(DATE_FORMAT_STRING)).format(new Date());
         element.setAttribute(CREATIONDATE_ATTRIBUTE_NAME, date);
-        for (ManufacturerDeviceClasses manufacturer : this)
-            element.appendChild(manufacturer.toElement(document));
         element.setAttribute(W3C_SCHEMA_NAMESPACE_ATTRIBUTE_NAME, W3C_XML_SCHEMA_INSTANCE_NS_URI);
         element.setAttribute(XMLNS_ATTRIBUTE + ":" + REMOTELOCATOR_PREFIX, REMOTELOCATOR_NAMESPACE);
         element.setAttribute(SCHEMA_LOCATION_ATTRIBUTE_NAME, REMOTELOCATOR_NAMESPACE + " " + REMOTELOCATOR_SCHEMA_LOCATION_URI);
+
+        for (ManufacturerDeviceClasses manufacturer : this)
+            element.appendChild(manufacturer.toElement(document));
+
         return element;
     }
 
@@ -254,9 +257,13 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return manufact.get(deviceClass, remoteName);
     }
 
-    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
-        RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
+    public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, Girrable.NotGirrableException {
+        RemoteLink remoteLink = getRemoteLink(manufacturer, deviceClass, remoteName);
         return remoteLink.getRemote(manufacturer, deviceClass);
+    }
+    
+    public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, Girrable.NotGirrableException {
+        return get(manufacturer, deviceClass, remoteName);
     }
 
     public List<String> getManufacturers() {

@@ -102,7 +102,7 @@
                     <xs:documentation>The kind of remote: girr, irdb (CSV), lirc, Jp1.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="path" type="xs:string" use="required">
+            <xs:attribute name="path" type="xs:string" use="optional">
                 <xs:annotation>
                     <xs:documentation>Local path to the resource.</xs:documentation>
                 </xs:annotation>
@@ -115,6 +115,21 @@
             <xs:attribute name="url" type="xs:string" use="required">
                 <xs:annotation>
                     <xs:documentation>The URL where to download the remote.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="protocol" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="device" type="xs:integer" use="optional">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="subdevice" type="xs:integer" use="optional">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>

@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
  */
 public class Jp1ScrapNGTest {
 
-    private static final File jp1XmlFile = new File("src/test/jp1/jp1-master-1.16.fods");
+    private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -43,7 +43,7 @@ public class Jp1ScrapNGTest {
     @Test
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = Jp1Scrap.scrap(jp1XmlFile);
+        RemoteDatabase result = Jp1Scrap.scrap(JP1_XML_FILE);
         result.print("output/jp1.xml");
     }
 
@@ -55,7 +55,7 @@ public class Jp1ScrapNGTest {
     public void testGetUrl() throws Exception {
         System.out.println("getRemote");
         Jp1Scrap instance = new Jp1Scrap();
-        instance.add(jp1XmlFile);
+        instance.add(JP1_XML_FILE);
         String name = "Oppo Sonica DAC";
         URL url = instance.getUrl("Oppo", "digital stbs", name);
         String result = url.toString();

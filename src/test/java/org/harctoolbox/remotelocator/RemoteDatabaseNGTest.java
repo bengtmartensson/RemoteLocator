@@ -1,7 +1,6 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -21,10 +20,11 @@ import org.xml.sax.SAXException;
  * @author bengt
  */
 public class RemoteDatabaseNGTest {
-    private static final File localLircBaseDir = new File("../../lirc/lirc-remotes/remotes");
-    private static final File localIrdbBaseDir = new File("../irdb/codes");
-    private static final File localGirrLibBaseDir = new File("../GirrLib/Girr");
-    private static final File localGirrTestBaseDir = new File("../Girr/src/test/girr");
+    //private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
+    private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
+    private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
+    //private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
+    private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -38,10 +38,13 @@ public class RemoteDatabaseNGTest {
 
     public RemoteDatabaseNGTest() throws IOException, SAXException {
         remoteDatabase = new RemoteDatabase();
-        new GirrScrap(remoteDatabase).add(localGirrLibBaseDir);
-        new LircScrap(remoteDatabase).add(localLircBaseDir);
-        new IrdbScrap(remoteDatabase).add(localIrdbBaseDir);
+        new GirrScrap(remoteDatabase).add(LOCAL_GIRRLIB_BASEDIR);
+        //new LircScrap(remoteDatabase).add(LOCAL_LIRC_BASEDIR);
+        new IrdbScrap(remoteDatabase).add(LOCAL_IRDB_BASEDIR);
+        new Jp1Scrap(remoteDatabase).add(JP1_XML_FILE);
         remoteDatabase.sort();
+        Document document = remoteDatabase.toDocument();
+        XmlUtils.printDOM(new File("output/all.xml"), document);
     }
 
     @BeforeMethod
@@ -108,24 +111,13 @@ public class RemoteDatabaseNGTest {
     }
 
     /**
-     * Test of toDocument method, of class RemoteDatabase.
-     * @throws java.io.FileNotFoundException
-     */
-    @Test
-    public void testToDocument() throws FileNotFoundException {
-        System.out.println("toDocument");
-        Document document = remoteDatabase.toDocument();
-        XmlUtils.printDOM(new File("output/all.xml"), document);
-    }
-
-    /**
      * Test of getManufacturers method, of class RemoteDatabase.
      */
     @Test
     public void testGetManufacturers() {
         System.out.println("getManufacturers");
         List<String> result = remoteDatabase.getManufacturers();
-        assertEquals(result.size(), 833);
+        assertEquals(result.size(), 1777);
     }
 
     /**
@@ -136,7 +128,7 @@ public class RemoteDatabaseNGTest {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
         List<String> result = remoteDatabase.getDeviceTypes(manufacturer);
-        assertEquals(result.size(), 73);
+        assertEquals(result.size(), 87);
     }
 
     /**
@@ -148,7 +140,7 @@ public class RemoteDatabaseNGTest {
         String manufacturer = "Philips";
         String deviceType = "TV";
         List result = remoteDatabase.getRemotes(manufacturer, deviceType);
-        assertEquals(result.size(), 6);
+        assertEquals(result.size(), 38);
     }
 
     /**

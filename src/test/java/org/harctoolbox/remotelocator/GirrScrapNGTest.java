@@ -10,8 +10,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class GirrScrapNGTest {
-    private static final File localGirrLibBaseDir = new File("../GirrLib/Girr");
-    private static final File localGirrTestBaseDir = new File("../Girr/src/test/girr");
+    private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
+    private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -39,7 +39,7 @@ public class GirrScrapNGTest {
     @Test
     public void testScrap() throws Exception {
         System.out.println("scrap");
-        RemoteDatabase result = GirrScrap.scrap(localGirrLibBaseDir);
+        RemoteDatabase result = GirrScrap.scrap(LOCAL_GIRRLIB_BASEDIR);
         result.print("output/girr.xml");
     }
 
@@ -52,8 +52,8 @@ public class GirrScrapNGTest {
         System.out.println("add");
         RemoteDatabase remoteDatabase = new RemoteDatabase();
         GirrScrap instance = new GirrScrap(remoteDatabase);
-        instance.add(localGirrLibBaseDir);
-        instance.add(localGirrTestBaseDir);
+        instance.add(LOCAL_GIRRLIB_BASEDIR);
+        instance.add(LOCAL_GIRRTEST_BASEDIR);
         remoteDatabase.print("output/allgirr.xml");
     }
 
@@ -65,7 +65,7 @@ public class GirrScrapNGTest {
     public void testGetRemote() throws Exception {
         System.out.println("getRemote");
         GirrScrap instance = new GirrScrap();
-        instance.add(localGirrLibBaseDir);
+        instance.add(LOCAL_GIRRLIB_BASEDIR);
         String name = "coolstream_neo";
         Remote remote = instance.getRemote("Coolstream", "sat", name);
         remote.print("output/coolstream.girr");
