@@ -5,11 +5,19 @@ HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
 JAVA=java
 JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
 CONFIG=${HOME}/remotelocator.xml
+CLASS=org.harctoolbox.remotelocator.RemoteDatabase
+STYLESHEET=${HOME}/src/main/xslt/remotelocator2html.xsl
+JP1FILE=${HOME}/src/test/jp1/jp1-master-1.16.fods
+HTML=${HOME}/remotelocator.html
+XSLTPROC=xsltproc
 
-rm "${CONFIG}"
+rm "${CONFIG}" "${HTML}"
 cd $HOME
-exec time "${JAVA}" -jar "${JAR}" -.config "${CONFIG}" --sort \
-     --girrdir ../GirrLib/Girr \
-     --irdb ../irdb/codes \
-     --lirc ../../lirc/lirc-remotes/remotes \
-     --jp1 src/test/jp1/jp1-master-1.16.fods
+time "${JAVA}" -cp "${JAR}" "${CLASS}" \
+    --out "${CONFIG}" --sort \
+    --girrdir ../GirrLib/Girr \
+    --irdb ../irdb/codes \
+    --lirc ../../lirc/lirc-remotes/remotes \
+    --jp1 "${JP1FILE}"
+
+${XSLTPROC}  -o "${HTML}" "${STYLESHEET}"  "${CONFIG}"

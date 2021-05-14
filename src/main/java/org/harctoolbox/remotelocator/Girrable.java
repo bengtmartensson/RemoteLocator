@@ -58,13 +58,14 @@ public abstract class Girrable extends Scrapable {
     public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
         return remoteDatabase.getRemote(manufacturer, deviceClass, remoteName);
     }
-    
+
     public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
         return remoteDatabase.getRemoteLink(manufacturer, deviceClass, remoteName);
     }
 
     public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;
 
+    @SuppressWarnings("PackageVisibleInnerClass")
     static class NotGirrableException extends Exception {
 
         NotGirrableException() {

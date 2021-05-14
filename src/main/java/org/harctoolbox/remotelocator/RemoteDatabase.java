@@ -17,10 +17,14 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.remotelocator;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -35,6 +39,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI;
 import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
 import javax.xml.validation.Schema;
@@ -43,7 +49,10 @@ import org.harctoolbox.girr.Remote;
 import static org.harctoolbox.girr.XmlStatic.CREATINGUSER_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.CREATIONDATE_ATTRIBUTE_NAME;
 import static org.harctoolbox.girr.XmlStatic.TITLE_ATTRIBUTE_NAME;
+import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.ircore.ThisCannotHappenException;
+import static org.harctoolbox.irp.IrpUtils.EXIT_SUCCESS;
+import static org.harctoolbox.irp.IrpUtils.EXIT_USAGE_ERROR;
 import static org.harctoolbox.remotelocator.ManufacturerDeviceClasses.MANUFACTURER_ELEMENT_NAME;
 import org.harctoolbox.xml.XmlUtils;
 import static org.harctoolbox.xml.XmlUtils.DEFAULT_CHARSETNAME;
@@ -60,7 +69,7 @@ import org.xml.sax.SAXException;
  */
 public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>, Serializable {
 
-    //private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
 
     private static final String DEFAULT_TITLE = "Database of downloadable remotes";
     public static final String UNKNOWN = "unknown";
@@ -95,10 +104,99 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      */
     static final String REMOTELOCATOR_COMMENT = "This file is in the RemoteLocator format, see " + REMOTELOCATOR_HOMEPAGE;
 
-    public static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
+            static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
+            static final String APP_NAME = "RemoteLocator";
+            static final String VERSION = "0.2.0";
+            static final String VERSION_STRING = APP_NAME + " version " + VERSION;
+
+    private static RemoteDatabase remoteDatabase;
+    private static JCommander argumentParser;
+    private static final CommandLineArgs commandLineArgs = new CommandLineArgs();
+    private static PrintStream out;
 
     static String mkKey(String string) {
         return (string == null || string.isEmpty()) ? UNKNOWN : string.toLowerCase(Locale.US);
+    }
+
+    private static void usage(int exitcode) {
+        StringBuilder str = new StringBuilder(256);
+        argumentParser.usage();
+
+        (exitcode == EXIT_SUCCESS ? System.out : System.err).println(str);
+        doExit(exitcode); // placifying FindBugs...
+    }
+
+    private static void die(String message, int exitCode) {
+        System.err.println(message);
+        System.exit(exitCode);
+    }
+
+    private static void doExit(int exitcode) {
+        System.exit(exitcode);
+    }
+
+    /**
+     * @param args the command line arguments.
+     */
+    public static void main(String[] args) {
+        argumentParser = new JCommander(commandLineArgs);
+        argumentParser.setProgramName(APP_NAME);
+        argumentParser.setAllowAbbreviatedOptions(true);
+        argumentParser.setCaseSensitiveOptions(false);
+
+        try {
+            argumentParser.parse(args);
+        } catch (ParameterException ex) {
+            System.err.println(ex.getMessage());
+            usage(EXIT_USAGE_ERROR);
+        }
+
+        if (commandLineArgs.helpRequested)
+            usage(EXIT_SUCCESS);
+
+        if (commandLineArgs.versionRequested) {
+            System.out.println(VERSION_STRING);
+            System.out.println("JVM: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version")
+                    + " " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+            //System.out.println();
+            //System.out.println(Version.licenseString);
+            System.exit(EXIT_SUCCESS);
+        }
+
+        try {
+            remoteDatabase = new RemoteDatabase();
+            readScrapers();
+            if (remoteDatabase.isEmpty())
+                die("No database content", EXIT_USAGE_ERROR);
+
+            if (commandLineArgs.sort)
+                remoteDatabase.sort();
+
+            out = IrCoreUtils.getPrintStream(commandLineArgs.output);
+
+            remoteDatabase.print(out);
+            System.err.println("Configuration file " + out.toString() + " written.");
+        } catch (IOException ex) {
+            die(ex.getLocalizedMessage(), EXIT_USAGE_ERROR);
+        } catch (SAXException ex) {
+            Logger.getLogger(RemoteDatabase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void readScrapers() throws IOException, SAXException {
+
+
+        if (commandLineArgs.girrDir != null)
+            new GirrScrap(remoteDatabase).add(new File(commandLineArgs.girrDir));
+
+        if (commandLineArgs.irdbDir != null)
+            new IrdbScrap(remoteDatabase).add(new File(commandLineArgs.irdbDir));
+
+        if (commandLineArgs.lircDir != null)
+            new LircScrap(remoteDatabase).add(new File(commandLineArgs.lircDir));
+
+        if (commandLineArgs.jp1File != null)
+            new Jp1Scrap(remoteDatabase).add(new File(commandLineArgs.jp1File));
     }
 
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
@@ -261,7 +359,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         RemoteLink remoteLink = getRemoteLink(manufacturer, deviceClass, remoteName);
         return remoteLink.getRemote(manufacturer, deviceClass);
     }
-    
+
     public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, Girrable.NotGirrableException {
         return get(manufacturer, deviceClass, remoteName);
     }
@@ -302,6 +400,33 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     public boolean isEmpty() {
         return manufacturers.isEmpty();
+    }
+
+    private final static class CommandLineArgs {
+
+        @Parameter(names = {"-g", "--girrdir"}, description = "Pathname of directory (recursively) containing Girr files.")
+        public String girrDir = null;
+
+        @Parameter(names = {"-h", "--help", "-?"}, description = "Display help message.")
+        private boolean helpRequested = false;
+
+        @Parameter(names = {"-i", "--irdbdir"}, description = "Pathname of directory containing IRDB files in CSV format.")
+        public String irdbDir = null;
+
+        @Parameter(names = {"-l", "--lircdirs"}, description = "Pathname of directory containing Lirc files.")
+        public String lircDir = null;
+
+        @Parameter(names = {"-j", "--jp1file"}, description = "Filename of XML export of JP1 master file.")
+        public String jp1File = null;
+
+        @Parameter(names = {"-o", "--output"}, description = "File name to write to, \"-\" for stdout.")
+        private String output = "-";
+
+        @Parameter(names = {"-s", "--sort"}, description = "Sort the configuration file before writing.")
+        public boolean sort = false;
+
+        @Parameter(names = {"-v", "--version"}, description = "Display version information.")
+        private boolean versionRequested;
     }
 
     public static class FormatVersionMismatchException extends Exception {

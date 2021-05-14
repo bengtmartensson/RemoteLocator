@@ -22,15 +22,17 @@ His list also contains meta information such as manufacturer and device class.
 This can be read into the present program, and used to browse the therein contained remotes (or rather, "device upgrades").
 These can, with some manual work be translated to Girr files.
 
-Basically, there are three use case for the program: 
+Basically, there are three use case for the program:
 
-1. Generaton of the index file, `remotelocator.xml`, and 
+1. Generaton of the index file, `remotelocator.xml`, and
 2. Using said index file (possibly as an URL rather than a local file) for extracting information of its content,
 3. Using the index file and information from 2. to downloading or browse a contained remote.
 
 ## Generation of the index file
-Typically, only an "administrator" invokes this use case. From (a subset of) the four sources, a local file is generated.
-See the program options below. The `--config` option is mandatory, and must point to a local (possibly non-existing) writeable file.
+Typically, only an "administrator" invokes this use case.
+This is achieved by calling the main-routine of the RemoteDatabase class.
+From (a subset of) the four sources, a local file is generated.
+The `--out` option is (effectively) mandatory, and must point to a local (preferably non-existing) write-able file.
 Using the options `--girrdirr`, --lircdir`, `--irdbdir` are used to point to a locally clone of the respective GitHub/Sourceforge repositories
 (to the extent desired).
 Use the option `--jp1file` to point to an OpenOffice format XML export of the JP1 master list.
@@ -68,30 +70,22 @@ It is planned to integrate this program in IrScrutinizer. By "Select me to load"
 ./remotelocator --help
 Usage: RemoteLocator [options] Arguments to the program
   Options:
-    -g, --Girr
-      Produce output in Girr format.
-      Default: false
     -b, --browse
       Browse the remote, do not directly download it.
       Default: false
-    -c, --config
+  * -c, --config
       Name or URL of config file, to be read or written.
     --csv
       Produce output in IRDB CVS format.
       Default: false
     -d, --deviceclass
       Device class, "?" for list.
-    --girrdir
-      Pathname of directory (recursively) containing Girr files.
+    -g, --girr
+      Produce output in Girr format.
+      Default: false
     -h, --help, -?
       Display help message.
       Default: false
-    -i, --irdbdir
-      Pathname of directory containing IRDB files in CSV format.
-    -j, --jp1file
-      Filename of XML export of JP1 master file.
-    -l, --lircdirs
-      Pathname of directory containing Lirc files.
     -m, --manufacturer
       Manufacturer, "?" for list.
     -o, --output
@@ -99,9 +93,6 @@ Usage: RemoteLocator [options] Arguments to the program
       Default: -
     -p, --prontohex
       Produce output in Pronto Hex format.
-      Default: false
-    -s, --sort
-      Sort the configuration file before writing.
       Default: false
     -u, --url
       Do not get the remote, just print its url.
