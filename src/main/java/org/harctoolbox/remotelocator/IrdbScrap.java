@@ -27,11 +27,15 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.harctoolbox.girr.Command;
 import org.harctoolbox.girr.CommandSet;
 import org.harctoolbox.girr.GirrException;
@@ -55,6 +59,12 @@ public final class IrdbScrap extends Girrable {
     public static final URI IRDB_BASE_URI   = URI.create(IRDB_BASE);
     private static final String IRDB_NAME = "irdb";
     private static final String SILLY_IRDB_HEADER = "functionname,protocol,device,subdevice,function";
+    private static final String COMMA = ",";
+    private static final int LIST_INITIAL_CAPACITY = 8;
+    private static final Pattern whitespaceQuoteStuff = Pattern.compile("\\s+\".*");
+    private static final String QUOTE = "\"";
+    private static final char SPACECHAR = ' ';
+    private static final char QUOTECHAR = '"';
 
 
     public static RemoteDatabase scrap(File baseDir) throws IOException, SAXException {
@@ -91,20 +101,22 @@ public final class IrdbScrap extends Girrable {
                 lineno++;
                 if (line == null)
                     break;
-                String[] array = line.split(",");
-                if (array.length < 5) {
-                    // Silly lines just ignored
-                    logger.warning("Too short line in ");
-                    continue;
-                }
-                String name = array[0];
-                String protocol = array[1];
-                if (protocol.equalsIgnoreCase("nec")) // TODO: remove
-                    protocol = "NEC1";
                 try {
-                    long device = Long.parseLong(array[2]);
-                    long subdevice = Long.parseLong(array[3]);
-                    long function = Long.parseLong(array[4]);
+                    List<String> list = splitCSV(line, COMMA, lineno);
+                    if (list.size() != 5) {
+                        // Silly lines just ignored
+                        logger.log(Level.WARNING, "Wrong number of fields in line {0}", lineno);
+                        continue;
+                    }
+
+                    String name = list.get(0);
+                    String protocol = list.get(1);
+                    if (protocol.equalsIgnoreCase("nec")) // TODO: remove
+                        protocol = "NEC1";
+
+                    long device = Long.parseLong(list.get(2));
+                    long subdevice = Long.parseLong(list.get(3));
+                    long function = Long.parseLong(list.get(4));
 
                     if (remoteName == null)
                         remoteName = mkName(protocol, device, subdevice, function);
@@ -119,6 +131,8 @@ public final class IrdbScrap extends Girrable {
                     commands.put(name, command);
                 } catch (NumberFormatException | GirrException | ArrayIndexOutOfBoundsException ex) {
                     logger.log(Level.WARNING, "Line {2} of {0}: {1}", new Object[]{source, ex.getLocalizedMessage(), lineno});
+                } catch (ParseException ex) {
+                    logger.log(Level.WARNING, "Unbalaned quotes in line {0}", lineno);
                 }
             }
 
@@ -145,12 +159,70 @@ public final class IrdbScrap extends Girrable {
         return remoteName.toString();
     }
 
+    /**
+     * Splits a line of CSV into fields, taking quoting into account.
+     * Embedded double quotation marks are not considered (yet?).
+     * @param input Line to be split
+     * @param separator String (typically a comma ",") to use as separator.
+     * @param lineNumber Line number, only used for constructing error messages from un-balanced quotes.
+     * @return
+     * @throws ParseException in the presence of un-balanced quotes.
+     */
+    public static LinkedList<String> splitCSV(String input, String separator, int lineNumber) throws ParseException {
+        // For performance reasons, use regexp only "occasionally"
+        if (input.charAt(0) == SPACECHAR)
+            if (whitespaceQuoteStuff.matcher(input).matches())
+                return splitCSV(input.trim(), separator, lineNumber); // Strictly speaking, this is wrong, since trailing spaces may be significant...
+
+        String first;
+        int index;
+        LinkedList<String> result; // need addFirst, so cannot use ArrayList
+        if (input.startsWith(QUOTE)) {
+            int closingQuoteIndex = input.indexOf(QUOTECHAR, 1);
+            if (closingQuoteIndex == -1)
+                throw new ParseException(input, lineNumber);
+            first = input.substring(1, closingQuoteIndex);
+            index = input.indexOf(separator, closingQuoteIndex);
+            if (index == -1) {
+                result = new LinkedList<>();
+            } else {
+                String rest = input.substring(index + separator.length());
+                result = splitCSV(rest, separator, lineNumber);
+            }
+        } else {
+            index = input.indexOf(separator);
+            if (index == -1) {
+                result = new LinkedList<>();
+                first = input;
+            } else {
+                String rest = input.substring(index + separator.length());
+                result = splitCSV(rest, separator, lineNumber);
+                first = input.substring(0, index);
+            }
+        }
+
+        result.addFirst(first);
+        return result;
+    }
+
+    public static List<String> splitCSV(String input, String separator) throws ParseException {
+        return splitCSV(input, separator, 0);
+    }
+
+    public static List<String> splitCSV(String input) throws ParseException {
+        return splitCSV(input, COMMA);
+    }
+
+    public static String possiblyQuote(String str) {
+        return str.contains(COMMA) ? (QUOTE + str + QUOTE) : str;
+    }
+
     static void print(PrintStream out, Remote remote) throws IrpException, IrCoreException {
         out.println(SILLY_IRDB_HEADER);
         for (CommandSet cs : remote) {
             for (Command c : cs) {
                 Map<String, Long> params = c.getParameters();
-                out.printf("%1$s,%2$s,%3$d,%4$d,%5$d", c.getName(), c.getProtocolName(), getNumber(params, "D"), getNumber(params, "S"), getNumber(params, "F"));
+                out.printf("%1$s,%2$s,%3$d,%4$d,%5$d", possiblyQuote(c.getName()), possiblyQuote(c.getProtocolName()), getNumber(params, "D"), getNumber(params, "S"), getNumber(params, "F"));
                 out.println();
             }
         }

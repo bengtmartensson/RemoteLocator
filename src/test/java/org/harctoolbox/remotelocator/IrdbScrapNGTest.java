@@ -2,6 +2,9 @@ package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import org.harctoolbox.girr.Remote;
 import org.harctoolbox.xml.XmlUtils;
 import static org.testng.Assert.*;
@@ -80,5 +83,42 @@ public class IrdbScrapNGTest {
         String firstcommand = remote.getCommands().keySet().iterator().next();
         String expResult = "0";
         assertEquals(firstcommand, expResult);
+    }
+
+    /**
+     * Test of splitCSV method, of class IrdbScrap.
+     * @throws java.text.ParseException
+     */
+    @Test
+    public void testSplitCSV_String() throws ParseException {
+        System.out.println("splitCSV");
+        String input = "1997,Ford,E350";
+        List<String> expResult = new ArrayList<>(3);
+        expResult.add("1997");
+        expResult.add("Ford");
+        expResult.add("E350");
+        List<String> result = IrdbScrap.splitCSV(input);
+        assertEquals(result, expResult);
+
+        input = "  \"1997\",\"Ford\"    ,    \"E350\" ";
+        result = IrdbScrap.splitCSV(input);
+        assertEquals(result, expResult);
+
+        input = "1997,Ford,E350, \"Super, luxurious truck\" ";
+        expResult.add("Super, luxurious truck");
+        result = IrdbScrap.splitCSV(input);
+        assertEquals(result, expResult);
+
+        input = "1997,Ford,E350, \"Super, luxurious truck "; // unbalanced quotes
+        try {
+            IrdbScrap.splitCSV(input);
+            fail();
+        } catch (ParseException ex) {
+        }
+
+        input = "1997,   Ford ,E350,\"Super, luxurious truck\""; // whitespaces outside of "" may not be removed-
+        expResult.set(1, "   Ford ");
+        result = IrdbScrap.splitCSV(input);
+        assertEquals(result, expResult);
     }
 }
