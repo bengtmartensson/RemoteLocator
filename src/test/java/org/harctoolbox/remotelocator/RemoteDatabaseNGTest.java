@@ -122,24 +122,37 @@ public class RemoteDatabaseNGTest {
 
     /**
      * Test of getDeviceTypes method, of class RemoteDatabase.
+     * @throws org.harctoolbox.remotelocator.NotFoundException
      */
     @Test
-    public void testGetDeviceTypes() {
+    public void testGetDeviceTypes() throws NotFoundException {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
         List<String> result = remoteDatabase.getDeviceTypes(manufacturer);
         assertEquals(result.size(), 87);
+        try {
+            remoteDatabase.getDeviceTypes("dfdfdfdf");
+            fail();
+        } catch (NotFoundException ex) {
+        }
     }
 
     /**
      * Test of getRemotes method, of class RemoteDatabase.
+     * @throws org.harctoolbox.remotelocator.NotFoundException
      */
     @Test
-    public void testGetRemotes() {
+    public void testGetRemotes() throws NotFoundException {
         System.out.println("getRemotes");
         String manufacturer = "Philips";
         String deviceType = "TV";
         List result = remoteDatabase.getRemotes(manufacturer, deviceType);
+        assertEquals(result.size(), 38);
+        try {
+            remoteDatabase.getRemotes(manufacturer, "sdfsdfsdfdsf");
+            fail();
+        } catch (NotFoundException ex) {
+        }
         assertEquals(result.size(), 38);
     }
 

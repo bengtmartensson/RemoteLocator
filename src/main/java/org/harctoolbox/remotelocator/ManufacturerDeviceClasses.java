@@ -140,7 +140,10 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         return result;
     }
 
-    public DeviceClassRemotes getDeviceClass(String deviceClassName) {
-        return deviceClasses.get(RemoteDatabase.mkKey(deviceClassName));
+    public DeviceClassRemotes getDeviceClass(String deviceClassName) throws NotFoundException {
+        DeviceClassRemotes d = deviceClasses.get(RemoteDatabase.mkKey(deviceClassName));
+        if (d == null)
+            throw new NotFoundException("Manufacturer \""  + manufacturer + "\" has no device class \"" + deviceClassName + "\" in the data base.");
+        return d;
     }
 }

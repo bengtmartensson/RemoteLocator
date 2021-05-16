@@ -349,9 +349,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public RemoteLink get(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
-        ManufacturerDeviceClasses manufact = manufacturers.get(manufacturer.toLowerCase(Locale.US));
-        if (manufact == null)
-            throw new NotFoundException("Manufacturer " + manufacturer + " unknown.");
+        ManufacturerDeviceClasses manufact = getManufacturerDeviceClass(manufacturer);
         return manufact.get(deviceClass, remoteName);
     }
 
@@ -371,13 +369,21 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return result;
     }
 
-    public List<String> getDeviceTypes(String manufacturer) {
+    public ManufacturerDeviceClasses getManufacturerDeviceClass(String manufacturer) throws NotFoundException {
         ManufacturerDeviceClasses m = manufacturers.get(mkKey(manufacturer));
-        return m.getDeviceClasses();
+        if (m == null)
+            throw new NotFoundException("Manufacturer \""  + manufacturer + "\" not found in the data base.");
+        return m;
     }
 
-    public List<String> getRemotes(String manufacturer, String deviceType) {
-        ManufacturerDeviceClasses m = manufacturers.get(mkKey(manufacturer));
+    public List<String> getDeviceTypes(String manufacturer) throws NotFoundException {
+        ManufacturerDeviceClasses m = getManufacturerDeviceClass(manufacturer);
+        List<String> list = m.getDeviceClasses();
+        return list;
+    }
+
+    public List<String> getRemotes(String manufacturer, String deviceType) throws NotFoundException {
+        ManufacturerDeviceClasses m = getManufacturerDeviceClass(manufacturer);
         DeviceClassRemotes d = m.getDeviceClass(deviceType);
         return d.getRemotes();
     }
