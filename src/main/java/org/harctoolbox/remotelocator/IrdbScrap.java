@@ -93,7 +93,7 @@ public final class IrdbScrap extends Girrable {
     public static Remote parse(Reader reader, String manufacturer, String deviceClass, String source) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             bufferedReader.readLine(); // junk first line
-            int lineno = 2;
+            int lineno = 1;
             String remoteName = null;
             Map<String, Command> commands = new LinkedHashMap<>(32);
             while (true) {
@@ -105,7 +105,7 @@ public final class IrdbScrap extends Girrable {
                     List<String> list = splitCSV(line, COMMA, lineno);
                     if (list.size() != 5) {
                         // Silly lines just ignored
-                        logger.log(Level.WARNING, "Wrong number of fields in line {0}", lineno);
+                        logger.log(Level.WARNING, "Wrong number of fields in line {0} in file {1}.", new Object[]{lineno, source});
                         continue;
                     }
 
