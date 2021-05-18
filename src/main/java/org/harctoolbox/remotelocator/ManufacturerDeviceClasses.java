@@ -134,9 +134,14 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     }
 
     public List<String> getDeviceClasses() {
+        return getDeviceClasses(null);
+    }
+
+    public List<String> getDeviceClasses(ScrapKind kind) {
         List<String> result = new ArrayList<>(deviceClasses.size());
         for (DeviceClassRemotes d : this)
-            result.add(d.getName());
+            if (d.hasKind(kind))
+                result.add(d.getName());
         return result;
     }
 
@@ -145,5 +150,12 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         if (d == null)
             throw new NotFoundException("Manufacturer \""  + manufacturer + "\" has no device class \"" + deviceClassName + "\" in the data base.");
         return d;
+    }
+
+    public boolean hasKind(ScrapKind kind) {
+        for (DeviceClassRemotes deviceClassRemotes : deviceClasses.values())
+            if (deviceClassRemotes.hasKind(kind))
+                return true;
+        return false;
     }
 }

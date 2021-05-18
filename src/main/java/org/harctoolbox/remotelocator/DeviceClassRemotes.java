@@ -123,10 +123,25 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         });
     }
 
-    public List<String> getRemotes() {
+   public List<String> getRemotes() {
+        return getRemotes(null);
+    }
+
+   public List<String> getRemotes(ScrapKind kind) {
         List<String> result = new ArrayList<>(remoteLinks.size());
-        for (RemoteLink r : this)
-            result.add(r.getName());
+        for (RemoteLink r : this) {
+            if (kind == null || r.getKind() == kind)
+                result.add(r.getName());
+        }
         return result;
+    }
+
+    public boolean hasKind(ScrapKind kind) {
+        if (kind == null)
+            return true;
+        for (RemoteLink remoteLink : this)
+            if (remoteLink.getKind() == kind)
+                return true;
+        return false;
     }
 }

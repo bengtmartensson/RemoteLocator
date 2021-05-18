@@ -116,8 +116,10 @@ public class RemoteDatabaseNGTest {
     @Test
     public void testGetManufacturers() {
         System.out.println("getManufacturers");
-        List<String> result = remoteDatabase.getManufacturers();
-        assertEquals(result.size(), 1777);
+        List<String> result = remoteDatabase.getManufacturers(null);
+        assertEquals(result.size(), 1775);
+        result = remoteDatabase.getManufacturers(ScrapKind.girr);
+        assertEquals(result.size(), 37);
     }
 
     /**
@@ -128,10 +130,12 @@ public class RemoteDatabaseNGTest {
     public void testGetDeviceTypes() throws NotFoundException {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
-        List<String> result = remoteDatabase.getDeviceTypes(manufacturer);
+        List<String> result = remoteDatabase.getDeviceTypes(null, manufacturer);
         assertEquals(result.size(), 87);
+        result = remoteDatabase.getDeviceTypes(ScrapKind.girr, manufacturer);
+        assertEquals(result.size(), 3);
         try {
-            remoteDatabase.getDeviceTypes("dfdfdfdf");
+            remoteDatabase.getDeviceTypes(null, "dfdfdfdf");
             fail();
         } catch (NotFoundException ex) {
         }

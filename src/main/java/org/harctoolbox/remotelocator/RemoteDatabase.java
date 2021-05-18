@@ -363,9 +363,14 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public List<String> getManufacturers() {
+        return getManufacturers(null);
+    }
+
+    public List<String> getManufacturers(ScrapKind kind) {
         List<String> result = new ArrayList<>(manufacturers.size());
         for (ManufacturerDeviceClasses m : this)
-            result.add(m.getName());
+            if (m.hasKind(kind))
+                result.add(m.getName());
         return result;
     }
 
@@ -377,15 +382,23 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public List<String> getDeviceTypes(String manufacturer) throws NotFoundException {
+        return getDeviceTypes(null, manufacturer);
+    }
+
+    public List<String> getDeviceTypes(ScrapKind kind, String manufacturer) throws NotFoundException {
         ManufacturerDeviceClasses m = getManufacturerDeviceClass(manufacturer);
-        List<String> list = m.getDeviceClasses();
+        List<String> list = m.getDeviceClasses(kind);
         return list;
     }
 
     public List<String> getRemotes(String manufacturer, String deviceType) throws NotFoundException {
+        return getRemotes(null, manufacturer, deviceType);
+    }
+
+    public List<String> getRemotes(ScrapKind kind, String manufacturer, String deviceType) throws NotFoundException {
         ManufacturerDeviceClasses m = getManufacturerDeviceClass(manufacturer);
         DeviceClassRemotes d = m.getDeviceClass(deviceType);
-        return d.getRemotes();
+        return d.getRemotes(kind);
     }
 
     ManufacturerDeviceClasses getOrCreate(String manufacturer) {

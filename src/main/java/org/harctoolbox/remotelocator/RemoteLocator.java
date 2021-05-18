@@ -17,6 +17,7 @@ this program. If not, see http://www.gnu.org/licenses/.
 
 package org.harctoolbox.remotelocator;
 
+import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -27,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.girr.Command;
@@ -114,7 +116,7 @@ public class RemoteLocator {
 
     private static void processManufacturer() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (commandLineArgs.manufacturer == null || isQuestion(commandLineArgs.manufacturer)) {
-            List<String> manufacturers = remoteDatabase.getManufacturers();
+            List<String> manufacturers = remoteDatabase.getManufacturers(commandLineArgs.kind);
             manufacturers.forEach(m -> {
                 out.println(m);
             });
@@ -125,7 +127,7 @@ public class RemoteLocator {
 
     private static void processDevices() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (commandLineArgs.deviceClass == null || isQuestion(commandLineArgs.deviceClass)) {
-            List<String> devices = remoteDatabase.getDeviceTypes(commandLineArgs.manufacturer);
+            List<String> devices = remoteDatabase.getDeviceTypes(commandLineArgs.kind, commandLineArgs.manufacturer);
             devices.forEach(dc -> {
                 out.println(dc);
             });
@@ -136,7 +138,7 @@ public class RemoteLocator {
 
     private static void processRemotes() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (commandLineArgs.remoteNames.isEmpty() || isQuestion(commandLineArgs.remoteNames.get(0))) {
-            List<String> remotes = remoteDatabase.getRemotes(commandLineArgs.manufacturer, commandLineArgs.deviceClass);
+            List<String> remotes = remoteDatabase.getRemotes(commandLineArgs.kind, commandLineArgs.manufacturer, commandLineArgs.deviceClass);
             remotes.forEach(r -> {
                 out.println(r);
             });
@@ -162,14 +164,18 @@ public class RemoteLocator {
             out.println(url.toString());
     }
 
-    private static void processRemoteLink(RemoteLink remoteLink) throws GirrException, IrpException, IrCoreException, IOException {
+    private static void processRemoteLink(RemoteLink remoteLink) throws GirrException, IrpException, IrCoreException, IOException, NotFoundException {
+        if (commandLineArgs.kind != null && remoteLink.getKind() != commandLineArgs.kind) {
+            throw new NotFoundException("Remote of kind " + remoteLink.getKind() + " found. but kind " + commandLineArgs.kind.toString() + " was requested.");
+        }
+
         boolean doneStuff = false;
         Remote remote;
         try {
             remote = remoteLink.getRemote(commandLineArgs.manufacturer, commandLineArgs.deviceClass);
         } catch (Girrable.NotGirrableException ex) {
-             System.err.println("Remote found, but can only be browsed.");
-             return;
+            System.err.println("Remote found, but can only be browsed (using --browse).");
+            return;
         }
         if (commandLineArgs.girr) {
             remote.print(out, true, true, true);
@@ -190,13 +196,13 @@ public class RemoteLocator {
             doneStuff = true;
         }
         if (!doneStuff) {
-            System.err.println("Remote of type " + remoteLink.getKind() + " found; use --Girr, --pronto or --csv to get output requested.");
+            System.err.println("Remote of type " + remoteLink.getKind() + " found; use --girr, --pronto or --csv to request output.");
         }
     }
 
     private final static class CommandLineArgs {
 
-        @Parameter(names = {"-b", "--browse"}, description = "Browse the remote, do not directly download it.")
+        @Parameter(names = {"-b", "--browse"}, description = "Browse the remote instead of downloading it.")
         private boolean browse = false;
 
         @Parameter(names = {"-c", "--config"}, required = true, description = "Name or URL of config file, to be read or written.")
@@ -213,6 +219,10 @@ public class RemoteLocator {
 
         @Parameter(names = {"-h", "--help", "-?"}, description = "Display help message.")
         private boolean helpRequested = false;
+
+        @Parameter(names = {"-k", "--kind"}, description = "Only consider remotes of this kind.",
+        converter = ScrapKindParser.class)
+        private ScrapKind kind = null;
 
         @Parameter(names = {"-m", "--manufacturer"}, description = "Manufacturer, \"?\" for list.")
         private String manufacturer = null;
@@ -232,5 +242,17 @@ public class RemoteLocator {
         @Parameter(description = "Arguments to the program")
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         private List<String> remoteNames = new ArrayList<>(4);
+    }
+
+    private static class ScrapKindParser implements IStringConverter<ScrapKind> {
+
+        @Override
+        public ScrapKind convert(String value) {
+            try {
+                return ScrapKind.valueOf(value.toLowerCase(Locale.US));
+            } catch (IllegalArgumentException ex) {
+                throw new ParameterException(ex);
+            }
+        }
     }
 }
