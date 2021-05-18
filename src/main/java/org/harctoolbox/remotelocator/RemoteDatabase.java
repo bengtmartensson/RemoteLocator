@@ -175,7 +175,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
             out = IrCoreUtils.getPrintStream(commandLineArgs.output);
 
             remoteDatabase.print(out);
-            System.err.println("Configuration file " + out.toString() + " written.");
+            System.err.println("Configuration file " + out.toString() + " written, containing " + remoteDatabase.numberRemotes() + " remotes.");
         } catch (IOException ex) {
             die(ex.getLocalizedMessage(), EXIT_USAGE_ERROR);
         } catch (SAXException ex) {
@@ -237,6 +237,13 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
             ManufacturerDeviceClasses manufacturer = new ManufacturerDeviceClasses(manufacturerElement);
             add(manufacturer);
         }
+    }
+
+    public int numberRemotes() {
+        int sum = 0;
+        for (ManufacturerDeviceClasses manufacturer : this)
+            sum += manufacturer.numberRemotes();
+        return sum;
     }
 
     public void sort(Comparator<? super Named> comparator) {

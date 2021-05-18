@@ -1,0 +1,14 @@
+#!/bin/sh
+
+HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
+
+JAVA=java
+JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
+CONFIG=${HOME}/lirc.xml
+CLASS=org.harctoolbox.remotelocator.RemoteDatabase
+
+rm "${CONFIG}"
+cd $HOME
+time "${JAVA}" -cp "${JAR}" "${CLASS}" \
+    --out "${CONFIG}" --sort \
+    --lirc ../../lirc/lirc-remotes/remotes

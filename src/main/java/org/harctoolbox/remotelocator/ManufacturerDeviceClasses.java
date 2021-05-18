@@ -72,6 +72,13 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         }
     }
 
+    public int numberRemotes() {
+        int sum = 0;
+        for (DeviceClassRemotes deviceClassRemotes : this)
+            sum += deviceClassRemotes.numberRemotes();
+        return sum;
+    }
+
     private void add(DeviceClassRemotes dev) {
         deviceClasses.put(mkKey(dev.getName()), dev);
         dev.setOwner(this);

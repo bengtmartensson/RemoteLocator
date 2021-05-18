@@ -93,7 +93,7 @@ public class RemoteDatabaseNGTest {
             it.next();
             cnt++;
         }
-        assertEquals(cnt, 4);
+        assertEquals(cnt, 5);
     }
 
     /**
@@ -131,9 +131,9 @@ public class RemoteDatabaseNGTest {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
         List<String> result = remoteDatabase.getDeviceTypes(null, manufacturer);
-        assertEquals(result.size(), 87);
+        assertEquals(result.size(), 88);
         result = remoteDatabase.getDeviceTypes(ScrapKind.girr, manufacturer);
-        assertEquals(result.size(), 3);
+        assertEquals(result.size(), 4);
         try {
             remoteDatabase.getDeviceTypes(null, "dfdfdfdf");
             fail();

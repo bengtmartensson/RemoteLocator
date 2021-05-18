@@ -45,6 +45,12 @@ public class GirrScrap extends Girrable {
     public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
     public static final URI GIRRLIB_BASE_URI= URI.create(GIRRLIB_BASE);
     private static final String GIRR_NAME = "girr";
+    private static final String[] junkExtensions = {
+        ".xsl",
+        ".jpg",
+        ".html",
+        ".pdf"
+    };
 
     public static RemoteDatabase scrap(File dir) throws IOException, SAXException {
         GirrScrap girr = new GirrScrap();
@@ -76,7 +82,9 @@ public class GirrScrap extends Girrable {
             String[] files = file.list();
             for (String f : files)
                 addRecursive(uriBase, baseDir, new File(file, f));
-        } else if (file.isFile() /*&& ! ignoreByExtension(path)*/) {
+        } else if (ignoreByExtension(file.getName())) {
+            logger.log(Level.FINE, "File {0} ignored due to its extension", file.toString());
+        } else if (file.isFile()) {
             try {
                 add(XmlUtils.openXmlFile(file), uriBase, baseDir, file);
             } catch (IOException | SAXException ex) {
@@ -131,5 +139,12 @@ public class GirrScrap extends Girrable {
             logger.log(Level.WARNING, ex.getLocalizedMessage());
             return null;
         }
+    }
+
+    private boolean ignoreByExtension(String name) {
+        for (String ext : junkExtensions)
+            if (name.endsWith(ext))
+                return true;
+        return false;
     }
 }

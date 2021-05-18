@@ -66,6 +66,10 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         }
     }
 
+    public int numberRemotes() {
+        return remoteLinks.size();
+    }
+
     public void setOwner(ManufacturerDeviceClasses owner) {
         this.owner = owner;
     }
@@ -111,7 +115,11 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
                 } else
                     number++;
             }
-            logger.log(Level.WARNING, "Remote {0} present several times", key);
+            try {
+            logger.log(Level.WARNING, "Remote {0} present several times, renamed to {1}", new Object[]{ key, actualKey});
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
+            }
             //return;
         }
         remoteLinks.put(actualKey, remoteLink);
