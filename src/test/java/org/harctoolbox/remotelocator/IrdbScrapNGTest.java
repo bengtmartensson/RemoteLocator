@@ -83,6 +83,8 @@ public class IrdbScrapNGTest {
         String firstcommand = remote.getCommands().keySet().iterator().next();
         String expResult = "0";
         assertEquals(firstcommand, expResult);
+        assertEquals(remote.getManufacturer(), "Yamaha");
+        assertEquals(remote.getDeviceClass(), "DVD");
     }
 
     /**

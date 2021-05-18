@@ -109,7 +109,12 @@ public class LircScrap extends Girrable {
     @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
         RemoteSet remoteSet = ConfigFile.parseConfig(reader, source, true, null, true);
-        return remoteSet.iterator().hasNext() ? remoteSet.iterator().next() : null;
+        Remote lircRemote = remoteSet.iterator().next();
+        if (lircRemote == null)
+            return null;
+        Remote.MetaData metaData = new Remote.MetaData(lircRemote.getName(), null, manufacturer, null, deviceClass, null);
+        Remote remote = new Remote(metaData, source, lircRemote.getComment(), null, lircRemote.getCommandSets().values(), lircRemote.getApplicationParameters());
+        return remote;
     }
 
     @Override

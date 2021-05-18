@@ -46,10 +46,12 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
     static final String DEVICECLASS_ATTRIBUTE_NAME = "name";
     private static final int INITIAL_CAPACITY = 8;
 
+    private ManufacturerDeviceClasses owner;
     private final String deviceClass;
     private final Map<String, RemoteLink> remoteLinks;
 
     DeviceClassRemotes(String key) {
+        owner = null;
         deviceClass = key;
         remoteLinks = new LinkedHashMap<>(INITIAL_CAPACITY);
     }
@@ -62,6 +64,14 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
             RemoteLink remoteLink = new RemoteLink(remoteLinkElement);
             add(remoteLink);
         }
+    }
+
+    public void setOwner(ManufacturerDeviceClasses owner) {
+        this.owner = owner;
+    }
+
+    public ManufacturerDeviceClasses getOwner() {
+        return owner;
     }
 
     @Override
@@ -105,6 +115,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
             //return;
         }
         remoteLinks.put(actualKey, remoteLink);
+        remoteLink.setOwner(this);
     }
 
     RemoteLink get(String deviceClass, String remoteName) throws NotFoundException {

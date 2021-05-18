@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import org.harctoolbox.girr.Named;
-import org.harctoolbox.girr.Remote;
 import org.xml.sax.SAXException;
 
 public abstract class Scrapable {
@@ -34,14 +33,6 @@ public abstract class Scrapable {
     protected static void assertReadableDirectory(File file) throws IOException {
         if (!isReadableDirectory(file))
             throw new IOException(file + " is not a readable directory");
-    }
-
-    static Remote getRemoteStatic(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException, Girrable.NotGirrableException {
-        Scrapable scrap = ScrapKind.mkScrapable(remoteLink.getKind());
-        if (! (scrap instanceof Girrable))
-            throw new Girrable.NotGirrableException();
-
-        return ((Girrable) scrap).getRemote(remoteLink, manufacturer, deviceClass);
     }
 
     /**
@@ -58,6 +49,10 @@ public abstract class Scrapable {
         this(new RemoteDatabase());
     }
 
+    RemoteDatabase getRemoteDatabase() {
+        return remoteDatabase;
+    }
+
     protected RemoteDatabase scrapSort(File file) throws IOException, SAXException {
         add(file);
         sort();
@@ -70,6 +65,10 @@ public abstract class Scrapable {
 
     public void sort(Comparator<? super Named> comparator) {
         remoteDatabase.sort(comparator);
+    }
+
+    public RemoteLink get(String manufacturer, String deviceClass, String remoteName) throws NotFoundException {
+        return remoteDatabase.get(manufacturer, deviceClass, remoteName);
     }
 
     public URL getUrl(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException {

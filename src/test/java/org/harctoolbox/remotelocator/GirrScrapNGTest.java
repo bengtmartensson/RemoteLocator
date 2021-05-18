@@ -72,5 +72,7 @@ public class GirrScrapNGTest {
         String firstcommand = remote.getCommands().keySet().iterator().next();
         String expResult = "power_toggle";
         assertEquals(firstcommand, expResult);
+        assertEquals(remote.getManufacturer(), "Coolstream");
+        assertEquals(remote.getDeviceClass(), "sat");
     }
 }

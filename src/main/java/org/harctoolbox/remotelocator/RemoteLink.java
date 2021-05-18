@@ -106,6 +106,7 @@ public final class RemoteLink implements Named, Serializable {
         return new Remote(metaData, comment, null, commandSet, null);
     }
 
+    private DeviceClassRemotes owner;
     private final ScrapKind kind;
 //    private String name;
     private final File file;
@@ -178,6 +179,18 @@ public final class RemoteLink implements Named, Serializable {
         remote = mkRemote(name, comment, protocol, device, subdevice);
     }
 
+    void setOwner(DeviceClassRemotes owner) {
+        this.owner = owner;
+    }
+
+    String getDeviceClass() {
+        return owner.getName();
+    }
+
+    String getManufacturer() {
+        return owner.getOwner().getName();
+    }
+
     private Command getFirstCommand() {
         Iterator<CommandSet> iterator = remote.iterator();
         if (!iterator.hasNext())
@@ -215,8 +228,12 @@ public final class RemoteLink implements Named, Serializable {
         return parameters != null ? parameters.get(Command.S_PARAMETER_NAME) : null;
     }
 
-    public Remote getRemote(String manufacturer, String deviceClass) throws IOException, Girrable.NotGirrableException {
-        return Scrapable.getRemoteStatic(this, manufacturer, deviceClass);
+    public Remote getRemote() throws IOException, Girrable.NotGirrableException, NotFoundException {
+        Scrapable scrap = ScrapKind.mkScrapable(this);
+        if (!(scrap instanceof Girrable))
+            throw new Girrable.NotGirrableException();
+
+        return ((Girrable) scrap).getRemote(this);
     }
 
     @Override
@@ -262,6 +279,10 @@ public final class RemoteLink implements Named, Serializable {
 
     public URL getUrl() {
         return url;
+    }
+
+    RemoteDatabase getRemoteDatabase() {
+        return owner.getOwner().getRemoteDatabase();
     }
 
 }

@@ -23,18 +23,26 @@ public enum ScrapKind {
     lirc,
     jp1;
 
-   static Scrapable mkScrapable(ScrapKind kind) {
+   private static Scrapable mkScrapable(RemoteDatabase remoteDatabase, ScrapKind kind) {
         switch (kind) {
             case irdb:
-                return new IrdbScrap(null);
+                return new IrdbScrap(remoteDatabase);
             case girr:
-                return new GirrScrap(null);
+                return new GirrScrap(remoteDatabase);
             case lirc:
-                return new LircScrap(null);
+                return new LircScrap(remoteDatabase);
             case jp1:
-                return new Jp1Scrap(null);
+                return new Jp1Scrap(remoteDatabase);
             default:
                 return null;
         }
+    }
+
+   static Scrapable mkScrapable(RemoteLink remoteLink) {
+       return mkScrapable(remoteLink.getRemoteDatabase(), remoteLink.getKind());
+   }
+
+    static Scrapable mkScrapable(ScrapKind kind) {
+        return mkScrapable(null, kind);
     }
 }

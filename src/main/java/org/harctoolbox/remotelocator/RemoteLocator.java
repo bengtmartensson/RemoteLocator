@@ -29,7 +29,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.harctoolbox.girr.Command;
 import org.harctoolbox.girr.CommandSet;
@@ -148,13 +147,9 @@ public class RemoteLocator {
 
     private static void processRemote() throws NotFoundException, URISyntaxException, IOException, GirrException, IrpException, IrCoreException {
         if (!commandLineArgs.doUrl && !commandLineArgs.browse) {
-            try {
-                RemoteLink remoteLink = remoteDatabase.getRemoteLink(commandLineArgs.manufacturer, commandLineArgs.deviceClass, commandLineArgs.remoteNames.get(0));
-                processRemoteLink(remoteLink);
-                return;
-            } catch (Girrable.NotGirrableException ex) {
-                logger.log(Level.WARNING, "Not girr-able, just giving the URL");
-            }
+            RemoteLink remoteLink = remoteDatabase.get(commandLineArgs.manufacturer, commandLineArgs.deviceClass, commandLineArgs.remoteNames.get(0));
+            processRemoteLink(remoteLink);
+            return;
         }
 
         URL url = remoteDatabase.getUrl(commandLineArgs.manufacturer, commandLineArgs.deviceClass, commandLineArgs.remoteNames.get(0));
@@ -172,7 +167,7 @@ public class RemoteLocator {
         boolean doneStuff = false;
         Remote remote;
         try {
-            remote = remoteLink.getRemote(commandLineArgs.manufacturer, commandLineArgs.deviceClass);
+            remote = remoteLink.getRemote();
         } catch (Girrable.NotGirrableException ex) {
             System.err.println("Remote found, but can only be browsed (using --browse).");
             return;
@@ -198,6 +193,9 @@ public class RemoteLocator {
         if (!doneStuff) {
             System.err.println("Remote of type " + remoteLink.getKind() + " found; use --girr, --pronto or --csv to request output.");
         }
+    }
+
+    private RemoteLocator() {
     }
 
     private final static class CommandLineArgs {

@@ -91,10 +91,9 @@ public class Jp1Scrap extends Scrapable {
         String manufacturer = getTextContent(cells.item(5));
         String name = getTextContent(cells.item(6));
         String protocol = getTextContent(cells.item(9));
-        String comment = null;//ew StringBuilder(32);
         String device = getTextContent(cells.item(10));
         String subdevice = getTextContent(cells.item(11));
-        Remote remote = RemoteLink.mkRemote(name, comment, protocol, device, subdevice);
+        Remote remote = RemoteLink.mkRemote(name, null, protocol, device, subdevice);
         RemoteLink remoteLink = new RemoteLink(ScrapKind.jp1, remote, uri, null, null);
         remoteDatabase.put(manufacturer, deviceClass, remoteLink);
     }

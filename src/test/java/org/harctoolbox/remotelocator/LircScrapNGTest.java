@@ -1,6 +1,9 @@
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
+import org.harctoolbox.girr.Command;
+import org.harctoolbox.girr.Remote;
+import static org.testng.Assert.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -43,5 +46,21 @@ public class LircScrapNGTest {
         System.out.println("scrap");
         RemoteDatabase result = LircScrap.scrap(LOCAL_LIRC_BASEDIR);
         result.print("output/lirc.xml");
+    }
+
+    /**
+     * Test of getRemote method, of class LircScrap.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testGetRemote() throws Exception {
+        System.out.println("getRemote");
+        RemoteDatabase instance = LircScrap.scrap(LOCAL_LIRC_BASEDIR);
+        Remote remote = instance.getRemote("Yamaha", "unknown", "yamaha-amp");
+        Command firstCommand = remote.iterator().next().iterator().next();
+        String expResult = "KEY_MUTE";
+        assertEquals(firstCommand.getName(), expResult);
+        assertEquals(remote.getManufacturer(), "yamaha");
+        assertEquals(remote.getDeviceClass(), "unknown");
     }
 }

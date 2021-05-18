@@ -36,31 +36,27 @@ public abstract class Girrable extends Scrapable {
         super();
     }
 
-    public Remote getRemote(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
+    public Remote getRemote(RemoteLink remoteLink) throws IOException {
         File file = remoteLink.getFile();
-        return file.canRead() ? getRemoteFile(remoteLink, manufacturer, deviceClass)
-                : getRemoteUrl(remoteLink, manufacturer, deviceClass);
+        return file.canRead() ? getRemoteFile(remoteLink) : getRemoteUrl(remoteLink);
     }
 
-    private Remote getRemoteFile(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(remoteLink.getFile()), EXTENDED_LATIN1);
-        return getRemote(reader, remoteLink.getFile().getPath(), remoteLink.getXpath(), manufacturer, deviceClass);
+    private Remote getRemoteFile(RemoteLink remoteLink) throws IOException {
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(remoteLink.getFile()), EXTENDED_LATIN1)) {
+            return getRemote(reader, remoteLink.getFile().getPath(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass());
+        }
     }
 
-    private Remote getRemoteUrl(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
+    private Remote getRemoteUrl(RemoteLink remoteLink) throws IOException {
         URLConnection conn = remoteLink.getUrl().openConnection();
         try (InputStream stream = conn.getInputStream()) {
             InputStreamReader reader = new InputStreamReader(stream, EXTENDED_LATIN1);
-            return getRemote(reader, remoteLink.getUrl().toString(), remoteLink.getXpath(), manufacturer, deviceClass);
+            return getRemote(reader, remoteLink.getUrl().toString(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass());
         }
     }
 
     public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
         return remoteDatabase.getRemote(manufacturer, deviceClass, remoteName);
-    }
-
-    public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, NotGirrableException {
-        return remoteDatabase.getRemoteLink(manufacturer, deviceClass, remoteName);
     }
 
     public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;

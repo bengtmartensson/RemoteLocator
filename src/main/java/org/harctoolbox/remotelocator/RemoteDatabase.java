@@ -341,6 +341,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     private void add(ManufacturerDeviceClasses manifacturer) {
         manufacturers.put(mkKey(manifacturer.getName()), manifacturer);
+        manifacturer.setRemoteDatabase(this);
     }
 
     void put(String manufacturer, String deviceClass, RemoteLink remoteLink) {
@@ -354,12 +355,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     public Remote getRemote(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, Girrable.NotGirrableException {
-        RemoteLink remoteLink = getRemoteLink(manufacturer, deviceClass, remoteName);
-        return remoteLink.getRemote(manufacturer, deviceClass);
-    }
-
-    public RemoteLink getRemoteLink(String manufacturer, String deviceClass, String remoteName) throws NotFoundException, IOException, Girrable.NotGirrableException {
-        return get(manufacturer, deviceClass, remoteName);
+        RemoteLink remoteLink = get(manufacturer, deviceClass, remoteName);
+        return remoteLink.getRemote();
     }
 
     public List<String> getManufacturers() {
@@ -408,6 +405,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         if (mt == null) {
             mt = new ManufacturerDeviceClasses((manufacturer == null || manufacturer.isEmpty()) ? UNKNOWN : manufacturer);
             manufacturers.put(key, mt);
+            mt.setRemoteDatabase(this);
         }
         return mt;
     }

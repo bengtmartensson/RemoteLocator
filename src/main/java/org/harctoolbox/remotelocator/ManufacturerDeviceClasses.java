@@ -27,7 +27,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +51,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
 
     private final String manufacturer;
     private final Map<String, DeviceClassRemotes> deviceClasses;
+    private RemoteDatabase remoteDatabase;
 
     ManufacturerDeviceClasses(String mani) {
         this.manufacturer = mani;
@@ -74,6 +74,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
 
     private void add(DeviceClassRemotes dev) {
         deviceClasses.put(mkKey(dev.getName()), dev);
+        dev.setOwner(this);
     }
 
     @Override
@@ -105,12 +106,13 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
         if (typeRemote == null) {
             typeRemote = new DeviceClassRemotes((deviceClass == null || deviceClass.isEmpty()) ? UNKNOWN : deviceClass);
             deviceClasses.put(key, typeRemote);
+            typeRemote.setOwner(this);
         }
         return typeRemote;
     }
 
     RemoteLink get(String deviceClass, String remoteName) throws NotFoundException {
-        DeviceClassRemotes type = deviceClasses.get(deviceClass.toLowerCase(Locale.US));
+        DeviceClassRemotes type = deviceClasses.get(mkKey(deviceClass));
         if (type == null)
             throw new NotFoundException("Device Class " + deviceClass + " not present in selected manufacturer.");
         return type.get(deviceClass, remoteName);
@@ -157,5 +159,13 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
             if (deviceClassRemotes.hasKind(kind))
                 return true;
         return false;
+    }
+
+    RemoteDatabase getRemoteDatabase() {
+        return remoteDatabase;
+    }
+
+    void setRemoteDatabase(RemoteDatabase remoteDatabase) {
+        this.remoteDatabase = remoteDatabase;
     }
 }
