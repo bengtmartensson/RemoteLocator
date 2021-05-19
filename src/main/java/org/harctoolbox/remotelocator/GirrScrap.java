@@ -101,7 +101,7 @@ public class GirrScrap extends Girrable {
     }
 
     private void add(Element element, URI baseUri, File baseDir, File file) throws GirrException {
-        switch (element.getTagName()) {
+        switch (element.getLocalName()) {
             case REMOTES_ELEMENT_NAME:
                 RemoteSet remoteSet = new RemoteSet(element, file.toString());
                 add(remoteSet, baseUri, baseDir, file);
