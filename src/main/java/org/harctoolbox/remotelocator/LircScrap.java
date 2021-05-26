@@ -92,7 +92,7 @@ public class LircScrap extends Girrable {
             File path = new File(dir, filename);
             //String name = filename.endsWith(".lircd.conf") ? filename.substring(0, filename.length() - 11) : filename;
             try {
-                RemoteSet remoteSet = ConfigFile.parseConfig(path, EXTENDED_LATIN1_NAME, true, null, true);
+                RemoteSet remoteSet = ConfigFile.parseConfig(path, EXTENDED_LATIN1_NAME, true, null);
                 for (Remote remote : remoteSet) {
 
                     //Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
@@ -108,7 +108,7 @@ public class LircScrap extends Girrable {
 
     @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
-        RemoteSet remoteSet = ConfigFile.parseConfig(reader, source, true, null, true);
+        RemoteSet remoteSet = ConfigFile.parseConfig(reader, source, true, null);
         Remote lircRemote = remoteSet.iterator().next();
         if (lircRemote == null)
             return null;

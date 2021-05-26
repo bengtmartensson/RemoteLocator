@@ -65,7 +65,7 @@ public class IrdbScrapNGTest {
         String manufacturer = "Trabbi";
         String deviceType = "Tractor";
         Remote result = IrdbScrap.parse(path, manufacturer, deviceType);
-        XmlUtils.printDOM(new File ("output/yamaha.girr"), result.toDocument(null, null, null, false, true, true, false, false));
+        XmlUtils.printDOM(new File ("output/yamaha.girr"), result.toDocument(null, null, null, false, true, false, false));
     }
 
     /**
