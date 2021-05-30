@@ -264,11 +264,6 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     public Document toDocument() {
         Document document = XmlUtils.newDocument(true);
-//        if (stylesheetType != null && stylesheetUrl != null && !stylesheetUrl.isEmpty()) {
-//            ProcessingInstruction pi = document.createProcessingInstruction("xml-stylesheet",
-//                    "type=\"text/" + stylesheetType + "\" href=\"" + stylesheetUrl + "\"");
-//            document.appendChild(pi);
-//        }
 
         // At least in some Java versions (https://bugs.openjdk.java.net/browse/JDK-7150637)
         // there is no line feed before and after the comment.

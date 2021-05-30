@@ -87,19 +87,9 @@ public final class RemoteLink implements Named, Serializable {
     private static Remote mkRemote(String name, String comment, String protocolName, Long device, Long subdevice) {
         Remote.MetaData metaData = new Remote.MetaData(name);
         CommandSet commandSet;
-//        Map<String, Long> parameters = new HashMap<>(2);
         if (Command.isKnownProtocol(protocolName)) {
-//            if (device != null)
-//                parameters.put(D_PARAMETER_NAME, device);
-//            if (subdevice != null)
-//                parameters.put(S_PARAMETER_NAME, subdevice);
-//            try {
                 Command command = new Command(protocolName, device, subdevice);
                 commandSet = new CommandSet(command);
-//            } catch (GirrException ex) {
-//                logger.log(Level.WARNING, ex.getLocalizedMessage());
-//                commandSet = new CommandSet();
-//            }
         } else
             commandSet = new CommandSet();
 
@@ -108,23 +98,15 @@ public final class RemoteLink implements Named, Serializable {
 
     private DeviceClassRemotes owner;
     private final ScrapKind kind;
-//    private String name;
     private final File file;
     private String xpath;
     private final URL url;
-//    private final String comment;
     private final Remote remote;
 
     public RemoteLink(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File file, String xpath) {
-//        this(kind, baseUri, baseDir, remote.getName(), file, xpath, remote.getComment(), remote.getProtocolName(), remote.getD(), remote.getS());
-//    }
-//
-//    public RemoteLink(ScrapKind kind, URI baseUri, File baseDir, String name, File file, String xpath, String comment, String protocol, Long device, Long subdevice) {
-//        try {
         Scrapable scrap = ScrapKind.mkScrapable(kind);
         this.remote = remote;
         this.kind = kind;
-//            this.name = name;
         if (baseDir != null) {
             Path baseDirPath = Paths.get(baseDir.getPath());
             Path localPath = Paths.get(file.getPath());
@@ -145,10 +127,6 @@ public final class RemoteLink implements Named, Serializable {
             } else {
                 url = null;
             }
-//            this.comment = comment;
-//            this.displayName = displayName;
-//            this.model = model;
-//            this.origRemote = origRemote;
         } catch (URISyntaxException | MalformedURLException ex) {
             throw new ThisCannotHappenException(ex);
         }
@@ -157,13 +135,6 @@ public final class RemoteLink implements Named, Serializable {
     RemoteLink(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File file) {
         this(kind, remote, baseUri, baseDir, file, (String) null);
     }
-//    public RemoteLink(ScrapKind kind, Remote remote, URI baseUri, File baseDir, File file) {
-//        this(kind, remote, baseUri, baseDir, file, (String) null);
-//    }
-//
-//    RemoteLink(ScrapKind kind, URI uri, File baseDir, File dir, String remoteName) {
-//        this(kind, uri, baseDir, remote, new File(dir, remote), null);
-//    }
 
     RemoteLink(Element remoteLinkElement) throws MalformedURLException {
         kind = ScrapKind.valueOf(remoteLinkElement.getAttribute(KIND_ATTRIBUTE_NAME));

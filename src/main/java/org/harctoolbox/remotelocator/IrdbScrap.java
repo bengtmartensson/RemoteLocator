@@ -55,7 +55,7 @@ public final class IrdbScrap extends Girrable {
     public static final String IRDB_CHARSET = "WINDOWS-1252"; // ?
     //public static final String IRDB_BASE    = "https://raw.githubusercontent.com/probonopd/irdb/master/codes/";
     public static final String IRDB_BASE    = "https://cdn.jsdelivr.net/gh/probonopd/irdb@master/codes/";
-//    public static final String IRDB_URL     = "https://github.com/probonopd/irdb";
+    //public static final String IRDB_URL     = "https://github.com/probonopd/irdb";
     public static final URI IRDB_BASE_URI   = URI.create(IRDB_BASE);
     private static final String IRDB_NAME = "irdb";
     private static final String SILLY_IRDB_HEADER = "functionname,protocol,device,subdevice,function";

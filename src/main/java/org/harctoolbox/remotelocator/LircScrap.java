@@ -90,13 +90,9 @@ public class LircScrap extends Girrable {
         String[] array = dir.list();
         for (String filename : array) {
             File path = new File(dir, filename);
-            //String name = filename.endsWith(".lircd.conf") ? filename.substring(0, filename.length() - 11) : filename;
             try {
                 RemoteSet remoteSet = ConfigFile.parseConfig(path, EXTENDED_LATIN1_NAME, true, null);
                 for (Remote remote : remoteSet) {
-
-                    //Remote.MetaData metaData = new Remote.MetaData(name, null, manufacturer, null, UNKNOWN, null);
-                    //Remote remote = new Remote(metaData, path.getPath(), null, null, null, null);
                     RemoteLink remoteLink = new RemoteLink(ScrapKind.lirc, remote, uri, baseDir, path);
                     devices.add(remoteLink);
                 }

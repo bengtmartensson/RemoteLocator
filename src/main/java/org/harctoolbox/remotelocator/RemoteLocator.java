@@ -92,8 +92,6 @@ public class RemoteLocator {
             System.out.println(VERSION_STRING);
             System.out.println("JVM: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version")
                     + " " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
-            //System.out.println();
-            //System.out.println(Version.licenseString);
             System.exit(EXIT_SUCCESS);
         }
 
