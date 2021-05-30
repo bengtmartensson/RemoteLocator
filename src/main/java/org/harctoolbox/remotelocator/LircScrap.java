@@ -77,10 +77,10 @@ public class LircScrap extends Girrable {
         }
 
         DeviceClassRemotes devices = manufacturerTypes.getOrCreate(UNKNOWN);
-        add(devices, uri, baseDir, dir, manufacturerTypes.getName());
+        add(devices, uri, baseDir, dir);
     }
 
-    private void add(DeviceClassRemotes devices, URI uri, File baseDir, File dir, String manufacturer) {
+    private void add(DeviceClassRemotes devices, URI uri, File baseDir, File dir) {
         if (!isReadableDirectory(dir)) {
             // Can be junk file, non-fatal
             logger.log(Level.WARNING, "File {0} not a readable directory, ignored.", dir);

@@ -9,10 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author bengt
- */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class Jp1ScrapNGTest {
 
     private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");

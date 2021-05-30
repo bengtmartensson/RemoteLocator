@@ -102,6 +102,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         add(remoteLink);
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     void add(RemoteLink remoteLink) {
         String key = RemoteDatabase.mkKey(remoteLink.getName());
         String actualKey = key;

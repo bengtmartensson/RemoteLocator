@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class GirrScrapNGTest {
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
     private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");

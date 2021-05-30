@@ -60,8 +60,7 @@ public final class IrdbScrap extends Girrable {
     private static final String IRDB_NAME = "irdb";
     private static final String SILLY_IRDB_HEADER = "functionname,protocol,device,subdevice,function";
     private static final String COMMA = ",";
-    private static final int LIST_INITIAL_CAPACITY = 8;
-    private static final Pattern whitespaceQuoteStuff = Pattern.compile("\\s+\".*");
+    private static final Pattern WHITESPACE_QUOTE_STUFF = Pattern.compile("\\s+\".*");
     private static final String QUOTE = "\"";
     private static final char SPACECHAR = ' ';
     private static final char QUOTECHAR = '"';
@@ -171,7 +170,7 @@ public final class IrdbScrap extends Girrable {
     public static LinkedList<String> splitCSV(String input, String separator, int lineNumber) throws ParseException {
         // For performance reasons, use regexp only "occasionally"
         if (input.charAt(0) == SPACECHAR)
-            if (whitespaceQuoteStuff.matcher(input).matches())
+            if (WHITESPACE_QUOTE_STUFF.matcher(input).matches())
                 return splitCSV(input.trim(), separator, lineNumber); // Strictly speaking, this is wrong, since trailing spaces may be significant...
 
         String first;

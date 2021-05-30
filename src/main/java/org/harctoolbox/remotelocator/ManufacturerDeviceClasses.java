@@ -162,10 +162,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     }
 
     public boolean hasKind(ScrapKind kind) {
-        for (DeviceClassRemotes deviceClassRemotes : deviceClasses.values())
-            if (deviceClassRemotes.hasKind(kind))
-                return true;
-        return false;
+        return deviceClasses.values().stream().anyMatch(deviceClassRemotes -> (deviceClassRemotes.hasKind(kind)));
     }
 
     RemoteDatabase getRemoteDatabase() {

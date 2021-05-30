@@ -10,10 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- *
- * @author bengt
- */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class LircScrapNGTest {
     private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
 

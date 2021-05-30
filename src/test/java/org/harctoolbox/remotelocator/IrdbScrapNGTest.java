@@ -15,10 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author bengt
- */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class IrdbScrapNGTest {
     private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
 

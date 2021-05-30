@@ -67,9 +67,10 @@ import org.xml.sax.SAXException;
 /**
  *
  */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>, Serializable {
 
-    private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
+    //private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
 
     private static final String DEFAULT_TITLE = "Database of downloadable remotes";
     public static final String UNKNOWN = "unknown";

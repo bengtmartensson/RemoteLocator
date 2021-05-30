@@ -15,10 +15,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author bengt
- */
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class RemoteDatabaseNGTest {
     //private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
     private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");

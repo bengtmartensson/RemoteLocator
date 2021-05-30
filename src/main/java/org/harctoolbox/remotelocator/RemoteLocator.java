@@ -29,7 +29,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 import org.harctoolbox.girr.Command;
 import org.harctoolbox.girr.CommandSet;
 import org.harctoolbox.girr.GirrException;
@@ -43,8 +42,9 @@ import static org.harctoolbox.remotelocator.RemoteDatabase.APP_NAME;
 import static org.harctoolbox.remotelocator.RemoteDatabase.VERSION_STRING;
 import org.xml.sax.SAXException;
 
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class RemoteLocator {
-    private static final Logger logger = Logger.getLogger(RemoteLocator.class.getName());
+    //private static final Logger logger = Logger.getLogger(RemoteLocator.class.getName());
 
     private static JCommander argumentParser;
     private static final CommandLineArgs commandLineArgs = new CommandLineArgs();
