@@ -62,7 +62,7 @@ public abstract class Girrable extends Scrapable {
     public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;
 
     @SuppressWarnings("PackageVisibleInnerClass")
-    static class NotGirrableException extends Exception {
+    public static class NotGirrableException extends Exception {
 
         NotGirrableException() {
         }

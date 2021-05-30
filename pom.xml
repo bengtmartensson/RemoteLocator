@@ -21,8 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <project.nameLowercase>girr</project.nameLowercase>
-        <project.manualName>${project.artifactId}-manual</project.manualName>
+        <project.nameLowercase>remotelocator</project.nameLowercase>
+        <project.manualName>${project.artifactId}</project.manualName>
     </properties>
 
     <developers>
@@ -64,14 +64,14 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-            <resource>
+            <!--resource>
                 <directory>src/main/xdocs</directory>
-            </resource>
+            </resource-->
             <resource>
                 <directory>src/main/schemas</directory>
             </resource>
             <resource>
-                <directory>src/main/stylesheets</directory>
+                <directory>src/main/xslt</directory>
             </resource>
         </resources>
         <plugins>
@@ -82,7 +82,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.harctoolbox.remotelocator.RemoteLocator</mainClass> <!-- does not interpolate variables -->
+                            <mainClass>${project.groupId}.${project.nameLowercase}.${project.artifactId}</mainClass>
                         </manifest>
                     </archive>
                     <descriptors>

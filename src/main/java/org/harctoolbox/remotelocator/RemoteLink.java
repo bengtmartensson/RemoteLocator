@@ -285,4 +285,7 @@ public final class RemoteLink implements Named, Serializable {
         return owner.getOwner().getRemoteDatabase();
     }
 
+    public boolean isLoadable() {
+        return kind != ScrapKind.jp1;
+    }
 }
