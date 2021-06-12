@@ -77,7 +77,7 @@ public class IrdbScrapNGTest {
         String name = IrdbScrap.mkName("RC6", 4, 0);
         Remote remote = instance.getRemote("Yamaha", "DVD", name);
         remote.print("output/yamaha-dvd.girr");
-        String firstcommand = remote.getCommands().keySet().iterator().next();
+        String firstcommand = remote.iterator().next().getCommands().iterator().next().getName();
         String expResult = "0";
         assertEquals(firstcommand, expResult);
         assertEquals(remote.getManufacturer(), "Yamaha");

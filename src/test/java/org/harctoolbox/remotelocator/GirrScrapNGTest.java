@@ -70,7 +70,8 @@ public class GirrScrapNGTest {
         String name = "coolstream_neo";
         Remote remote = instance.getRemote("Coolstream", "sat", name);
         remote.print("output/coolstream.girr");
-        String firstcommand = remote.getCommands().keySet().iterator().next();
+        @SuppressWarnings("deprecation")
+        String firstcommand = remote.getCommands().iterator().next().getName();
         String expResult = "power_toggle";
         assertEquals(firstcommand, expResult);
         assertEquals(remote.getManufacturer(), "Coolstream");
