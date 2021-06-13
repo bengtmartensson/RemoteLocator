@@ -114,7 +114,7 @@ public class RemoteDatabaseNGTest {
     public void testGetManufacturers() {
         System.out.println("getManufacturers");
         List<String> result = remoteDatabase.getManufacturers(null);
-        assertEquals(result.size(), 1775);
+        assertEquals(result.size(), 1764);
         result = remoteDatabase.getManufacturers(ScrapKind.girr);
         assertEquals(result.size(), 38);
     }
