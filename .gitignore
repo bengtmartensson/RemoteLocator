@@ -5,3 +5,7 @@ girrlib.xml
 irdb.xml
 remotelocator.*
 lirc.xml
+.mozilla
+.cache
+.local
+.config

@@ -110,8 +110,6 @@ public final class IrdbScrap extends Girrable {
 
                     String name = list.get(0);
                     String protocol = list.get(1);
-                    if (protocol.equalsIgnoreCase("nec")) // TODO: remove
-                        protocol = "NEC1";
 
                     long device = Long.parseLong(list.get(2));
                     long subdevice = Long.parseLong(list.get(3));
