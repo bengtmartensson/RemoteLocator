@@ -41,7 +41,12 @@ import org.harctoolbox.girr.CommandSet;
 import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Remote;
 import org.harctoolbox.ircore.IrCoreException;
+import org.harctoolbox.ircore.ThisCannotHappenException;
+import org.harctoolbox.irp.IrpDatabase;
 import org.harctoolbox.irp.IrpException;
+import org.harctoolbox.irp.IrpParseException;
+import org.harctoolbox.xml.XmlUtils;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public final class IrdbScrap extends Girrable {
@@ -64,7 +69,20 @@ public final class IrdbScrap extends Girrable {
     private static final String QUOTE = "\"";
     private static final char SPACECHAR = ' ';
     private static final char QUOTECHAR = '"';
-
+    private static final IrpDatabase irpDatabaseWithIrdbprotocols;
+    private static final String IRDB_PROTOCOL_FILE = "/IrdbProtocols.xml";
+    
+    static {
+        // Unfortunately, this forces IrpProtocol.xml to be parsed twice :-\
+        try {
+            irpDatabaseWithIrdbprotocols = new IrpDatabase((String) null);
+            Document document = XmlUtils.openXmlStream(IrdbScrap.class.getResourceAsStream(IRDB_PROTOCOL_FILE), null, true, true);
+            irpDatabaseWithIrdbprotocols.patch(document);
+            Command.setIrpDatabase(irpDatabaseWithIrdbprotocols);
+        } catch (IOException | IrpParseException | SAXException ex) {
+            throw new ThisCannotHappenException(ex);
+        }
+    }
 
     public static RemoteDatabase scrap(File baseDir) throws IOException, SAXException {
         IrdbScrap irdb = new IrdbScrap();
