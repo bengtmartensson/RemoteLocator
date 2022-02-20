@@ -7,10 +7,11 @@ It can handle collections of remotes in the following formats:
 * [IRDB format](https://github.com/probonopd/irdb): This collection was until recently available at the server `irdb.ik`, which is now defunct.
 The IRDB format is a very simple CSV format ("the IT version of the stone axe"), containing command name, protocol and the device and subdevice parameters,
 but no meta information. Instead, information on the manufacturer and the device class are gleaned from the file path.
-* The [Lirc](http://lirc.org) collection of remotes, which are collected in the Sourceforge project [lirc-remotes](https://sourceforge.net/projects/lirc-remotes/),
-* [Girr](http://harctoolbox.org/Girr.html) is a very versatile format for IR remotes. This format also contains no meta information.
-The manufacturer information is gleanead from the file path; however there are no information on device class,
+* The [Lirc](http://lirc.org) collection of remotes, which are collected in the Sourceforge project [lirc-remotes](https://sourceforge.net/projects/lirc-remotes/).
+This format also contains no meta information.
+The manufacturer information is gleaned from the file path; however there are no information on device class,
 so all the Lirc remotes have device class "unknown" in the generated list.
+* [Girr](http://harctoolbox.org/Girr.html) is a very versatile format for IR remotes.
 It is the native format for [IrScrutinizer](http://harctoolbox.org/IrScrutinizer.html), and also supported by main program
 [RMIR](https://sourceforge.net/projects/controlremote/) of the [JP1 project](http://hifi-remote.com/forums/index.php).
 Meta information, including manufacturer and device class, is contained in the Girr file.
@@ -63,7 +64,9 @@ The option `--url` just prints the URL where the remote can be downloaded. Final
 prints the (possibly converted) remote in Girr, Pronto Hex or IRDB CSV-format respectivelly.
 
 ## Integration in IrScrutinizer
-It is planned to integrate this program in IrScrutinizer. By "Select me to load" a global `remotelocator.xml` file is downloaded, once per session.
+This program is integrated in IrScrutinizer version 2.3.1 and later, giving it a GUI.
+I can be accessed as the pane Import -> RemoteLocator.
+By "Select me to load" a global `remotelocator.xml` file is downloaded, once per session.
 
 ## Appendix. All program options:
 ```
