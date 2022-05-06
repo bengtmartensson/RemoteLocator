@@ -90,7 +90,7 @@ public class RemoteDatabaseNGTest {
             it.next();
             cnt++;
         }
-        assertEquals(cnt, 5);
+        assertEquals(cnt, 6);
     }
 
     /**
