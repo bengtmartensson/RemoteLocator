@@ -185,7 +185,7 @@
         <dependency>
             <groupId>org.harctoolbox</groupId>
             <artifactId>Jirc</artifactId> <!-- Invokes Girr, IrpTransmogrifier, JCommander transitively -->
-            <version>2.2.11-SNAPSHOT</version>
+            <version>2.2.11</version>
         </dependency>
     </dependencies>
 </project>
