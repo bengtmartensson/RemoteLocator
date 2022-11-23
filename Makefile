@@ -64,6 +64,6 @@ tag:
 
 clean:
 	mvn clean
-	rm -rf $(GH_PAGES) pom.xml.versionsBackup
+	rm -rf $(GH_PAGES) pom.xml.versionsBackup lirc.xml irdb.xml girrlib.xml remotelocator.*ml 
 
 .PHONY: clean $(PROJECT_JAR)-test release

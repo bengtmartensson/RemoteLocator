@@ -1,6 +1,6 @@
 #!/bin/sh
 
-HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
+HOME="$(dirname $(dirname -- "$(readlink -f -- "${0}")" ))"
 
 JAVA=java
 JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )

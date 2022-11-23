@@ -1,10 +1,16 @@
 #!/bin/sh
 
-HOME="$(dirname -- "$(readlink -f -- "${0}")" )"
+HOME="$(dirname $(dirname -- "$(readlink -f -- "${0}")" ))"
 
-UPLOAD="curl --netrc --upload-file"
+#UPLOAD="curl --netrc --upload-file"
+UPLOAD=upload
+
+upload () {
+    echo Now upload $1 to $2.
+}
+
 FTPDIR="ftp://bengt-martensson.de/harctoolbox/downloads"
-
+TIME=
 JAVA=java
 JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
 CONFIG=${HOME}/remotelocator.xml
@@ -14,9 +20,9 @@ JP1FILE=${HOME}/src/test/jp1/jp1-master-1.16.fods
 HTML=${HOME}/remotelocator.html
 XSLTPROC=xsltproc
 
-rm "${CONFIG}" "${HTML}"
+rm -f "${CONFIG}" "${HTML}"
 cd $HOME
-time "${JAVA}" -cp "${JAR}" "${CLASS}" \
+${TIME} "${JAVA}" -cp "${JAR}" "${CLASS}" \
     --out "${CONFIG}" --sort \
     --girrdir ../GirrLib/Girr \
     --irdb ../irdb/codes \
