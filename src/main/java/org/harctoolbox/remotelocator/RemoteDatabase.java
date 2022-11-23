@@ -306,7 +306,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     /**
      * Convenience function that generates a DOM and dumps it onto the argument.
-     * @param ostr
+     * @param ostr Stream to use.
      */
     public void print(OutputStream ostr) {
         Document doc = toDocument();
@@ -319,8 +319,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     /**
      * Convenience function that generates a DOM and dumps it onto the argument.
-     * @param file
-     * @throws java.io.FileNotFoundException
+     * @param file Input file
+     * @throws java.io.FileNotFoundException if file not existing
      */
     public void print(File file) throws IOException {
         try (OutputStream os = new FileOutputStream(file)) {
@@ -330,8 +330,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     /**
      * Convenience function that generates a DOM and dumps it onto the argument.
-     * @param file
-     * @throws java.io.FileNotFoundException
+     * @param file Input file
+     * @throws java.io.FileNotFoundException if file not existing
      */
     public void print(String file) throws IOException {
         print(new File(file));

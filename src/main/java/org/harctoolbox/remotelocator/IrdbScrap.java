@@ -71,7 +71,7 @@ public final class IrdbScrap extends Girrable {
     private static final char QUOTECHAR = '"';
     private static final IrpDatabase irpDatabaseWithIrdbprotocols;
     private static final String IRDB_PROTOCOL_FILE = "/IrdbProtocols.xml";
-    
+
     static {
         // Unfortunately, this forces IrpProtocol.xml to be parsed twice :-\
         try {
@@ -180,7 +180,7 @@ public final class IrdbScrap extends Girrable {
      * @param input Line to be split
      * @param separator String (typically a comma ",") to use as separator.
      * @param lineNumber Line number, only used for constructing error messages from un-balanced quotes.
-     * @return
+     * @return Linked list of fields.
      * @throws ParseException in the presence of un-balanced quotes.
      */
     public static LinkedList<String> splitCSV(String input, String separator, int lineNumber) throws ParseException {
