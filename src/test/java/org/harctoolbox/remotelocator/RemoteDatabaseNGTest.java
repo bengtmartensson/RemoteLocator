@@ -21,7 +21,8 @@ public class RemoteDatabaseNGTest {
     private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
     //private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
-    private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
+    //private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
+    private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.17.fods");
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -114,7 +115,7 @@ public class RemoteDatabaseNGTest {
     public void testGetManufacturers() {
         System.out.println("getManufacturers");
         List<String> result = remoteDatabase.getManufacturers(null);
-        assertTrue(result.size() > 1700);
+        assertTrue(result.size() > 1600);
         result = remoteDatabase.getManufacturers(ScrapKind.girr);
         assertTrue(result.size() > 40);
     }
@@ -128,7 +129,7 @@ public class RemoteDatabaseNGTest {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
         List<String> result = remoteDatabase.getDeviceTypes(null, manufacturer);
-        assertEquals(result.size(), 88);
+        assertEquals(result.size(), 87);
         result = remoteDatabase.getDeviceTypes(ScrapKind.girr, manufacturer);
         assertEquals(result.size(), 4);
         try {
@@ -148,13 +149,13 @@ public class RemoteDatabaseNGTest {
         String manufacturer = "Philips";
         String deviceType = "TV";
         List result = remoteDatabase.getRemotes(manufacturer, deviceType);
-        assertEquals(result.size(), 38);
+        assertEquals(result.size(), 39);
         try {
             remoteDatabase.getRemotes(manufacturer, "sdfsdfsdfdsf");
             fail();
         } catch (NotFoundException ex) {
         }
-        assertEquals(result.size(), 38);
+        assertEquals(result.size(), 39);
     }
 
     /**

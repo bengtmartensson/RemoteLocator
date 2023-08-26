@@ -37,7 +37,7 @@ The `--out` option is (effectively) mandatory, and must point to a local (prefer
 Using the options `--girrdirr`, --lircdir`, `--irdbdir` are used to point to a locally clone of the respective GitHub/Sourceforge repositories
 (to the extent desired).
 Use the option `--jp1file` to point to an OpenOffice format XML export of the JP1 master list.
-(One such export is contained in the present project as  `src/test/jp1/jp1-master-1.16.fods`.)
+(One such export is contained in the present project as  `src/test/jp1/jp1-master-1.17.fods`.)
 If Lirc is not involved, this takes a few seconds. If Lirc _is_ included, this is slightly constlier (half a minute CPU time, 1 GB memory)
 since all the commands in the (almost 3000) Lirc files have to be rendered and decoded.
 

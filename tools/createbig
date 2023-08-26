@@ -7,7 +7,7 @@ JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
 CONFIG=${HOME}/remotelocator.xml
 CLASS=org.harctoolbox.remotelocator.RemoteDatabase
 STYLESHEET=${HOME}/src/main/xslt/remotelocator2html.xsl
-JP1FILE=${HOME}/src/test/jp1/jp1-master-1.16.fods
+JP1FILE=${HOME}/src/test/jp1/jp1-master-1.17.fods
 HTML=${HOME}/remotelocator.html
 XSLTPROC=xsltproc
 
