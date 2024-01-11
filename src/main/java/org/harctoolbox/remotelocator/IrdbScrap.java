@@ -90,6 +90,11 @@ public final class IrdbScrap extends Girrable {
     }
 
     public static Remote parse(File file, String manufacturer, String deviceClass) throws IOException {
+        if (!(file.isFile() && file.canRead())) {
+            logger.log(Level.WARNING, "{0} is not a regular and readable file, ignored.", new Object[]{file});
+            return null;
+        }
+
         return parse(new InputStreamReader(new FileInputStream(file), IRDB_CHARSET), manufacturer, deviceClass, file.getPath());
     }
 
@@ -118,6 +123,8 @@ public final class IrdbScrap extends Girrable {
                 lineno++;
                 if (line == null)
                     break;
+                if (line.isEmpty())
+                    continue;
                 try {
                     List<String> list = splitCSV(line, COMMA, lineno);
                     if (list.size() != 5) {
