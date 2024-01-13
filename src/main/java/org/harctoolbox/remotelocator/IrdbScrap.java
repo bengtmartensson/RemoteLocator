@@ -127,9 +127,11 @@ public final class IrdbScrap extends Girrable {
                 lineno++;
                 if (line == null)
                     break;
-                if (line.isEmpty())
+                if (line.isEmpty()) {
                     // empty line, should not occur really, but just ignore it.
+                    logger.log(Level.WARNING, "File {0} contains an empty line in line {1}.", new Object[]{source, lineno});
                     continue;
+                }
                 try {
                     List<String> list = splitCSV(line, COMMA, lineno);
                     if (list.size() != 5) {
