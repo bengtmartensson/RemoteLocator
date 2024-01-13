@@ -172,4 +172,13 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
     void setRemoteDatabase(RemoteDatabase remoteDatabase) {
         this.remoteDatabase = remoteDatabase;
     }
+
+    void removeIfEmpty(DeviceClassRemotes devices) {
+        if (devices.isEmpty())
+            this.deviceClasses.remove(mkKey(devices.getName()));
+    }
+
+    boolean isEmpty() {
+        return deviceClasses.isEmpty();
+    }
 }

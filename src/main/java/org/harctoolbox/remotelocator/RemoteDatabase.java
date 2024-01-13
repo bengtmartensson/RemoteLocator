@@ -422,6 +422,11 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         return manufacturers.isEmpty();
     }
 
+    void removeIfEmpty(ManufacturerDeviceClasses manufacturerTypes) {
+        if (manufacturerTypes.isEmpty())
+            manufacturers.remove(mkKey(manufacturerTypes.getName()));
+    }
+
     private final static class CommandLineArgs {
 
         @Parameter(names = {"-g", "--girrdir"}, description = "Pathname of directory (recursively) containing Girr files.")

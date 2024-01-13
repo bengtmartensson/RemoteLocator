@@ -71,6 +71,7 @@ public final class IrdbScrap extends Girrable {
     private static final char QUOTECHAR = '"';
     private static final IrpDatabase irpDatabaseWithIrdbprotocols;
     private static final String IRDB_PROTOCOL_FILE = "/IrdbProtocols.xml";
+    private static boolean rejectSilliness = true;
 
     static {
         // Unfortunately, this forces IrpProtocol.xml to be parsed twice :-\
@@ -124,13 +125,17 @@ public final class IrdbScrap extends Girrable {
                 if (line == null)
                     break;
                 if (line.isEmpty())
+                    // empty line, should not occur really, but just ignore it.
                     continue;
                 try {
                     List<String> list = splitCSV(line, COMMA, lineno);
                     if (list.size() != 5) {
                         // Silly lines just ignored
                         logger.log(Level.WARNING, "Wrong number of fields in line {0} in file {1}.", new Object[]{lineno, source});
-                        continue;
+                        if (rejectSilliness)
+                            return null;
+                        else
+                            continue;
                     }
 
                     String name = list.get(0);
@@ -282,6 +287,7 @@ public final class IrdbScrap extends Girrable {
         for (String manufacturer : manufacturerArray) {
             ManufacturerDeviceClasses manufacturerTypes = remoteDatabase.getOrCreate(manufacturer);
             addDevices(manufacturerTypes, uriBase, baseDir, new File(file, manufacturer), manufacturer);
+            remoteDatabase.removeIfEmpty(manufacturerTypes);
         }
     }
 
@@ -300,6 +306,7 @@ public final class IrdbScrap extends Girrable {
         for (String deviceClass : list) {
             DeviceClassRemotes devices = manufacturerTypes.getOrCreate(deviceClass);
             addRemotes(devices, uriBase, baseDir, new File(dir, deviceClass), manufacturer);
+            manufacturerTypes.removeIfEmpty(devices);
         }
     }
 

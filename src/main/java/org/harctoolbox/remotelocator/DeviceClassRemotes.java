@@ -164,4 +164,8 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
                 return true;
         return false;
     }
+
+    boolean isEmpty() {
+        return remoteLinks.isEmpty();
+    }
 }
