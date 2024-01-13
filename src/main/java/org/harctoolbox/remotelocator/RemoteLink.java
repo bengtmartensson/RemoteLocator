@@ -76,8 +76,8 @@ public final class RemoteLink implements Named, Serializable {
         Long dev = null;
         Long subdev = null;
         try {
-            dev = Long.parseLong(device);
-            subdev = Long.parseLong(subdevice);
+            dev = Long.valueOf(device);
+            subdev = Long.valueOf(subdevice);
         } catch (NumberFormatException ex) {
             logger.fine(ex.getLocalizedMessage());
         }

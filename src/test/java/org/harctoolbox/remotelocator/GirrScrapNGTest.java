@@ -14,15 +14,15 @@ public class GirrScrapNGTest {
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
     private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
 
+    public GirrScrapNGTest() {
+    }
+
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public void setUpClass() throws Exception {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    public GirrScrapNGTest() {
+    public void tearDownClass() throws Exception {
     }
 
     @BeforeMethod

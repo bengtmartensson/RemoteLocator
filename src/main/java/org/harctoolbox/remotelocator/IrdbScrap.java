@@ -71,7 +71,9 @@ public final class IrdbScrap extends Girrable {
     private static final char QUOTECHAR = '"';
     private static final IrpDatabase irpDatabaseWithIrdbprotocols;
     private static final String IRDB_PROTOCOL_FILE = "/IrdbProtocols.xml";
-    private static boolean rejectSilliness = true;
+    private static final boolean rejectSilliness = true;
+    private static final String IRDB_REMOTE_ENDING = ".csv";
+    private static final int IRDB_REMOTE_ENDING_LENGTH = IRDB_REMOTE_ENDING.length();
 
     static {
         // Unfortunately, this forces IrpProtocol.xml to be parsed twice :-\
@@ -95,29 +97,30 @@ public final class IrdbScrap extends Girrable {
             logger.log(Level.WARNING, "{0} is not a regular and readable file, ignored.", new Object[]{file});
             return null;
         }
-
-        return parse(new InputStreamReader(new FileInputStream(file), IRDB_CHARSET), manufacturer, deviceClass, file.getPath());
+        String remoteName = file.getName();
+        if (remoteName.endsWith(IRDB_REMOTE_ENDING))
+            remoteName = remoteName.substring(0, remoteName.length() - IRDB_REMOTE_ENDING_LENGTH);
+        return parse(new InputStreamReader(new FileInputStream(file), IRDB_CHARSET), manufacturer, deviceClass, remoteName, file.getPath());
     }
 
-    public static Remote parse(RemoteLink remoteLink, String manufacturer, String deviceClass) throws IOException {
+    public static Remote parse(RemoteLink remoteLink, String manufacturer, String deviceClass, String remoteName) throws IOException {
         if (remoteLink.getKind() != ScrapKind.irdb)
             return null;
 
         try (InputStream inputStream = remoteLink.getUrl().openStream(); InputStreamReader inputStreamReader = new InputStreamReader(inputStream, IRDB_CHARSET)) {
-            return parse(inputStreamReader, manufacturer, deviceClass, remoteLink.getUrl().toString());
+            return parse(inputStreamReader, manufacturer, deviceClass, remoteName, remoteLink.getUrl().toString());
         }
     }
-    public static Remote parse(URL url, String manufacturer, String deviceClass) throws IOException {
+    public static Remote parse(URL url, String manufacturer, String deviceClass, String remoteName) throws IOException {
         try (InputStream inputStream = url.openStream(); InputStreamReader inputStreamReader = new InputStreamReader(inputStream, IRDB_CHARSET)) {
-            return parse(inputStreamReader, manufacturer, deviceClass, url.toString());
+            return parse(inputStreamReader, manufacturer, deviceClass, remoteName, url.toString());
         }
     }
 
-    public static Remote parse(Reader reader, String manufacturer, String deviceClass, String source) throws IOException {
+    public static Remote parse(Reader reader, String manufacturer, String deviceClass, String remoteName, String source) throws IOException {
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             bufferedReader.readLine(); // junk first line
             int lineno = 1;
-            String remoteName = null;
             Map<String, Command> commands = new LinkedHashMap<>(32);
             while (true) {
                 String line = bufferedReader.readLine();
@@ -145,9 +148,6 @@ public final class IrdbScrap extends Girrable {
                     long subdevice = Long.parseLong(list.get(3));
                     long function = Long.parseLong(list.get(4));
 
-                    if (remoteName == null)
-                        remoteName = mkName(protocol, device, subdevice, function);
-
                     Map<String, Long> parameters = new HashMap<>(3);
                     parameters.put("D", device);
                     if (subdevice != -1L)
@@ -163,27 +163,9 @@ public final class IrdbScrap extends Girrable {
                 }
             }
 
-            if (remoteName == null) {
-                logger.log(Level.WARNING, "File {0} is effectively empty, ignored.", source);
-                return null;
-            }
-
             Remote.MetaData metadata = new Remote.MetaData(remoteName, null, manufacturer, null, deviceClass, null);
             return new Remote(metadata, source, null, null, commands, null, null, null);
         }
-    }
-
-    public static String mkName(String protocol, long device, long function) {
-        return mkName(protocol, device, -1L, function);
-    }
-
-    public static String mkName(String protocol, long device, long subdevice, long function) {
-        StringBuilder remoteName = new StringBuilder(64);
-        remoteName.append("Protocol=").append(protocol);
-        remoteName.append(",device=").append(device);
-        if (subdevice != -1L)
-            remoteName.append(",subdevice=").append(subdevice);
-        return remoteName.toString();
     }
 
     /**
@@ -329,7 +311,7 @@ public final class IrdbScrap extends Girrable {
     }
 
     @Override
-    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
-        return parse(reader, manufacturer, deviceClass, source);
+    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass, String remoteName) throws IOException {
+        return parse(reader, manufacturer, deviceClass, source, "dfsds");
     }
 }

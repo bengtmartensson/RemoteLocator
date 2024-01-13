@@ -117,8 +117,9 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
                     number++;
             }
             try {
-            logger.log(Level.WARNING, "Remote {0} present several times, renamed to {1}", new Object[]{ key, actualKey});
+                    logger.log(Level.WARNING, "Remote {0} (File: \"{2}\") present several times, renamed to {1}", new Object[]{key, actualKey, remoteLink.getFile()});
             } catch (NullPointerException ex) {
+                // Programming error or severe data error, just barf.
                 ex.printStackTrace();
             }
             //return;

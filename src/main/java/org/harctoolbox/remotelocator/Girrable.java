@@ -43,7 +43,7 @@ public abstract class Girrable extends Scrapable {
 
     private Remote getRemoteFile(RemoteLink remoteLink) throws IOException {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(remoteLink.getFile()), EXTENDED_LATIN1)) {
-            return getRemote(reader, remoteLink.getFile().getPath(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass());
+            return getRemote(reader, remoteLink.getFile().getPath(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass(), remoteLink.getName());
         }
     }
 
@@ -51,7 +51,7 @@ public abstract class Girrable extends Scrapable {
         URLConnection conn = remoteLink.getUrl().openConnection();
         try (InputStream stream = conn.getInputStream()) {
             InputStreamReader reader = new InputStreamReader(stream, EXTENDED_LATIN1);
-            return getRemote(reader, remoteLink.getUrl().toString(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass());
+            return getRemote(reader, remoteLink.getUrl().toString(), remoteLink.getXpath(), remoteLink.getManufacturer(), remoteLink.getDeviceClass(), remoteLink.getName());
         }
     }
 
@@ -59,7 +59,7 @@ public abstract class Girrable extends Scrapable {
         return remoteDatabase.getRemote(manufacturer, deviceClass, remoteName);
     }
 
-    public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException;
+    public abstract Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass, String remoteName) throws IOException;
 
     @SuppressWarnings("PackageVisibleInnerClass")
     public static class NotGirrableException extends Exception {

@@ -24,14 +24,6 @@ public class RemoteDatabaseNGTest {
     //private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
     private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.17.fods");
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     private final RemoteDatabase remoteDatabase;
 
     public RemoteDatabaseNGTest() throws IOException, SAXException {
@@ -43,6 +35,14 @@ public class RemoteDatabaseNGTest {
         remoteDatabase.sort();
         Document document = remoteDatabase.toDocument();
         XmlUtils.printDOM(new File("output/all.xml"), document);
+    }
+
+    @BeforeClass
+    public void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public void tearDownClass() throws Exception {
     }
 
     @BeforeMethod

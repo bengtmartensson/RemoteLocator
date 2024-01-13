@@ -12,11 +12,30 @@ PROJECT_NAME_LOWERCASE := $(shell echo $(PROJECT_NAME) | tr A-Z a-z)
 EXTRACT_VERSION := $(TOP)/common/xslt/extract_project_version.xsl
 VERSION := $(shell $(XSLTPROC) $(EXTRACT_VERSION) pom.xml)
 PROJECT_JAR := target/$(PROJECT_NAME)-$(VERSION).jar
+PROJECT_JAR_DEPENDENCIES := target/$(PROJECT_NAME)-$(VERSION)-jar-with-dependencies.jar
 PROJECT_BIN := target/$(PROJECT_NAME)-$(VERSION)-bin.zip
 GH_PAGES := $(TOP)/gh-pages
 ORIGINURL := $(shell git remote get-url origin)
+REMOTELOCATOR_XML := generated_configs/remotelocator.xml
+REMOTELOCATOR_HTML := generated_configs/remotelocator.html
+CLASS=org.harctoolbox.remotelocator.RemoteDatabase
+JP1FILE=$(TOP)/src/test/jp1/jp1-master-1.17.fods
+STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
 
 default: $(PROJECT_JAR)
+
+all: $(REMOTELOCATOR_HTML)
+
+$(REMOTELOCATOR_XML): $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out "$@" --sort \
+	--girrdir ../GirrLib/Girr \
+	--irdb ../irdb/codes \
+	--lirc ../../lirc/lirc-remotes/remotes \
+	--jp1 "$(JP1FILE)"
+
+$(REMOTELOCATOR_HTML): $(REMOTELOCATOR_XML)
+	$(XSLTPROC)  -o "$@" "${STYLESHEET}"  "$<"
 
 $(PROJECT_JAR) $(PROJECT_BIN):
 	mvn install -Dmaven.test.skip=true
@@ -64,6 +83,6 @@ tag:
 
 clean:
 	mvn clean
-	rm -rf $(GH_PAGES) pom.xml.versionsBackup lirc.xml irdb.xml girrlib.xml remotelocator.*ml 
+	rm -rf $(GH_PAGES) pom.xml.versionsBackup lirc.xml irdb.xml girrlib.xml remotelocator.*ml generated_configs/*
 
 .PHONY: clean $(PROJECT_JAR)-test release

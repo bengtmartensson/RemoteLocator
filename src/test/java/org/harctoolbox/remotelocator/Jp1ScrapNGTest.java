@@ -15,11 +15,11 @@ public class Jp1ScrapNGTest {
     private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.17.fods");
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public void setUpClass() throws Exception {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public void tearDownClass() throws Exception {
     }
 
     public Jp1ScrapNGTest() {

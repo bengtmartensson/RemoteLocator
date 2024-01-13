@@ -127,7 +127,6 @@ public class GirrScrap extends Girrable {
         manufacturerTypes.add(ScrapKind.girr, remote, baseUri, baseDir, file, xpath);
     }
 
-    @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
         try {
             Document document = XmlUtils.openXmlReader(reader, null, false, true);
@@ -146,5 +145,10 @@ public class GirrScrap extends Girrable {
             if (name.endsWith(ext))
                 return true;
         return false;
+    }
+
+    @Override
+    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass, String remoteName) throws IOException {
+        return getRemote(reader, source, xpath, manufacturer, deviceClass);
     }
 }

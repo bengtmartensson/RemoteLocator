@@ -14,15 +14,15 @@ import org.testng.annotations.Test;
 public class LircScrapNGTest {
     private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
 
+    public LircScrapNGTest() {
+    }
+
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public void setUpClass() throws Exception {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    public LircScrapNGTest() {
+    public void tearDownClass() throws Exception {
     }
 
     @BeforeMethod

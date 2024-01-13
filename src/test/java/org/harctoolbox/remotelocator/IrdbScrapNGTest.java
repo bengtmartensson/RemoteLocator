@@ -19,15 +19,15 @@ import org.xml.sax.SAXException;
 public class IrdbScrapNGTest {
     private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
 
+    public IrdbScrapNGTest() {
+    }
+
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public void setUpClass() throws Exception {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    public IrdbScrapNGTest() {
+    public void tearDownClass() throws Exception {
     }
 
     @BeforeMethod
@@ -74,7 +74,7 @@ public class IrdbScrapNGTest {
         System.out.println("getRemote");
         IrdbScrap instance = new IrdbScrap();
         instance.add(LOCAL_IRDB_BASEDIR);
-        String name = IrdbScrap.mkName("RC6", 4, 0);
+        String name = "4,-1";
         Remote remote = instance.getRemote("Yamaha", "DVD", name);
         remote.print("output/yamaha-dvd.girr");
         String firstcommand = remote.iterator().next().getCommands().iterator().next().getName();

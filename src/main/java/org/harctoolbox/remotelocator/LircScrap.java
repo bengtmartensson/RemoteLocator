@@ -102,7 +102,6 @@ public class LircScrap extends Girrable {
         }
     }
 
-    @Override
     public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass) throws IOException {
         RemoteSet remoteSet = ConfigFile.parseConfig(reader, source, true, null);
         Remote lircRemote = remoteSet.iterator().next();
@@ -116,5 +115,10 @@ public class LircScrap extends Girrable {
     @Override
     String formatUrl(String url) {
         return String.format("%1$s?format=raw", url);
+    }
+
+    @Override
+    public Remote getRemote(InputStreamReader reader, String source, String xpath, String manufacturer, String deviceClass, String remoteName) throws IOException {
+        return getRemote(reader, source, xpath, manufacturer, deviceClass);
     }
 }
