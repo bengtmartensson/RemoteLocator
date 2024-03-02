@@ -18,10 +18,10 @@ Meta information, including manufacturer and device class, is contained in the G
 There is a small collection ([GirrLib](https://github.com/bengtmartensson/GirrLib)),
 which is more of a proof-of-concept than a sizeable collection of remotes.
 * The JP1 project has a large collection of "device upgrades". These are summarized in
-[an Excel file](http://www.hifi-remote.com/forums/dload.php?action=file&file_id=26089).
-His list also contains meta information such as manufacturer and device class.
+[an Excel file](http://www.hifi-remote.com/forums/dload.php?action=file&file_id=26701).
+This list also contains meta information such as manufacturer and device class.
 This can be read into the present program, and used to browse the therein contained remotes (or rather, "device upgrades").
-These can, with some manual work be translated to Girr files.
+These can, with some manual work, be translated to Girr files.
 
 Basically, there are three use case for the program:
 
@@ -34,7 +34,7 @@ Typically, only an "administrator" invokes this use case.
 This is achieved by calling the main-routine of the RemoteDatabase class.
 From (a subset of) the four sources, a local file is generated.
 The `--out` option is (effectively) mandatory, and must point to a local (preferably non-existing) write-able file.
-Using the options `--girrdirr`, --lircdir`, `--irdbdir` are used to point to a locally clone of the respective GitHub/Sourceforge repositories
+Using the options `--girrdir`, `--lircdir`, `--irdbdir` are used to point to a locally clone of the respective GitHub/Sourceforge repositories
 (to the extent desired).
 Use the option `--jp1file` to point to an OpenOffice format XML export of the JP1 master list.
 (One such export is contained in the present project as  `src/test/jp1/jp1-master-1.17.fods`.)
@@ -42,17 +42,17 @@ If Lirc is not involved, this takes a few seconds. If Lirc _is_ included, this i
 since all the commands in the (almost 3000) Lirc files have to be rendered and decoded.
 
 ### Global file
-It is planned to make a current version of the complete file available for download, for example as
+The current version of the complete file is available for download as
 [`http://harctoolbox.org/downloads/remotelocator.xml`](http://harctoolbox.org/downloads/remotelocator.xml).
 
 ### HTML version of the remotelocator file
 There exists an XSLT transformation `src/main/xslt/remotelocator2html.xsl` that turnes the XML file into a HTML file
 containing clickable `a`-elements for download/browsing.
-It is planned to make a current version of the HTML file available for download, for example as
+This is available for download and browsing as
 [`http://harctoolbox.org/downloads/remotelocator.html`](http://harctoolbox.org/downloads/remotelocator.html).
 
 ## Gathering information from the file
-For this use case, the argument of `--config` must be a correct, readable file or URL. By using the options
+For this use case, the argument of `--config` must be a valid and readable file or URL. By using the options
 `--manufacturer`, `--deviceclass` (possibly with an argument of `?`) information on contained manufacturers, their device classes,
 and the contained remotes can be queried.
 
@@ -65,8 +65,8 @@ prints the (possibly converted) remote in Girr, Pronto Hex or IRDB CSV-format re
 
 ## Integration in IrScrutinizer
 This program is integrated in IrScrutinizer version 2.3.1 and later, giving it a GUI.
-I can be accessed as the pane Import -> RemoteLocator.
-By "Select me to load" a global `remotelocator.xml` file is downloaded, once per session.
+I can be accessed as the pane `Import -> RemoteLocator`.
+By selecting `Select me to load` a global `remotelocator.xml` file is downloaded, once per session.
 
 ## Appendix. All program options:
 ```
