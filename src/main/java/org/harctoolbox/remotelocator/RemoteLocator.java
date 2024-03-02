@@ -95,6 +95,11 @@ public class RemoteLocator {
             System.exit(EXIT_SUCCESS);
         }
 
+        if (commandLineArgs.config == null) {
+            System.err.println("--config|-c is a required argument");
+            usage(EXIT_USAGE_ERROR);
+        }
+
         try {
             remoteDatabase = new RemoteDatabase(commandLineArgs.config);
             if (remoteDatabase.isEmpty())
@@ -201,7 +206,7 @@ public class RemoteLocator {
         @Parameter(names = {"-b", "--browse"}, description = "Browse the remote instead of downloading it.")
         private boolean browse = false;
 
-        @Parameter(names = {"-c", "--config"}, required = true, description = "Name or URL of config file, to be read or written.")
+        @Parameter(names = {"-c", "--config"}, description = "Name or URL of config file, to be read or written.")
         String config = null;
 
         @Parameter(names = {"--csv"}, description = "Produce output in IRDB CVS format.")
