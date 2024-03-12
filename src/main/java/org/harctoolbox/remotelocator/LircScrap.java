@@ -108,8 +108,7 @@ public class LircScrap extends Girrable {
         if (lircRemote == null)
             return null;
         Remote.MetaData metaData = new Remote.MetaData(lircRemote.getName(), null, manufacturer, null, deviceClass, null);
-        Remote remote = new Remote(metaData, source, lircRemote.getComment(), null, lircRemote.getCommandSets().values(), lircRemote.getApplicationParameters());
-        return remote;
+        return new Remote(metaData, source, lircRemote.getComment(), null, lircRemote.getCommandSets().values(), lircRemote.getApplicationParameters());
     }
 
     @Override

@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
 /**
  *
  */
-@SuppressWarnings("UseOfSystemOutOrSystemErr")
+@SuppressWarnings({"UseOfSystemOutOrSystemErr", "serial"})
 public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>, Serializable {
 
     //private static final Logger logger = Logger.getLogger(RemoteDatabase.class.getName());
@@ -77,6 +77,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public static final String FILE_SCHEME_NAME = "file";
     public static final String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
     public static final String FORMATVERSION_ATTRIBUTE_NAME = "formatVersion";
+    public static final String CREATING_TOOL_ATTRIBUTE_NAME = "tool";
+    public static final String CREATING_TOOL_VERSION_ATTRIBUTE_NAME = "toolVersion";
     public static final String FORMATVERSION = "0.1";
     private static final int INITIAL_CAPACITY = 64;
 
@@ -105,10 +107,10 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      */
     static final String REMOTELOCATOR_COMMENT = "This file is in the RemoteLocator format, see " + REMOTELOCATOR_HOMEPAGE;
 
-            static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
-            static final String APP_NAME = "RemoteLocator";
-            static final String VERSION = "0.2.0";
-            static final String VERSION_STRING = APP_NAME + " version " + VERSION;
+    static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
+    static final String APP_NAME = "RemoteLocator";
+    static final String VERSION = "0.2.0";
+    static final String VERSION_STRING = APP_NAME + " version " + VERSION;
 
     private static RemoteDatabase remoteDatabase;
     private static JCommander argumentParser;
@@ -297,6 +299,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         element.setAttribute(W3C_SCHEMA_NAMESPACE_ATTRIBUTE_NAME, W3C_XML_SCHEMA_INSTANCE_NS_URI);
         element.setAttribute(XMLNS_ATTRIBUTE + ":" + REMOTELOCATOR_PREFIX, REMOTELOCATOR_NAMESPACE);
         element.setAttribute(SCHEMA_LOCATION_ATTRIBUTE_NAME, REMOTELOCATOR_NAMESPACE + " " + REMOTELOCATOR_SCHEMA_LOCATION_URI);
+        element.setAttribute(CREATING_TOOL_ATTRIBUTE_NAME, APP_NAME);
+        element.setAttribute(CREATING_TOOL_VERSION_ATTRIBUTE_NAME, VERSION);
 
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));
@@ -387,8 +391,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     public List<String> getDeviceTypes(ScrapKind kind, String manufacturer) throws NotFoundException {
         ManufacturerDeviceClasses m = getManufacturerDeviceClass(manufacturer);
-        List<String> list = m.getDeviceClasses(kind);
-        return list;
+        return m.getDeviceClasses(kind);
     }
 
     public List<String> getRemotes(String manufacturer, String deviceType) throws NotFoundException {

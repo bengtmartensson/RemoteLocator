@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2024-01-13_21:20:40" formatVersion="0.1" title="Database of downloadable remotes" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-0.1.xsd">
+<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2024-03-12_15:15:59" formatVersion="0.1" title="Database of downloadable remotes" tool="RemoteLocator" toolVersion="0.2.0" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-0.1.xsd">
     <rl:manufacturer name="&quot;TacT">
         <rl:deviceClass name="Audio">
             <rl:remoteLink device="135" kind="jp1" name="&quot;TacT Millennium MKII amplifier &quot;" protocol="NEC1" subdevice="124" url="http://www.hifi-remote.com/forums/dload.php?action=file&amp;file_id=25828"/>

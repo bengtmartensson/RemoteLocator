@@ -51,6 +51,16 @@
             <xs:attribute name="creatingUser" type="xs:string"/>
             <xs:attribute name="creationDate" type="xs:string"/>
             <xs:attribute name="title" type="xs:string"/>
+            <xs:attribute name="tool" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Name of creating tool.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="toolVersion" type="xs:string" use="optional">
+                <xs:annotation>
+                    <xs:documentation>Version of creating tool.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

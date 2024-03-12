@@ -14,6 +14,9 @@ public class Jp1ScrapNGTest {
 
     private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.17.fods");
 
+    public Jp1ScrapNGTest() {
+    }
+
     @BeforeClass
     public void setUpClass() throws Exception {
     }
@@ -22,8 +25,6 @@ public class Jp1ScrapNGTest {
     public void tearDownClass() throws Exception {
     }
 
-    public Jp1ScrapNGTest() {
-    }
 
     @BeforeMethod
     public void setUpMethod() throws Exception {
