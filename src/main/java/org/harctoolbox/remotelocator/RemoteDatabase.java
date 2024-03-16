@@ -109,7 +109,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
     static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
     static final String APP_NAME = "RemoteLocator";
-    static final String VERSION = "0.2.0";
+    static final String VERSION = "0.2.1";
     static final String VERSION_STRING = APP_NAME + " version " + VERSION;
 
     private static RemoteDatabase remoteDatabase;
