@@ -133,7 +133,6 @@
                 <configuration>
                     <outputDirectory>${project.build.directory}/apidocs</outputDirectory>
                     <show>package</show> <!-- Document also package private classes -->
-                    <aggregate>true</aggregate>
                 </configuration>
             </plugin>
             <plugin>
