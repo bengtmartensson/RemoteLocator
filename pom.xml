@@ -76,6 +76,79 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <!--goal>validate</goal-->
+                            <goal>transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <basedir>common/schemas</basedir>
+                    <catalogHandling>strict</catalogHandling>
+                    <catalogs>
+                        <catalog>catalog.xml</catalog>
+                    </catalogs>
+                    <!--validationSets>
+                        <validationSet>
+                            <dir>src/main/xml</dir>
+                            <includes>
+                                <include>Version.xml</include>
+                            </includes>
+                            <xincludeAware>true</xincludeAware>
+                            <systemId>http://www.harctoolbox.org/dtds/version.dtd</systemId>
+                        </validationSet>
+                    </validationSets-->
+                    <transformationSets>
+                        <transformationSet>
+                            <!-- Generate Version.java from Version.xml using mkVersion.xsl. -->
+                            <dir>src/main/xml</dir>
+                            <outputDir>${project.build.directory}/generated-sources/xml/org/harctoolbox/remotelocator</outputDir>
+                            <includes>
+                                <include>Version.xml</include>
+                            </includes>
+                            <stylesheet>${project.basedir}/common/xslt/mkVersion.xsl</stylesheet>
+                            <parameters>
+                                <parameter>
+                                    <name>version</name>
+                                    <value>${project.version}</value>
+                                </parameter>
+                                <parameter>
+                                    <name>url</name>
+                                    <value>${project.url}</value>
+                                </parameter>
+                                <parameter>
+                                    <name>appName</name>
+                                    <value>${project.artifactId}</value>
+                                </parameter>
+                                <parameter>
+                                    <name>commitId</name>
+                                    <value>${git.commit.id}</value>
+                                </parameter>
+                            </parameters>
+                            <fileMappers>
+                                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <targetExtension>.java</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
+                    </transformationSets>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>xalan</groupId>
+                        <artifactId>xalan</artifactId>
+                        <version>2.7.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.6.0</version>
@@ -157,6 +230,24 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.9.10</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dateFormat>yyyyMMdd</dateFormat><!--  human-readable part of the version number -->
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <generateGitPropertiesFile>false</generateGitPropertiesFile><!-- somehow necessary. otherwise the variables are not available in the pom -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

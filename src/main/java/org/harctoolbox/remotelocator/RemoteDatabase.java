@@ -106,11 +106,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      * Comment string pointing to RemoteLocator docu.
      */
     static final String REMOTELOCATOR_COMMENT = "This file is in the RemoteLocator format, see " + REMOTELOCATOR_HOMEPAGE;
-
     static final String DATE_FORMAT_STRING = "yyyy-MM-dd_HH:mm:ss";
-    static final String APP_NAME = "RemoteLocator";
-    static final String VERSION = "0.2.1";
-    static final String VERSION_STRING = APP_NAME + " version " + VERSION;
 
     private static RemoteDatabase remoteDatabase;
     private static JCommander argumentParser;
@@ -143,7 +139,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      */
     public static void main(String[] args) {
         argumentParser = new JCommander(commandLineArgs);
-        argumentParser.setProgramName(APP_NAME);
+        argumentParser.setProgramName(Version.appName);
         argumentParser.setAllowAbbreviatedOptions(true);
         argumentParser.setCaseSensitiveOptions(false);
 
@@ -158,11 +154,9 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
             usage(EXIT_SUCCESS);
 
         if (commandLineArgs.versionRequested) {
-            System.out.println(VERSION_STRING);
+            System.out.println(Version.licenseString);
             System.out.println("JVM: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version")
                     + " " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
-            //System.out.println();
-            //System.out.println(Version.licenseString);
             System.exit(EXIT_SUCCESS);
         }
 
@@ -299,8 +293,8 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         element.setAttribute(W3C_SCHEMA_NAMESPACE_ATTRIBUTE_NAME, W3C_XML_SCHEMA_INSTANCE_NS_URI);
         element.setAttribute(XMLNS_ATTRIBUTE + ":" + REMOTELOCATOR_PREFIX, REMOTELOCATOR_NAMESPACE);
         element.setAttribute(SCHEMA_LOCATION_ATTRIBUTE_NAME, REMOTELOCATOR_NAMESPACE + " " + REMOTELOCATOR_SCHEMA_LOCATION_URI);
-        element.setAttribute(CREATING_TOOL_ATTRIBUTE_NAME, APP_NAME);
-        element.setAttribute(CREATING_TOOL_VERSION_ATTRIBUTE_NAME, VERSION);
+        element.setAttribute(CREATING_TOOL_ATTRIBUTE_NAME, Version.appName);
+        element.setAttribute(CREATING_TOOL_VERSION_ATTRIBUTE_NAME, Version.version);
 
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));

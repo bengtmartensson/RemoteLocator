@@ -38,8 +38,6 @@ import org.harctoolbox.ircore.IrCoreUtils;
 import org.harctoolbox.irp.IrpException;
 import static org.harctoolbox.irp.IrpUtils.EXIT_SUCCESS;
 import static org.harctoolbox.irp.IrpUtils.EXIT_USAGE_ERROR;
-import static org.harctoolbox.remotelocator.RemoteDatabase.APP_NAME;
-import static org.harctoolbox.remotelocator.RemoteDatabase.VERSION_STRING;
 import org.xml.sax.SAXException;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
@@ -74,7 +72,7 @@ public class RemoteLocator {
      */
     public static void main(String[] args) {
         argumentParser = new JCommander(commandLineArgs);
-        argumentParser.setProgramName(APP_NAME);
+        argumentParser.setProgramName(Version.appName);
         argumentParser.setAllowAbbreviatedOptions(true);
         argumentParser.setCaseSensitiveOptions(false);
 
@@ -89,9 +87,11 @@ public class RemoteLocator {
             usage(EXIT_SUCCESS);
 
         if (commandLineArgs.versionRequested) {
-            System.out.println(VERSION_STRING);
-            System.out.println("JVM: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version")
-                    + " " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+            System.out.println(Version.versionString);
+            System.out.println("commitId: " + Version.commitId);
+            System.out.println("JVM: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + " " + System.getProperty("os.name") + "-" + System.getProperty("os.arch"));
+            System.out.println();
+            System.out.println(Version.licenseString);
             System.exit(EXIT_SUCCESS);
         }
 
