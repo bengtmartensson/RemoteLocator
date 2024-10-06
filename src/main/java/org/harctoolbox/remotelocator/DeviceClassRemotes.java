@@ -110,19 +110,18 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
             int number = 1;
             while (true) {
                 actualKey = key + "$" + Integer.toString(number);
-                if (! remoteLinks.containsKey(actualKey)) {
+                if (!remoteLinks.containsKey(actualKey)) {
                     //key = actualKey;
                     break;
                 } else
                     number++;
             }
             try {
-                    logger.log(Level.WARNING, "Remote {0} (File: \"{2}\") present several times, renamed to {1}", new Object[]{key, actualKey, remoteLink.getFile()});
+                logger.log(Level.WARNING, "Remote {0} (File: \"{2}\") present several times, renamed to {1}", new Object[]{key, actualKey, remoteLink.getFile()});
             } catch (NullPointerException ex) {
                 // Programming error or severe data error, just barf.
                 ex.printStackTrace();
             }
-            //return;
         }
         remoteLinks.put(actualKey, remoteLink);
         remoteLink.setOwner(this);
