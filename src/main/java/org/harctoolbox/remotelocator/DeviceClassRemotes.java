@@ -138,9 +138,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         List<RemoteLink> list = new ArrayList<>(remoteLinks.values());
         Collections.sort(list, comparator);
         remoteLinks.clear();
-        list.forEach(link -> {
-            remoteLinks.put(RemoteDatabase.mkKey(link.getName()), link);
-        });
+        list.forEach(this::add);
     }
 
    public List<String> getRemotes() {
