@@ -144,6 +144,8 @@ public final class IrdbScrap extends Girrable {
                     }
 
                     String name = list.get(0);
+                    if (name.isEmpty())
+                        logger.log(Level.WARNING, "Empty function name in {0}", source);
                     String protocol = list.get(1);
 
                     long device = Long.parseLong(list.get(2));
@@ -294,6 +296,7 @@ public final class IrdbScrap extends Girrable {
         }
     }
 
+    @SuppressWarnings({"BroadCatchBlock", "TooBroadCatch"})
     private void addRemotes(DeviceClassRemotes devices, URI uriBase, File baseDir, File dir, String manufacturer) throws IOException {
         if (!isReadableDirectory(dir)) {
             // Can be junk file; non-fatal
@@ -303,11 +306,18 @@ public final class IrdbScrap extends Girrable {
 
         String[] array = dir.list();
         for (String remoteName : array) {
+            if (remoteName.endsWith("~"))
+                continue;
+
             File file = new File(dir, remoteName);
-            Remote remote = parse(file, manufacturer, devices.getName());
-            if (remote != null) {
-                RemoteLink remoteLink = new RemoteLink(ScrapKind.irdb, remote, uriBase, baseDir, file);
-                devices.add(remoteLink);
+            try {
+                Remote remote = parse(file, manufacturer, devices.getName());
+                if (remote != null) {
+                    RemoteLink remoteLink = new RemoteLink(ScrapKind.irdb, remote, uriBase, baseDir, file);
+                    devices.add(remoteLink);
+                }
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Parse error in file {0}", file.toString());
             }
         }
     }

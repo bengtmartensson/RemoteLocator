@@ -8,5 +8,5 @@ lirc.xml
 .cache
 .local
 .config
-~*
+*~
 old

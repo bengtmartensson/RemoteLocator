@@ -18,6 +18,7 @@ GH_PAGES := $(TOP)/gh-pages
 ORIGINURL := $(shell git remote get-url origin)
 REMOTELOCATOR_XML := generated_configs/remotelocator.xml
 REMOTELOCATOR_HTML := generated_configs/remotelocator.html
+REMOTELOCATOR_IRDB := generated_configs/remotelocator_irdb.xml
 CLASS=org.harctoolbox.remotelocator.RemoteDatabase
 JP1FILE=$(TOP)/src/test/jp1/jp1-master-1.17.fods
 STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
@@ -33,6 +34,11 @@ $(REMOTELOCATOR_XML): $(PROJECT_JAR)
 	--irdb ../irdb/codes \
 	--lirc ../../lirc/lirc-remotes/remotes \
 	--jp1 "$(JP1FILE)"
+
+$(REMOTELOCATOR_IRDB): $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out "$@" --sort \
+	--irdb ../irdb/codes
 
 $(REMOTELOCATOR_HTML): $(REMOTELOCATOR_XML)
 	$(XSLTPROC)  -o "$@" "${STYLESHEET}"  "$<"
