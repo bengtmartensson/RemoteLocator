@@ -16,9 +16,16 @@ PROJECT_JAR_DEPENDENCIES := target/$(PROJECT_NAME)-$(VERSION)-jar-with-dependenc
 PROJECT_BIN := target/$(PROJECT_NAME)-$(VERSION)-bin.zip
 GH_PAGES := $(TOP)/gh-pages
 ORIGINURL := $(shell git remote get-url origin)
-REMOTELOCATOR_XML := generated_configs/remotelocator.xml
+
+REMOTELOCATOR_XML  := generated_configs/remotelocator.xml
 REMOTELOCATOR_HTML := generated_configs/remotelocator.html
 REMOTELOCATOR_IRDB := generated_configs/remotelocator_irdb.xml
+REMOTELOCATOR_JP1  := generated_configs/remotelocator_jp1.xml
+REMOTELOCATOR_LIRC := generated_configs/remotelocator_lirc.xml
+
+IRDB_PATH := ../irdb/codes
+GIRR_PATH := ../GirrLib/Girr
+LIRC_PATH := ../../lirc/lirc-remotes/remotes
 CLASS=org.harctoolbox.remotelocator.RemoteDatabase
 JP1FILE=$(TOP)/src/test/jp1/jp1-master-1.17.fods
 STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
@@ -30,15 +37,25 @@ all: $(REMOTELOCATOR_HTML)
 $(REMOTELOCATOR_XML): $(PROJECT_JAR)
 	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
 	--out "$@" --sort \
-	--girrdir ../GirrLib/Girr \
-	--irdb ../irdb/codes \
-	--lirc ../../lirc/lirc-remotes/remotes \
+	--girrdir $(GIRR_PATH) \
+	--irdb $(IRDB_PATH) \
+	--lirc $(LIRC_PATH) \
+	--jp1 "$(JP1FILE)"
+
+$(REMOTELOCATOR_LIRC): $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out "$@" --sort \
+	--lirc "$(LIRC_PATH)"
+
+$(REMOTELOCATOR_JP1): $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out "$@" --sort \
 	--jp1 "$(JP1FILE)"
 
 $(REMOTELOCATOR_IRDB): $(PROJECT_JAR)
 	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
 	--out "$@" --sort \
-	--irdb ../irdb/codes
+	--irdb $(IRDB_PATH)
 
 $(REMOTELOCATOR_HTML): $(REMOTELOCATOR_XML)
 	$(XSLTPROC)  -o "$@" "${STYLESHEET}"  "$<"
