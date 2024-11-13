@@ -66,6 +66,7 @@ public class LircScrap extends Girrable {
         for (String manufacturer : manufacturerArray) {
             ManufacturerDeviceClasses manufacturerTypes = remoteDatabase.getOrCreate(manufacturer);
             add(manufacturerTypes, uriBase, baseDir, new File(file, manufacturer));
+            remoteDatabase.removeIfEmpty(manufacturerTypes);
         }
     }
 
@@ -78,6 +79,7 @@ public class LircScrap extends Girrable {
 
         DeviceClassRemotes devices = manufacturerTypes.getOrCreate(UNKNOWN);
         add(devices, uri, baseDir, dir);
+        manufacturerTypes.removeIfEmpty(devices);
     }
 
     private void add(DeviceClassRemotes devices, URI uri, File baseDir, File dir) {
