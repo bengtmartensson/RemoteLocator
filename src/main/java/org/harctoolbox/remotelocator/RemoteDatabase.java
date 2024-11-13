@@ -172,7 +172,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
             out = IrCoreUtils.getPrintStream(commandLineArgs.output);
 
             remoteDatabase.print(out);
-            System.err.println("Configuration file " + out.toString() + " written, containing " + remoteDatabase.numberRemotes() + " remotes.");
+            System.err.println("Configuration file " + commandLineArgs.output + " written, containing " + remoteDatabase.numberRemotes() + " remotes.");
         } catch (IOException ex) {
             die(ex.getLocalizedMessage(), EXIT_USAGE_ERROR);
         } catch (SAXException ex) {
