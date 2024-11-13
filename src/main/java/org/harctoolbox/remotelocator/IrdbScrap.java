@@ -118,6 +118,7 @@ public final class IrdbScrap extends Girrable {
     }
 
     public static Remote parse(Reader reader, String manufacturer, String deviceClass, String remoteName, String source) throws IOException {
+        boolean nonemptyContent = false;
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             bufferedReader.readLine(); // junk first line
             int lineno = 1;
@@ -145,7 +146,9 @@ public final class IrdbScrap extends Girrable {
 
                     String name = list.get(0);
                     if (name.isEmpty())
-                        logger.log(Level.WARNING, "Empty function name in {0}", source);
+                        logger.log(Level.WARNING, "Empty function name in line {0} in file {1}", new Object[]{lineno, source});
+                    else
+                        nonemptyContent = true;
                     String protocol = list.get(1);
 
                     long device = Long.parseLong(list.get(2));
@@ -165,6 +168,10 @@ public final class IrdbScrap extends Girrable {
                 } catch (ParseException ex) {
                     logger.log(Level.WARNING, "Unbalaned quotes in line {0}", lineno);
                 }
+            }
+            if (! nonemptyContent) {
+                logger.log(Level.WARNING, "File {0} does not contain a single command with non-empty name, ignored.", source);
+                return null;
             }
 
             Remote.MetaData metadata = new Remote.MetaData(remoteName, null, manufacturer, null, deviceClass, null);
@@ -280,7 +287,9 @@ public final class IrdbScrap extends Girrable {
     private void addDevices(ManufacturerDeviceClasses manufacturerTypes, URI uriBase, File baseDir, File dir, String manufacturer) throws IOException {
         if (!isReadableDirectory(dir)) {
             // Non-fatal; there may lie junk files around
-            logger.log(Level.WARNING, "{0} is not a readable directory", dir);
+            String filename = dir.getName();
+            if (! (filename.equals("index") || filename.equals("index.sh")))
+                logger.log(Level.WARNING, "{0} is not a readable directory", dir);
             return;
         }
 
