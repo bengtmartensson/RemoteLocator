@@ -22,7 +22,7 @@ public class RemoteDatabaseNGTest {
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
     //private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
     //private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
-    private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.17.fods");
+    private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.17.fods");
 
     private final RemoteDatabase remoteDatabase;
 

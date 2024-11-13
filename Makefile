@@ -27,7 +27,7 @@ IRDB_PATH := ../irdb/codes
 GIRR_PATH := ../GirrLib/Girr
 LIRC_PATH := ../../lirc/lirc-remotes/remotes
 CLASS=org.harctoolbox.remotelocator.RemoteDatabase
-JP1FILE=$(TOP)/src/test/jp1/jp1-master-1.17.fods
+JP1FILE=$(TOP)/src/main/resources/jp1-master-1.18.fods
 STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
 
 default: $(PROJECT_JAR)
