@@ -22,6 +22,7 @@ REMOTELOCATOR_HTML := generated_configs/remotelocator.html
 REMOTELOCATOR_IRDB := generated_configs/remotelocator_irdb.xml
 REMOTELOCATOR_JP1  := generated_configs/remotelocator_jp1.xml
 REMOTELOCATOR_LIRC := generated_configs/remotelocator_lirc.xml
+REMOTELOCATOR_GIRR := generated_configs/remotelocator_girr.xml
 
 IRDB_PATH := ../irdb/codes
 GIRR_PATH := ../GirrLib/Girr
@@ -33,6 +34,34 @@ STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
 default: $(PROJECT_JAR)
 
 all: $(REMOTELOCATOR_HTML)
+
+check_all: $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out /dev/null \
+	--girrdir $(GIRR_PATH) \
+	--irdb $(IRDB_PATH) \
+	--lirc $(LIRC_PATH) \
+	--jp1 "$(JP1FILE)"
+
+check_lirc: $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out /dev/null \
+	--lirc "$(LIRC_PATH)"
+
+check_jp1: $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out /dev/null \
+	--jp1 "$(JP1FILE)"
+
+check_irdb: $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out /dev/null \
+	--irdb $(IRDB_PATH)
+
+check_girr: $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out /dev/null \
+	--girrdir $(GIRR_PATH)
 
 $(REMOTELOCATOR_XML): $(PROJECT_JAR)
 	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
@@ -56,6 +85,11 @@ $(REMOTELOCATOR_IRDB): $(PROJECT_JAR)
 	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
 	--out "$@" --sort \
 	--irdb $(IRDB_PATH)
+
+$(REMOTELOCATOR_GIRR): $(PROJECT_JAR)
+	"$(JAVA)" -cp "$(PROJECT_JAR_DEPENDENCIES)" "$(CLASS)" \
+	--out "$@" --sort \
+	--girrdir $(GIRR_PATH)
 
 $(REMOTELOCATOR_HTML): $(REMOTELOCATOR_XML)
 	$(XSLTPROC)  -o "$@" "${STYLESHEET}"  "$<"
@@ -106,6 +140,6 @@ tag:
 
 clean:
 	mvn clean
-	rm -rf $(GH_PAGES) pom.xml.versionsBackup lirc.xml irdb.xml girrlib.xml remotelocator.*ml generated_configs/*
+	rm -rf $(GH_PAGES) generated_configs/remotelocator_*
 
-.PHONY: clean $(PROJECT_JAR)-test release
+.PHONY: clean $(PROJECT_JAR)-test release check_all check_lirc check_jp1 check_irdb check_girr
