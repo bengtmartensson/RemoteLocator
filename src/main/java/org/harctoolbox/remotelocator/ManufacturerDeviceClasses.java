@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,7 +67,7 @@ public final class ManufacturerDeviceClasses implements Named, Iterable<DeviceCl
             try {
                 DeviceClassRemotes dev = new DeviceClassRemotes(devElement);
                 add(dev);
-            } catch (MalformedURLException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 logger.log(Level.WARNING, "Erroneous URL {0}", ex.getLocalizedMessage());
             }
         }

@@ -136,10 +136,10 @@ public final class RemoteLink implements Named, Serializable {
         this(kind, remote, baseUri, baseDir, file, (String) null);
     }
 
-    RemoteLink(Element remoteLinkElement) throws MalformedURLException {
+    RemoteLink(Element remoteLinkElement) throws URISyntaxException, MalformedURLException {
         kind = ScrapKind.valueOf(remoteLinkElement.getAttribute(KIND_ATTRIBUTE_NAME));
         file = new File(remoteLinkElement.getAttribute(PATH_ELEMENT_NAME));
-        url = new URL(remoteLinkElement.getAttribute(URL_ATTRIBUTE_NAME));
+        url = new URI(remoteLinkElement.getAttribute(URL_ATTRIBUTE_NAME)).toURL();
         xpath = remoteLinkElement.getAttribute(XPATH_ATTRIBUTE_NAME);
 
         String name = remoteLinkElement.getAttribute(NAME_ATTRIBUTE_NAME);

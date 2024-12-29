@@ -20,6 +20,7 @@ package org.harctoolbox.remotelocator;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,7 +57,7 @@ public final class DeviceClassRemotes implements Named, Iterable<RemoteLink> {
         remoteLinks = new LinkedHashMap<>(INITIAL_CAPACITY);
     }
 
-    DeviceClassRemotes(Element devElement) throws MalformedURLException {
+    DeviceClassRemotes(Element devElement) throws MalformedURLException, URISyntaxException {
         this(devElement.getAttribute(DEVICECLASS_ATTRIBUTE_NAME));
         NodeList nodeList = devElement.getElementsByTagNameNS(REMOTELOCATOR_NAMESPACE, REMOTELINK_ELEMENT_NAME);
         for (int i = 0; i < nodeList.getLength(); i++) {
