@@ -56,6 +56,7 @@ public class LircScrap extends Girrable {
 
     @Override
     public void add(File dir) throws IOException {
+        remoteDatabase.addKind(ScrapKind.lirc);
         add(LIRC_BASE_URI, dir, dir);
     }
 

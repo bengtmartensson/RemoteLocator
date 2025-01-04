@@ -270,6 +270,7 @@ public final class IrdbScrap extends Girrable {
 
     @Override
     public void add(File dir) throws IOException {
+        remoteDatabase.addKind(ScrapKind.irdb);
         addManufacturerDirectory(IRDB_BASE_URI, dir, dir);
     }
 

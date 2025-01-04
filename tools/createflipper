@@ -1,0 +1,10 @@
+#!/bin/sh
+
+HOME="$(dirname $(dirname -- "$(readlink -f -- "${0}")" ))"
+
+JAVA=java
+JAR=$(echo ${HOME}/target/RemoteLocator-*-jar-with-dependencies.jar )
+CONFIG=${HOME}/flipper.xml
+
+cd $HOME
+exec "${JAVA}" -cp "${JAR}" org.harctoolbox.remotelocator.RemoteDatabase -o "${CONFIG}" --sort --flipper ../Flipper-IRDB

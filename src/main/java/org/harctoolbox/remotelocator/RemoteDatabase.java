@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2021 Bengt Martensson.
+Copyright (C) 2021, 2025 Bengt Martensson.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,10 +77,13 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public static final String UNKNOWN = "unknown";
     public static final String FILE_SCHEME_NAME = "file";
     public static final String REMOTEDATABASE_ELEMENT_NAME = "remotedatabase";
+    public static final String REMOTEDATABASE_KINDS_NAME = "kinds";
+    public static final String REMOTEDATABASE_KIND_NAME = "kind";
+    public static final String NAME_NAME = "name";
     public static final String FORMATVERSION_ATTRIBUTE_NAME = "formatVersion";
     public static final String CREATING_TOOL_ATTRIBUTE_NAME = "tool";
     public static final String CREATING_TOOL_VERSION_ATTRIBUTE_NAME = "toolVersion";
-    public static final String FORMATVERSION = "0.1";
+    public static final String FORMATVERSION = "1.0";
     private static final int INITIAL_CAPACITY = 64;
 
     /**
@@ -96,6 +100,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
      * URL for schema file supporting name spaces.
      */
     public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "http://www.harctoolbox.org/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
+    //public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "/home/bengt/harctoolbox/RemoteLocator/src/main/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
 
     /**
      * Prefix for RemoteLocator.
@@ -188,6 +193,9 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
         if (commandLineArgs.irdbDir != null)
             new IrdbScrap(remoteDatabase).add(new File(commandLineArgs.irdbDir));
+        
+        if (commandLineArgs.flipperDir != null)
+            new FlipperScrap(remoteDatabase).add(new File(commandLineArgs.flipperDir));
 
         if (commandLineArgs.lircDir != null)
             new LircScrap(remoteDatabase).add(new File(commandLineArgs.lircDir));
@@ -197,6 +205,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     private final Map<String, ManufacturerDeviceClasses> manufacturers;
+    private final EnumSet<ScrapKind> kinds = EnumSet.noneOf(ScrapKind.class);
 
     public RemoteDatabase() {
         manufacturers = new LinkedHashMap<>(INITIAL_CAPACITY);
@@ -296,9 +305,20 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
         element.setAttribute(CREATING_TOOL_ATTRIBUTE_NAME, Version.appName);
         element.setAttribute(CREATING_TOOL_VERSION_ATTRIBUTE_NAME, Version.version);
 
+        element.appendChild(toElement(document, kinds));
         for (ManufacturerDeviceClasses manufacturer : this)
             element.appendChild(manufacturer.toElement(document));
 
+        return element;
+    }
+    
+    private Element toElement(Document document, EnumSet<ScrapKind> kinds) {
+        Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + REMOTEDATABASE_KINDS_NAME);
+        for (ScrapKind kind : kinds) {
+            Element el = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + REMOTEDATABASE_KIND_NAME);
+            el.setAttribute(NAME_NAME, kind.name());
+            element.appendChild(el);
+        }
         return element;
     }
 
@@ -343,6 +363,10 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     private void add(ManufacturerDeviceClasses manifacturer) {
         manufacturers.put(mkKey(manifacturer.getName()), manifacturer);
         manifacturer.setRemoteDatabase(this);
+    }
+
+    protected void addKind(ScrapKind kind) {
+        kinds.add(kind);
     }
 
     void put(String manufacturer, String deviceClass, RemoteLink remoteLink) {
@@ -425,7 +449,10 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     private final static class CommandLineArgs {
-
+     
+        @Parameter(names = {"-f", "--flipperdir"}, description = "Pathname of directory containing Flipper files in ir format.")
+        public String flipperDir = null;
+     
         @Parameter(names = {"-g", "--girrdir"}, description = "Pathname of directory (recursively) containing Girr files.")
         public String girrDir = null;
 

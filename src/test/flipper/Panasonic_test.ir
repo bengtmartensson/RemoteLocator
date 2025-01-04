@@ -1,0 +1,264 @@
+Filetype: IR signals file
+Version: 1
+#
+# Brand: Panasonic
+# Device Model: DPUB820
+# Device Type: Blu-ray Player
+# Contributor: jay candel
+#
+# Goes into S
+name: c0
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 00 00
+#
+name: c1
+type: parsed
+protocol: Kaseikyo
+address: 01 02 20 00
+command: 00 00 00 00
+#
+name: c2
+type: parsed
+protocol: Kaseikyo
+address: 02 02 20 00
+command: 00 00 00 00
+#
+name: c4
+type: parsed
+protocol: Kaseikyo
+address: 04 02 20 00
+command: 00 00 00 00
+#
+name: c8
+type: parsed
+protocol: Kaseikyo
+address: 08 02 20 00
+command: 00 00 00 00
+#
+# Goes into D << 4L
+name: c10
+type: parsed
+protocol: Kaseikyo
+address: 10 02 20 00
+command: 00 00 00 00
+#
+name: c20
+type: parsed
+protocol: Kaseikyo
+address: 20 02 20 00
+command: 00 00 00 00
+#
+name: c40
+type: parsed
+protocol: Kaseikyo
+address: 40 02 20 00
+command: 00 00 00 00
+#
+name: c80
+type: parsed
+protocol: Kaseikyo
+address: 80 02 20 00
+command: 00 00 00 00
+#
+name: d0
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 00 00
+#
+# Goes into S << 4L
+name: d1
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 01
+command: 00 00 00 00
+#
+name: d2
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 02
+command: 00 00 00 00
+#
+# Rejectd
+name: d4
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 04
+command: 00 00 00 00
+#
+name: d8
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 08
+command: 00 00 00 00
+#
+name: d10
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 10
+command: 00 00 00 00
+#
+name: d20
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 20
+command: 00 00 00 00
+#
+name: d40
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 40
+command: 00 00 00 00
+#
+name: d80
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 80
+command: 00 00 00 00
+#
+name: e1
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 01 00 00 00
+#
+name: e2
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 02 00 00 00
+#
+name: e4
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 04 00 00 00
+#
+name: e8
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 08 00 00 00
+#
+name: e10
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 10 00 00 00
+#
+name: e20
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 20 00 00 00
+#
+name: e40
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 40 00 00 00
+#
+name: e80
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 80 00 00 00
+#
+name: f1
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 01 00 00
+#
+name: f2
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 02 00 00
+#
+name: f4
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 04 00 00
+#
+name: f8
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 08 00 00
+#
+name: f10
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 10 00 00
+#
+name: f20
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 20 00 00
+#
+name: f40
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 40 00 00
+#
+name: f80
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 80 00 00
+#
+name: g1
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 01 00
+#
+name: g2
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 02 00
+#
+name: g4
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 04 00
+#
+name: g8
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 08 00
+#
+name: g10
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 10 00
+#
+name: g20
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 20 00
+#
+name: g40
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 40 00
+#
+name: g80
+type: parsed
+protocol: Kaseikyo
+address: 00 02 20 00
+command: 00 00 80 00
+#

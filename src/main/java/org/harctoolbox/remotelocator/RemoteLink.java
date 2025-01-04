@@ -167,6 +167,8 @@ public final class RemoteLink implements Named, Serializable {
         if (!iterator.hasNext())
             return null;
         CommandSet firstCommandSet = iterator.next();
+        if (firstCommandSet == null)
+            throw new NullPointerException();
         Iterator<Command> it = firstCommandSet.iterator();
         return it.hasNext() ? it.next() : null;
     }

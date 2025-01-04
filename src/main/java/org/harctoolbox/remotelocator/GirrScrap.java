@@ -72,6 +72,7 @@ public class GirrScrap extends Girrable {
 
     @Override
     public void add(File dir) throws IOException, SAXException {
+        remoteDatabase.addKind(ScrapKind.girr);
         addRecursive(GIRRLIB_BASE_URI, dir, dir);
     }
 

@@ -108,6 +108,7 @@ public class Jp1Scrap extends Scrapable {
 
     @Override
     public void add(File file) throws SAXException, IOException {
+        remoteDatabase.addKind(ScrapKind.jp1);
         add(XmlUtils.openXmlFile(file, (Schema) null, true, false));
     }
 

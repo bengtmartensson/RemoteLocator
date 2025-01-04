@@ -19,6 +19,7 @@ package org.harctoolbox.remotelocator;
 
 public enum ScrapKind {
     girr,
+    flipper,
     irdb,
     lirc,
     jp1;
@@ -27,6 +28,8 @@ public enum ScrapKind {
         switch (kind) {
             case irdb:
                 return new IrdbScrap(remoteDatabase);
+            case flipper:
+                return new FlipperScrap(remoteDatabase);
             case girr:
                 return new GirrScrap(remoteDatabase);
             case lirc:
