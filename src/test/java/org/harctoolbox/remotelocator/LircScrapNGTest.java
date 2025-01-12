@@ -1,3 +1,6 @@
+// Note: This test requires the project https://sourceforge.net/projects/lirc-remotes/
+// to be locally cloned to the location given by LOCAL_LIRCB_ASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;

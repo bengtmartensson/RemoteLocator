@@ -1,3 +1,6 @@
+// Note: This test requires the project https://github.com/Lucaslhm/Flipper-IRDB
+// to be locally cloned to the location given by LOCAL_FLIPPER_BASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -52,6 +55,7 @@ public class FlipperParserNGTest {
 
     /**
      * Test of parse method, of class FlipperParser.
+     * @throws Exception
      */
     @Test
     public void testParse() throws Exception {

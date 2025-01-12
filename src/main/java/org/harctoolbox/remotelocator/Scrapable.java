@@ -49,10 +49,6 @@ public abstract class Scrapable {
         this(new RemoteDatabase());
     }
 
-    RemoteDatabase getRemoteDatabase() {
-        return remoteDatabase;
-    }
-
     protected RemoteDatabase scrapSort(File file) throws IOException, SAXException {
         add(file);
         sort();

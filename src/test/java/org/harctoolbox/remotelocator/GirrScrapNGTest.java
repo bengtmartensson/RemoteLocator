@@ -1,3 +1,8 @@
+// Note: This test requires the project https://github.com/bengtmartensson/GirrLib
+// to be locally cloned to the location given by LOCAL_GIRRLIB_BASEDIR.
+// Note: This test requires the project https://github.com/bengtmartensson/Girr
+// to be locally cloned to the location given by LOCAL_GIRRTEST_BASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;

@@ -1,9 +1,10 @@
+// Note: This test requires the project https://github.com/Lucaslhm/Flipper-IRDB
+// to be locally cloned to the location given by LOCAL_FLIPPER_BASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import org.harctoolbox.girr.GirrException;
 import org.harctoolbox.girr.Remote;
 import org.harctoolbox.xml.XmlUtils;
 import static org.testng.Assert.*;
@@ -51,10 +52,10 @@ public class FlipperScrapNGTest {
 
     /**
      * Test of parse method, of class FlipperScrap.
-     * @throws java.io.IOException
+     * @throws Exception
      */
     @Test
-    public void testParse_3args_1() throws IOException, ParseException, GirrException {
+    public void testParse_3args_1() throws Exception {
         System.out.println("parse");
         File path = new File("src/test/flipper/OPPO_BDP93.ir");
         String manufacturer = "Trabbi";
@@ -65,10 +66,10 @@ public class FlipperScrapNGTest {
 
     /**
      * Test of parse method, of class FlipperScrap.
-     * @throws java.io.IOException
+     * @throws Exception
      */
     @Test
-    public void testParse_3args_1_1() throws IOException, ParseException, GirrException {
+    public void testParse_3args_1_1() throws Exception {
         System.out.println("parse sony");
         File path = new File("../Flipper-IRDB/VCR/Sony/Sony_SLV-SE610B.ir");
         String manufacturer = "Trabbi";

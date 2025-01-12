@@ -320,14 +320,10 @@ public final class IrdbScrap extends Girrable {
                 continue;
 
             File file = new File(dir, remoteName);
-            try {
-                Remote remote = parse(file, manufacturer, devices.getName());
-                if (remote != null) {
-                    RemoteLink remoteLink = new RemoteLink(ScrapKind.irdb, remote, uriBase, baseDir, file);
-                    devices.add(remoteLink);
-                }
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Parse error in file {0}", file.toString());
+            Remote remote = parse(file, manufacturer, devices.getName());
+            if (remote != null) {
+                RemoteLink remoteLink = new RemoteLink(ScrapKind.irdb, remote, uriBase, baseDir, file);
+                devices.add(remoteLink);
             }
         }
     }

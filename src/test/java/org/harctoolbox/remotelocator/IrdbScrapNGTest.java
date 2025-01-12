@@ -1,3 +1,6 @@
+// Note: This test requires the project https://github.com/probonopd/irdb
+// to be locally cloned to the location given by LOCAL_IRDB_BASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;

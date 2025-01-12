@@ -1,3 +1,8 @@
+// Note: This test requires the project https://github.com/bengtmartensson/GirrLib
+// to be locally cloned to the location given by LOCAL_GIRRLIB_BASEDIR.
+// Note: This test requires the project https://github.com/probonopd/irdb
+// to be locally cloned to the location given by LOCAL_IRDB_BASEDIR.
+
 package org.harctoolbox.remotelocator;
 
 import java.io.File;
@@ -17,11 +22,8 @@ import org.xml.sax.SAXException;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class RemoteDatabaseNGTest {
-    //private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
     private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("../GirrLib/Girr");
-    //private static final File LOCAL_GIRRTEST_BASEDIR = new File("../Girr/src/test/girr");
-    //private static final File JP1_XML_FILE = new File("src/test/jp1/jp1-master-1.16.fods");
     private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.17.fods");
 
     private final RemoteDatabase remoteDatabase;
