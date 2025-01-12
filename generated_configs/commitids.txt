@@ -1,0 +1,6 @@
+./ : 			 a753b26e4c7ecb0e34adb930a173ec3a60e35f81
+../irdb/codes : 	 8f480a248fe40951e53882ee9d95b10098a0b9fe
+../GirrLib/Girr : 	 5fbd0079cda4eb5236db9f7000c4a953ef24fed8
+../Flipper-IRDB : 	 b03267da44560433ea9e1e546605830ae29dcb85
+../../lirc/lirc-remotes/remotes : 	 395780726ef83b5891c3a217b613e880a3cd8e2a
+/home/bengt/harctoolbox/RemoteLocator/src/main/resources/jp1-master-1.18.fods : 	 ac630ca40dcece3251c75a0addc4dd1d  -

@@ -11,19 +11,22 @@ PROJECT_NAME := $(notdir $(TOP))
 PROJECT_NAME_LOWERCASE := $(shell echo $(PROJECT_NAME) | tr A-Z a-z)
 EXTRACT_VERSION := $(TOP)/common/xslt/extract_project_version.xsl
 VERSION := $(shell $(XSLTPROC) $(EXTRACT_VERSION) pom.xml)
+FORMAT_VERSION_PREFIX := ^ *public static final String FORMATVERSION = \"
+FORMAT_VERSION := $(shell grep  "$(FORMAT_VERSION_PREFIX)" src/main/java/org/harctoolbox/remotelocator/RemoteDatabase.java | sed -e "s/$(FORMAT_VERSION_PREFIX)//" -e s/\"\;//)
 PROJECT_JAR := target/$(PROJECT_NAME)-$(VERSION).jar
 PROJECT_JAR_DEPENDENCIES := target/$(PROJECT_NAME)-$(VERSION)-jar-with-dependencies.jar
 PROJECT_BIN := target/$(PROJECT_NAME)-$(VERSION)-bin.zip
 GH_PAGES := $(TOP)/gh-pages
 ORIGINURL := $(shell git remote get-url origin)
 
-REMOTELOCATOR_XML  := generated_configs/remotelocator.xml
-REMOTELOCATOR_HTML := generated_configs/remotelocator.html
+REMOTELOCATOR_XML  := generated_configs/remotelocator-$(FORMAT_VERSION).xml
+REMOTELOCATOR_HTML := generated_configs/remotelocator-$(FORMAT_VERSION).html
 REMOTELOCATOR_IRDB := generated_configs/remotelocator_irdb.xml
 REMOTELOCATOR_JP1  := generated_configs/remotelocator_jp1.xml
 REMOTELOCATOR_LIRC := generated_configs/remotelocator_lirc.xml
 REMOTELOCATOR_GIRR := generated_configs/remotelocator_girr.xml
 REMOTELOCATOR_FLIPPER := generated_configs/remotelocator_flipper.xml
+COMMITIDS          := generated_configs/commitids.txt
 
 IRDB_PATH := ../irdb/codes
 GIRR_PATH := ../GirrLib/Girr
@@ -35,7 +38,7 @@ STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
 
 default: $(PROJECT_JAR)
 
-all: $(REMOTELOCATOR_HTML)
+all: $(REMOTELOCATOR_HTML) $(COMMITIDS)
 
 help: $(PROJECT_JAR)
 	"$(JAVA)" -jar "$(PROJECT_JAR_DEPENDENCIES)" --help
@@ -115,6 +118,21 @@ $(PROJECT_JAR) $(PROJECT_BIN):
 
 $(PROJECT_JAR)-test:
 	mvn install -Dmaven.test.skip=false
+
+$(COMMITIDS):
+	cp /dev/null $@
+	@echo -n -e $(MYDIR) ": \t\t\t " >> $@
+	git log --format="%H" -n 1 >> $@
+	@echo -n -e $(IRDB_PATH) ": \t " >> $@ 
+	git -C $(IRDB_PATH) log --format="%H" -n 1 >> $@  
+	@echo -n -e $(GIRR_PATH) ": \t " >> $@ 
+	git -C $(GIRR_PATH) log --format="%H" -n 1 >> $@  
+	@echo -n -e $(FLIPPER_PATH) ": \t " >> $@ 
+	git -C $(FLIPPER_PATH) log --format="%H" -n 1 >> $@  
+	@echo -n -e $(LIRC_PATH) ": \t " >> $@ 
+	git -C $(LIRC_PATH) log --format="%H" -n 1 >> $@
+	@echo -n -e $(JP1FILE) ": \t " >> $@
+	md5sum < $(JP1FILE)  >> $@
 
 release: push gh-pages tag deploy
 
