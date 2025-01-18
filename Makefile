@@ -7,12 +7,15 @@ TOP := $(realpath $(MYDIR))
 
 include $(MYDIR)/common/makefiles/paths.mk
 
+# This file is not public ;-)
+-include $(MYDIR)/upload_location.mk
+
 PROJECT_NAME := $(notdir $(TOP))
 PROJECT_NAME_LOWERCASE := $(shell echo $(PROJECT_NAME) | tr A-Z a-z)
 EXTRACT_VERSION := $(TOP)/common/xslt/extract_project_version.xsl
 VERSION := $(shell $(XSLTPROC) $(EXTRACT_VERSION) pom.xml)
 FORMAT_VERSION_PREFIX := ^ *public static final String FORMATVERSION = \"
-FORMAT_VERSION := $(shell grep  "$(FORMAT_VERSION_PREFIX)" src/main/java/org/harctoolbox/remotelocator/RemoteDatabase.java | sed -e "s/$(FORMAT_VERSION_PREFIX)//" -e s/\"\;//)
+FORMAT_VERSION := $(shell grep	"$(FORMAT_VERSION_PREFIX)" src/main/java/org/harctoolbox/remotelocator/RemoteDatabase.java | sed -e "s/$(FORMAT_VERSION_PREFIX)//" -e s/\"\;//)
 PROJECT_JAR := target/$(PROJECT_NAME)-$(VERSION).jar
 PROJECT_JAR_DEPENDENCIES := target/$(PROJECT_NAME)-$(VERSION)-jar-with-dependencies.jar
 PROJECT_BIN := target/$(PROJECT_NAME)-$(VERSION)-bin.zip
@@ -38,7 +41,10 @@ STYLESHEET=$(TOP)/src/main/xslt/remotelocator2html.xsl
 
 default: $(PROJECT_JAR)
 
-all: $(REMOTELOCATOR_HTML) $(COMMITIDS)
+index: $(REMOTELOCATOR_HTML) $(COMMITIDS)
+
+upload: $(REMOTELOCATOR_HTML) $(COMMITIDS)
+	scp $(REMOTELOCATOR_XML) $(REMOTELOCATOR_HTML) $(COMMITIDS) $(UPLOAD_LOCATION)
 
 help: $(PROJECT_JAR)
 	"$(JAVA)" -jar "$(PROJECT_JAR_DEPENDENCIES)" --help

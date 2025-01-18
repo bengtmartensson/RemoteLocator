@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2025-01-12_21:37:59" formatVersion="1.0" title="Database of downloadable remotes" tool="RemoteLocator" toolVersion="0.2.2-SNAPSHOT" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-1.0.xsd">
+<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2025-01-18_13:17:18" formatVersion="1.0" title="Database of downloadable remotes" tool="RemoteLocator" toolVersion="0.2.2-SNAPSHOT" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-1.0.xsd">
     <rl:kinds>
         <rl:kind name="girr"/>
         <rl:kind name="flipper"/>
@@ -2759,6 +2759,11 @@
     <rl:manufacturer name="BeoutQ">
         <rl:deviceClass name="Cable">
             <rl:remoteLink device="9" kind="jp1" name="BeoutQ Sports STB" protocol="NEC1" subdevice="254" url="http://www.hifi-remote.com/forums/dload.php?action=file&amp;file_id=26519"/>
+        </rl:deviceClass>
+    </rl:manufacturer>
+    <rl:manufacturer name="Berbel_Kitchen_Hoods">
+        <rl:deviceClass name="Miscellaneous">
+            <rl:remoteLink kind="flipper" name="Berbel_Skyline_2011" path="Miscellaneous/Berbel_Kitchen_Hoods/Berbel_Skyline_2011.ir" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Miscellaneous/Berbel_Kitchen_Hoods/Berbel_Skyline_2011.ir"/>
         </rl:deviceClass>
     </rl:manufacturer>
     <rl:manufacturer name="Best">
@@ -5836,8 +5841,8 @@
             <rl:remoteLink device="97" kind="irdb" name="97,-1" path="Denon/Receiver/97,-1.csv" protocol="NEC2" url="https://cdn.jsdelivr.net/gh/probonopd/irdb@master/codes/Denon/Receiver/97,-1.csv"/>
             <rl:remoteLink device="2" kind="girr" name="Denon AVR-3808 Receiver" path="Denon/denon_avr3808.girr" protocol="denon" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/Denon/denon_avr3808.girr" xpath="remotes/remote[@name='Denon AVR-3808 Receiver']"/>
             <rl:remoteLink device="2" kind="girr" name="Denon AVR-4311 Receiver" path="Denon/denon_avr4311.girr" protocol="denon" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/Denon/denon_avr4311.girr" xpath="remotes/remote[@name='Denon AVR-4311 Receiver']"/>
-            <rl:remoteLink comment="Export from IrScrutinizer" device="2" kind="girr" name="denon_rc-1148" path="Denon/denon_rc-1148.girr" protocol="Denon" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/Denon/denon_rc-1148.girr" xpath="remotes/remote[@name='denon_rc-1148']"/>
             <rl:remoteLink comment="Export from IrScrutinizer" device="4" kind="girr" name="denon_rc-1148" path="Denon/denon_rc-1145.girr" protocol="Denon-K" subdevice="1" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/Denon/denon_rc-1145.girr" xpath="remotes/remote[@name='denon_rc-1148']"/>
+            <rl:remoteLink comment="Export from IrScrutinizer" device="2" kind="girr" name="denon_rc-1148" path="Denon/denon_rc-1148.girr" protocol="Denon" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/Denon/denon_rc-1148.girr" xpath="remotes/remote[@name='denon_rc-1148']"/>
         </rl:deviceClass>
         <rl:deviceClass name="SoundBars">
             <rl:remoteLink device="5" kind="flipper" name="Denon_RC-1230" path="SoundBars/Denon/Denon_RC-1230.ir" protocol="Denon-K" subdevice="2" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/SoundBars/Denon/Denon_RC-1230.ir"/>
@@ -6256,8 +6261,8 @@
             <rl:remoteLink device="12" kind="jp1" name="DirecTV THR22" protocol="DirecTV" subdevice="3" url="http://www.hifi-remote.com/forums/dload.php?action=file&amp;file_id=11351"/>
         </rl:deviceClass>
         <rl:deviceClass name="streamer">
-            <rl:remoteLink comment="Export from IrScrutinizer" device="12" kind="girr" name="DirecTV_Stream_boxes" path="DirecTV/DirecTV.girr~" protocol="DirecTV_P3" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/DirecTV/DirecTV.girr~" xpath="remotes/remote[@name='DirecTV_Stream_boxes']"/>
             <rl:remoteLink comment="Export from IrScrutinizer" device="12" kind="girr" name="DirecTV_Stream_boxes" path="DirecTV/DirecTV.girr" protocol="DirecTV_P3" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/DirecTV/DirecTV.girr" xpath="remotes/remote[@name='DirecTV_Stream_boxes']"/>
+            <rl:remoteLink comment="Export from IrScrutinizer" device="12" kind="girr" name="DirecTV_Stream_boxes" path="DirecTV/DirecTV.girr~" protocol="DirecTV_P3" url="https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/DirecTV/DirecTV.girr~" xpath="remotes/remote[@name='DirecTV_Stream_boxes']"/>
         </rl:deviceClass>
         <rl:deviceClass name="Unknown">
             <rl:remoteLink device="12" kind="irdb" name="12,-1" path="DirecTV/Unknown/12,-1.csv" protocol="DirecTV_P3" url="https://cdn.jsdelivr.net/gh/probonopd/irdb@master/codes/DirecTV/Unknown/12,-1.csv"/>
@@ -10367,8 +10372,8 @@
     <rl:manufacturer name="Homedics">
         <rl:deviceClass name="Humidifiers">
             <rl:remoteLink device="0" kind="flipper" name="Homedics_ARM-720A_Ellia_Essential_Diffuser" path="Humidifiers/Homedics/Homedics_ARM-720A_Ellia_Essential_Diffuser.ir" protocol="NEC1" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Humidifiers/Homedics/Homedics_ARM-720A_Ellia_Essential_Diffuser.ir"/>
-            <rl:remoteLink device="3" kind="flipper" name="Homedics_humidifier" path="Humidifiers/Homedics/HoMedics TotalComfort Ultrasonic Humidifier/Homedics_humidifier.ir" protocol="F12x" subdevice="0" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Humidifiers/Homedics/HoMedics%20TotalComfort%20Ultrasonic%20Humidifier/Homedics_humidifier.ir"/>
             <rl:remoteLink device="3" kind="flipper" name="Homedics_Humidifier" path="Humidifiers/Homedics/Homedics_Humidifier.ir" protocol="F12x" subdevice="0" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Humidifiers/Homedics/Homedics_Humidifier.ir"/>
+            <rl:remoteLink device="3" kind="flipper" name="Homedics_humidifier" path="Humidifiers/Homedics/HoMedics TotalComfort Ultrasonic Humidifier/Homedics_humidifier.ir" protocol="F12x" subdevice="0" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Humidifiers/Homedics/HoMedics%20TotalComfort%20Ultrasonic%20Humidifier/Homedics_humidifier.ir"/>
             <rl:remoteLink device="3" kind="flipper" name="HoMedics_TotalComfort" path="Humidifiers/Homedics/HoMedics_TotalComfort.ir" protocol="F12x" subdevice="0" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/Humidifiers/Homedics/HoMedics_TotalComfort.ir"/>
         </rl:deviceClass>
     </rl:manufacturer>
@@ -11553,7 +11558,7 @@
         </rl:deviceClass>
         <rl:deviceClass name="SoundBars">
             <rl:remoteLink device="132" kind="flipper" name="JBL_5_1_Soundbar" path="SoundBars/JBL/JBL_5_1_Soundbar.ir" protocol="NEC1" subdevice="116" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/SoundBars/JBL/JBL_5_1_Soundbar.ir"/>
-            <rl:remoteLink device="132" kind="flipper" name="JBL_Boost_TV_Soundbar" path="SoundBars/JBL/JBL_Boost_TV_Soundbar.ir" protocol="NEC" subdevice="116" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/SoundBars/JBL/JBL_Boost_TV_Soundbar.ir"/>
+            <rl:remoteLink device="132" kind="flipper" name="JBL_Boost_TV_Soundbar" path="SoundBars/JBL/JBL_Boost_TV_Soundbar.ir" protocol="NEC1" subdevice="116" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/SoundBars/JBL/JBL_Boost_TV_Soundbar.ir"/>
             <rl:remoteLink device="2" kind="flipper" name="JBL_CINEMA_SB120" path="SoundBars/JBL/JBL_CINEMA_SB120.ir" protocol="NEC1-f16" subdevice="189" url="https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/SoundBars/JBL/JBL_CINEMA_SB120.ir"/>
         </rl:deviceClass>
         <rl:deviceClass name="Speakers">
@@ -17977,9 +17982,9 @@
             <rl:remoteLink device="144" kind="lirc" name="N2QAKB000001" path="panasonic/N2QAKB000001.lircd.conf" protocol="Panasonic" subdevice="0" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/N2QAKB000001.lircd.conf?format=raw"/>
             <rl:remoteLink device="128" kind="lirc" name="N2QAYB000976" path="panasonic/N2QAYB000976.conf" protocol="Panasonic" subdevice="0" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/N2QAYB000976.conf?format=raw"/>
             <rl:remoteLink device="160" kind="lirc" name="panas928" path="panasonic/RAK-RX928WK.lircd.conf" protocol="Panasonic" subdevice="194" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/RAK-RX928WK.lircd.conf?format=raw"/>
+            <rl:remoteLink device="160" kind="lirc" name="Panasonic" path="panasonic/SA-PM02.lircd.conf" protocol="Panasonic" subdevice="28" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/SA-PM02.lircd.conf?format=raw"/>
             <rl:remoteLink device="176" kind="lirc" name="PANASONIC" path="panasonic/N2QAJB000051.lircd.conf" protocol="Panasonic" subdevice="0" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/N2QAJB000051.lircd.conf?format=raw"/>
             <rl:remoteLink device="144" kind="lirc" name="Panasonic" path="panasonic/NV-HS830.lircd.conf" protocol="Panasonic" subdevice="0" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/NV-HS830.lircd.conf?format=raw"/>
-            <rl:remoteLink device="160" kind="lirc" name="Panasonic" path="panasonic/SA-PM02.lircd.conf" protocol="Panasonic" subdevice="28" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/SA-PM02.lircd.conf?format=raw"/>
             <rl:remoteLink kind="lirc" name="Panasonic" path="panasonic/TNQ2637.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/TNQ2637.lircd.conf?format=raw"/>
             <rl:remoteLink kind="lirc" name="Panasonic" path="panasonic/TV.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/TV.lircd.conf?format=raw"/>
             <rl:remoteLink device="128" kind="lirc" name="PANASONIC" path="panasonic/TX29AD10C.lircd.conf" protocol="Panasonic" subdevice="0" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/panasonic/TX29AD10C.lircd.conf?format=raw"/>
@@ -21568,10 +21573,10 @@
             <rl:remoteLink device="7" kind="lirc" name="Samsung_AA59-00316b" path="samsung/AA59-00316b.lircd.conf" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00316b.lircd.conf?format=raw"/>
             <rl:remoteLink device="7" kind="lirc" name="Samsung_AA59-00370A" path="samsung/AA59-00370A.lircd.conf" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00370A.lircd.conf?format=raw"/>
             <rl:remoteLink device="7" kind="lirc" name="Samsung_AA59-00382A" path="samsung/AA59-00382A.lircd.conf" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00382A.lircd.conf?format=raw"/>
-            <rl:remoteLink device="7" kind="lirc" name="SAMSUNG_AA59-00600A" path="samsung/AA59-00600A.jpg" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.jpg?format=raw"/>
             <rl:remoteLink device="7" kind="lirc" name="SAMSUNG_AA59-00600A" path="samsung/AA59-00600A.lircd.conf" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.lircd.conf?format=raw"/>
-            <rl:remoteLink kind="lirc" name="SAMSUNG_AA59-00600A_POWER" path="samsung/AA59-00600A.jpg" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.jpg?format=raw"/>
+            <rl:remoteLink device="7" kind="lirc" name="SAMSUNG_AA59-00600A" path="samsung/AA59-00600A.jpg" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.jpg?format=raw"/>
             <rl:remoteLink kind="lirc" name="SAMSUNG_AA59-00600A_POWER" path="samsung/AA59-00600A.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.lircd.conf?format=raw"/>
+            <rl:remoteLink kind="lirc" name="SAMSUNG_AA59-00600A_POWER" path="samsung/AA59-00600A.jpg" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-00600A.jpg?format=raw"/>
             <rl:remoteLink device="5" kind="lirc" name="Samsung_AA59-10026E" path="samsung/AA59-10026E.lircd.conf" protocol="NECx2" subdevice="5" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA59-10026E.lircd.conf?format=raw"/>
             <rl:remoteLink device="7" kind="lirc" name="Samsung_AA64-50236A" path="samsung/AA64-50236A.lircd.conf" protocol="NECx2" subdevice="7" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AA64-50236A.lircd.conf?format=raw"/>
             <rl:remoteLink kind="lirc" name="Samsung_AH59-00043E" path="samsung/AH59-00043E.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/samsung/AH59-00043E.lircd.conf?format=raw"/>
@@ -22408,7 +22413,6 @@
     <rl:manufacturer name="sezam">
         <rl:deviceClass name="unknown">
             <rl:remoteLink device="20" kind="lirc" name="SAT_SEZAM" path="sezam/HST317.lircd.conf" protocol="RC5-7F-57" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/sezam/HST317.lircd.conf?format=raw"/>
-            <rl:remoteLink device="20" kind="lirc" name="SAT_SEZAM" path="sezam/cuberevo.lircd.conf" protocol="RC5-7F-57" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/sezam/cuberevo.lircd.conf?format=raw"/>
         </rl:deviceClass>
     </rl:manufacturer>
     <rl:manufacturer name="SGEYR">
@@ -26270,7 +26274,6 @@
             <rl:remoteLink device="27" kind="lirc" name="TWC_UR4-P360" path="time_warner_cable/UR4-P360.lircd.conf" protocol="Panasonic_Old" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/time_warner_cable/UR4-P360.lircd.conf?format=raw"/>
             <rl:remoteLink device="1" kind="lirc" name="TWC_UR4-P360-SONY" path="time_warner_cable/UR4-P360.lircd.conf" protocol="Sony12" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/time_warner_cable/UR4-P360.lircd.conf?format=raw"/>
             <rl:remoteLink kind="lirc" name="UR5U-8700L-TWY" path="time_warner_cable/ur5u-8700l.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/time_warner_cable/ur5u-8700l.lircd.conf?format=raw"/>
-            <rl:remoteLink kind="lirc" name="UR5U-8700L-TWY" path="time_warner_cable/ur5u-8780L.lircd.conf" url="https://sourceforge.net/p/lirc-remotes/code/ci/master/tree/remotes/time_warner_cable/ur5u-8780L.lircd.conf?format=raw"/>
         </rl:deviceClass>
     </rl:manufacturer>
     <rl:manufacturer name="tinydeal">

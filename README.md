@@ -18,10 +18,15 @@ Meta information, including manufacturer and device class, is contained in the G
 There is a small collection ([GirrLib](https://github.com/bengtmartensson/GirrLib)),
 which is more of a proof-of-concept than a sizeable collection of remotes.
 * The JP1 project has a large collection of "device upgrades". These are summarized in
-[an Excel file](http://www.hifi-remote.com/forums/dload.php?action=file&file_id=26701).
+[an Excel file](http://www.hifi-remote.com/forums/dload.php?action=file&file_id=269991)
+(or a later version thereof).
 This list also contains meta information such as manufacturer and device class.
 This can be read into the present program, and used to browse the therein contained remotes (or rather, "device upgrades").
 These can, with some manual work, be translated to Girr files.
+* [Flipper-IRDB](https://github.com/Lucaslhm/Flipper-IRDB). This is a large and fairly active collection of IR signals in the Flipper IR format (`*.ir`).
+It is intended for the [Flipper Zero "Multi-tool Device for Geeks"](https://flipperzero.one), but since the format is a
+[simple text based format](https://developer.flipper.net/flipperzero/doxygen/infrared_file_format.html), we can read that format too.
+(In IrScrutinizer supported for import and export since early January 2025.)
 
 Basically, there are three use case for the program:
 
@@ -43,13 +48,13 @@ since all the commands in the (almost 3000) Lirc files have to be rendered and d
 
 ### Global file
 The current version of the complete file is available for download as
-[`http://harctoolbox.org/downloads/remotelocator.xml`](http://harctoolbox.org/downloads/remotelocator.xml).
+[`http://harctoolbox.org/downloads/remotelocator.xml`](http://harctoolbox.org/downloads/remotelocator-1.0.xml).
 
 ### HTML version of the remotelocator file
 There exists an XSLT transformation `src/main/xslt/remotelocator2html.xsl` that turnes the XML file into a HTML file
 containing clickable `a`-elements for download/browsing.
 This is available for download and browsing as
-[`http://harctoolbox.org/downloads/remotelocator.html`](http://harctoolbox.org/downloads/remotelocator.html).
+[`http://harctoolbox.org/downloads/remotelocator-1.0.html`](http://harctoolbox.org/downloads/remotelocator-1.0.html).
 
 ## Gathering information from the file
 For this use case, the argument of `--config` must be a valid and readable file or URL. By using the options
@@ -66,7 +71,7 @@ prints the (possibly converted) remote in Girr, Pronto Hex or IRDB CSV-format re
 ## Integration in IrScrutinizer
 This program is integrated in IrScrutinizer version 2.3.1 and later, giving it a GUI.
 I can be accessed as the pane `Import -> RemoteLocator`.
-By selecting `Select me to load` a global `remotelocator.xml` file is downloaded, once per session.
+By selecting `Select me to load` a global index file file is downloaded, once per session.
 
 ## Appendix. All program options:
 ```
@@ -74,9 +79,9 @@ By selecting `Select me to load` a global `remotelocator.xml` file is downloaded
 Usage: RemoteLocator [options] Arguments to the program
   Options:
     -b, --browse
-      Browse the remote, do not directly download it.
+      Browse the remote instead of downloading it.
       Default: false
-  * -c, --config
+    -c, --config
       Name or URL of config file, to be read or written.
     --csv
       Produce output in IRDB CVS format.
@@ -89,6 +94,9 @@ Usage: RemoteLocator [options] Arguments to the program
     -h, --help, -?
       Display help message.
       Default: false
+    -k, --kind
+      Only consider remotes of this kind.
+      Possible Values: [girr, flipper, irdb, lirc, jp1]
     -m, --manufacturer
       Manufacturer, "?" for list.
     -o, --output
