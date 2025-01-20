@@ -92,6 +92,11 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     public static final String REMOTELOCATOR_NAMESPACE       = "http://www.harctoolbox.org/RemoteLocator";
 
     /**
+     * Catalog URL
+     */
+    public static final String REMOTELOCATOR_CATALOG_URL     = "http://www.harctoolbox.org/downloads/remotelocator-" + FORMATVERSION + ".xml";
+
+    /**
      * Homepage URL.
      */
     public static final String REMOTELOCATOR_HOMEPAGE        = "https://github.com/bengtmartensson/RemoteLocator";
@@ -193,7 +198,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
         if (commandLineArgs.irdbDir != null)
             new IrdbScrap(remoteDatabase).add(new File(commandLineArgs.irdbDir));
-        
+
         if (commandLineArgs.flipperDir != null)
             new FlipperScrap(remoteDatabase).add(new File(commandLineArgs.flipperDir));
 
@@ -311,7 +316,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
 
         return element;
     }
-    
+
     private Element toElement(Document document, EnumSet<ScrapKind> kinds) {
         Element element = document.createElementNS(REMOTELOCATOR_NAMESPACE, REMOTELOCATOR_PREFIX + ":" + REMOTEDATABASE_KINDS_NAME);
         for (ScrapKind kind : kinds) {
@@ -449,10 +454,10 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     }
 
     private final static class CommandLineArgs {
-     
+
         @Parameter(names = {"-f", "--flipperdir"}, description = "Pathname of directory containing Flipper files in ir format.")
         public String flipperDir = null;
-     
+
         @Parameter(names = {"-g", "--girrdir"}, description = "Pathname of directory (recursively) containing Girr files.")
         public String girrDir = null;
 

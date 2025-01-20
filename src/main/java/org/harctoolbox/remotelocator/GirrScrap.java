@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 public class GirrScrap extends Girrable {
     private static final Logger logger = Logger.getLogger(GirrScrap.class.getName());
 
-    public static final String GIRRLIB_BASE = "https://raw.githubusercontent.com/bengtmartensson/GirrLib/master/Girr/";
+    public static final String GIRRLIB_BASE = DELIVERY_SERVICE + "bengtmartensson/GirrLib@master/Girr/";
     public static final URI GIRRLIB_BASE_URI= URI.create(GIRRLIB_BASE);
     private static final String GIRR_NAME = "girr";
     private static final String[] junkExtensions = {
@@ -132,8 +132,12 @@ public class GirrScrap extends Girrable {
         try {
             Document document = XmlUtils.openXmlReader(reader, null, false, true);
             XPath xpathy = XPathFactory.newInstance().newXPath();
-            NodeList str = (NodeList) xpathy.compile(xpath).evaluate(document, XPathConstants.NODESET);
-            Element el = (Element) str.item(0);
+            NodeList nodeList = (NodeList) xpathy.compile(xpath).evaluate(document, XPathConstants.NODESET);
+            if (nodeList.getLength() == 0) {
+                logger.log(Level.WARNING, "XPath \"{0}\" produced no match, please report this as bug.", xpath);
+                return null;
+            }
+            Element el = (Element) nodeList.item(0);
             return new Remote(el, "remote");
         } catch (XPathExpressionException | SAXException | GirrException ex) {
             logger.log(Level.WARNING, ex.getLocalizedMessage());

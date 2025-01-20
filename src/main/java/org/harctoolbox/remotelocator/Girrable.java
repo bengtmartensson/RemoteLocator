@@ -28,6 +28,8 @@ import static org.harctoolbox.ircore.IrCoreUtils.EXTENDED_LATIN1;
 
 public abstract class Girrable extends Scrapable {
 
+    protected final static String DELIVERY_SERVICE = "https://cdn.jsdelivr.net/gh/";
+
     Girrable(RemoteDatabase remoteDatabase) {
         super(remoteDatabase);
     }

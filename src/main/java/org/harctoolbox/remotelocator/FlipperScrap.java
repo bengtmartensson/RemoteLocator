@@ -48,11 +48,7 @@ public final class FlipperScrap extends Girrable {
      * This is "be liberal in what you accept".
      */
     public static final String FLIPPER_CHARSET = "WINDOWS-1252"; // ?
-    //public static final String FLIPPER_BASE  = "https://raw.githubusercontent.com/probonopd/flipper/master/codes/";
-    // produces error message: "Package size exceeded the configured limit of 50 MB"
-    //public static final String FLIPPER_BASE    = "https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/";
-    public static final String FLIPPER_BASE    = "https://raw.githubusercontent.com/Lucaslhm/Flipper-IRDB/refs/heads/main/";
-    public static final String FLIPPER_URL     = "https://github.com/Lucaslhm/Flipper-IRDB";
+    public static final String FLIPPER_BASE    = DELIVERY_SERVICE +  "Lucaslhm/Flipper-IRDB@main/";
     public static final URI FLIPPER_BASE_URI   = URI.create(FLIPPER_BASE);
     private static final String FLIPPER_NAME   = "flipper";
     private static final IrpDatabase irpDatabase;
@@ -99,7 +95,7 @@ public final class FlipperScrap extends Girrable {
             return parse(inputStreamReader, manufacturer, deviceClass, remoteName, remoteLink.getUrl().toString());
         }
     }
-    
+
     public static Remote parse(URL url, String manufacturer, String deviceClass, String remoteName) throws IOException, ParseException, GirrException {
         try (InputStream inputStream = url.openStream(); InputStreamReader inputStreamReader = new InputStreamReader(inputStream, FLIPPER_CHARSET)) {
             return parse(inputStreamReader, manufacturer, deviceClass, remoteName, url.toString());
@@ -147,7 +143,7 @@ public final class FlipperScrap extends Girrable {
             logger.log(Level.WARNING, "File {0} is not a readable directory, skipping", dir.getCanonicalPath());
             return;
         }
-        
+
         String[] manufacturers = dir.list();
         for (String manufacturer : manufacturers) {
             addManifacturer(uriBase, baseDir, manufacturer, deviceType, new File(dir, manufacturer));
@@ -166,7 +162,7 @@ public final class FlipperScrap extends Girrable {
         String[] remotes = dir.list();
         for (String remoteFileName : remotes) {
             addRemote(uriBase, baseDir, devType, manifacturer, /*deviceType,*/ remoteFileName, new File(dir, remoteFileName), "");
-//            remoteDatabase.removeIfEmpty(manufacturerTypes);    
+//            remoteDatabase.removeIfEmpty(manufacturerTypes);
         }
     }
 
