@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2025-01-20_11:41:23" formatVersion="1.0" title="Database of downloadable remotes" tool="RemoteLocator" toolVersion="1.0.0-SNAPSHOT" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-1.0.xsd">
+<!--This file is in the RemoteLocator format, see https://github.com/bengtmartensson/RemoteLocator--><rl:remotedatabase xmlns:rl="http://www.harctoolbox.org/RemoteLocator" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creatingUser="bengt" creationDate="2025-02-10_10:59:38" formatVersion="1.0" title="Database of downloadable remotes" tool="RemoteLocator" toolVersion="1.0.0-SNAPSHOT" xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-1.0.xsd">
     <rl:kinds>
         <rl:kind name="girr"/>
         <rl:kind name="flipper"/>
@@ -14990,6 +14990,9 @@
         </rl:deviceClass>
     </rl:manufacturer>
     <rl:manufacturer name="Micca">
+        <rl:deviceClass name="Cable_Boxes">
+            <rl:remoteLink device="1" kind="flipper" name="Micca_SpeckG2" path="Cable_Boxes/Micca/Micca_SpeckG2.ir" protocol="NEC1" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Cable_Boxes/Micca/Micca_SpeckG2.ir"/>
+        </rl:deviceClass>
         <rl:deviceClass name="Media Players">
             <rl:remoteLink device="1" kind="jp1" name="Micca Speck G2" protocol="NEC1" url="http://www.hifi-remote.com/forums/dload.php?action=file&amp;file_id=14600"/>
         </rl:deviceClass>
@@ -18468,11 +18471,13 @@
             <rl:remoteLink device="1" kind="jp1" name="Philips Streamium SLA5520" protocol="NEC1" subdevice="253" url="http://www.hifi-remote.com/forums/dload.php?action=file&amp;file_id=5601"/>
         </rl:deviceClass>
         <rl:deviceClass name="Audio_and_Video_Receivers">
+            <rl:remoteLink device="186" kind="flipper" name="Bose_LifestyleV35" path="Audio_and_Video_Receivers/Philips/Bose_LifestyleV35.ir" protocol="NEC1-f16" subdevice="75" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Bose_LifestyleV35.ir"/>
             <rl:remoteLink device="4" kind="flipper" name="Philips_BTD2180" path="Audio_and_Video_Receivers/Philips/Philips_BTD2180.ir" protocol="RC6" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_BTD2180.ir"/>
             <rl:remoteLink device="20" kind="flipper" name="Philips_CD_Player_723" path="Audio_and_Video_Receivers/Philips/Philips_CD_Player_723.ir" protocol="RC5" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_CD_Player_723.ir"/>
             <rl:remoteLink device="18" kind="flipper" name="Philips_FW21" path="Audio_and_Video_Receivers/Philips/Philips_FW21.ir" protocol="RC5" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_FW21.ir"/>
             <rl:remoteLink device="16" kind="flipper" name="Philips_FW750c" path="Audio_and_Video_Receivers/Philips/Philips_FW750c.ir" protocol="RC5" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_FW750c.ir"/>
             <rl:remoteLink device="20" kind="flipper" name="Philips_FX55_HiFi" path="Audio_and_Video_Receivers/Philips/Philips_FX55_HiFi.ir" protocol="RC5" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_FX55_HiFi.ir"/>
+            <rl:remoteLink device="21" kind="flipper" name="Philips_HTS8010S" path="Audio_and_Video_Receivers/Philips/Philips_HTS8010S.ir" protocol="RC6" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Audio_and_Video_Receivers/Philips/Philips_HTS8010S.ir"/>
         </rl:deviceClass>
         <rl:deviceClass name="Blu-Ray">
             <rl:remoteLink device="70" kind="flipper" name="Philips_BDP2501F7" path="Blu-Ray/Philips/Philips_BDP2501F7.ir" protocol="RC6" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/Blu-Ray/Philips/Philips_BDP2501F7.ir"/>
@@ -23549,6 +23554,7 @@
         </rl:deviceClass>
         <rl:deviceClass name="CD_Players">
             <rl:remoteLink device="68" kind="flipper" name="Sony_CFD-S35CP" path="CD_Players/Sony/Sony_CFD-S35CP.ir" protocol="Sony15" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/CD_Players/Sony/Sony_CFD-S35CP.ir"/>
+            <rl:remoteLink device="26" kind="flipper" name="Sony_ICFCDK50" path="CD_Players/Sony/Sony_ICFCDK50.ir" protocol="Sony20" subdevice="19" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/CD_Players/Sony/Sony_ICFCDK50.ir"/>
             <rl:remoteLink device="15" kind="flipper" name="SONY_minidisk-deck" path="CD_Players/Sony/SONY_minidisk-deck.ir" protocol="Sony12" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/CD_Players/Sony/SONY_minidisk-deck.ir"/>
             <rl:remoteLink device="17" kind="flipper" name="Sony_RM-R52_RCD-W500C_Deck-A" path="CD_Players/Sony/Sony_RM-R52_RCD-W500C/Sony_RM-R52_RCD-W500C_Deck-A.ir" protocol="Sony12" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/CD_Players/Sony/Sony_RM-R52_RCD-W500C/Sony_RM-R52_RCD-W500C_Deck-A.ir"/>
             <rl:remoteLink device="26" kind="flipper" name="Sony_RM-R52_RCD-W500C_Deck-B" path="CD_Players/Sony/Sony_RM-R52_RCD-W500C/Sony_RM-R52_RCD-W500C_Deck-B.ir" protocol="Sony20" subdevice="202" url="https://cdn.jsdelivr.net/gh/Lucaslhm/Flipper-IRDB@main/CD_Players/Sony/Sony_RM-R52_RCD-W500C/Sony_RM-R52_RCD-W500C_Deck-B.ir"/>

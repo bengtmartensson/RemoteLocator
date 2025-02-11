@@ -125,7 +125,7 @@ $(PROJECT_JAR) $(PROJECT_BIN):
 $(PROJECT_JAR)-test:
 	mvn install -Dmaven.test.skip=false
 
-$(COMMITIDS):
+$(COMMITIDS): $(IRDB_PATH)/../.git $(FLIPPER_PATH)/.git
 	cp /dev/null $@
 	@echo -n -e $(MYDIR) ": \t\t\t " >> $@
 	git log --format="%H" -n 1 >> $@
