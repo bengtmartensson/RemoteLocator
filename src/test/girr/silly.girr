@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="simplehtml.xsl"?>
+<remotes
+         xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns="http://www.harctoolbox.org/Girr"
+         xs:schemaLocation="http://www.harctoolbox.org/Girr http://www.harctoolbox.org/schemas/girr_ns.xsd"
+         girrVersion="1.0"
+         title="Hand written example">
+    <adminData>
+        <creationData source="/etc/lirc/lircd.conf" creationDate="Thu Jul 11 11:05:14 CEST 2013"
+                       creatingUser="Archimedes" tool="lirc2xml" toolVersion="0.2.0java"
+                       tool2="decodeIr" tool2Version="2.44"/>
+        <versioningData/>
+        <notes xml:lang="en">Notes in English.</notes>
+        <notes xml:lang="de">Notitzen auf deutsch.</notes>
+        <notes xml:lang="sv">Notiser på svenska.</notes>
+    </adminData>
+    <remote name="test" comment="just a test">
+        <notes xml:lang="en">Notes in English</notes>
+        <notes xml:lang="de">Notitzen auf deutsch.</notes>
+        <notes xml:lang="sv">Notiser på svenska.</notes>
+        <applicationData application="jp1">
+            <notes/>
+            <appParameter name="SetupCode" value="1234"/>
+            <!--button-map>
+                <button name="play" display-name="Play" unshifted="cmd1" shifted="stop" metashifted="record"/>
+            </button-map-->
+        </applicationData>
+        <commandSet name="commandSet" comment="">
+            <notes/>
+            <!--parameters protocol="nec1">
+                <parameter name="D" value="0"/>
+            </parameters-->
+            <command name="play" displayName="Play |>" comment="" master="ccf">
+                <notes/>
+                <ccf>0000 006C 0022 0002 015B 00AD 0016 0016 0116 0016 0016 0016 0116 0016 0016 0016 0116 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041</ccf>
+            </command>
+	    <command name="Work" comment="" master="ccf">
+                <notes/>
+                <ccf>0000 006C 0022 0002 015B 00AD 0016 0016 0016 0016 0016 0041 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 0016 0016 0016 0016 0016 0016 0041 0016 0041 0016 06A4 015B 0057 0016 0E6C</ccf>
+            </command>
+        </commandSet>
+
+        <commandSet name="godzilla">
+            <parameters protocol="Motorola"> <!-- alias for Blaupunkt -->
+                <parameter name="D" value="3"/>
+            </parameters>
+            <command name="Mothra" F="1"/>
+            <command name="Rodan">
+                <parameters protocol="ruwido R-stEp"> <!-- alias for CanalSat -->
+                    <parameter name="D" value="0"/>
+                    <parameter name="S" value="0"/>
+                    <parameter name="F" value="0"/>
+                </parameters>
+            </command>
+        </commandSet>
+    </remote>
+</remotes>

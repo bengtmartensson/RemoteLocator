@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="simplehtml.xsl"?>
+<!--This file is in the Girr (General IR Remote) format, see http://www.harctoolbox.org/Girr.html-->
+<commandSet name="tv_template" girrVersion="1.2" title="IrScrutinizer parametric export"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.harctoolbox.org/Girr"
+            xsi:schemaLocation="http://www.harctoolbox.org/Girr http://www.harctoolbox.org/schemas/girr_ns.xsd">
+    <command name="volume_up"/>
+    <command name="volume_down"/>
+    <command name="channel_up"/>
+    <command name="channel_down"/>
+    <command name="in_av"/>
+    <command name="mute_toggle"/>
+    <command name="power_toggle"/>
+    <command name="power_on"/>
+    <command name="power_off"/>
+    <command name="contrast_up"/>
+    <command name="contrast_down"/>
+    <command name="color_up"/>
+    <command name="color_down"/>
+    <command name="info"/>
+    <command name="1"/>
+    <command name="2"/>
+    <command name="3"/>
+    <command name="4"/>
+    <command name="5"/>
+    <command name="6"/>
+    <command name="7"/>
+    <command name="8"/>
+    <command name="9"/>
+    <command name="0"/>
+    <command name="two_digit"/>
+</commandSet>

@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class LircScrapNGTest {
-    private static final File LOCAL_LIRC_BASEDIR = new File("../../lirc/lirc-remotes/remotes");
+    private static final File LOCAL_LIRC_BASEDIR = new File("src/test/lirc-remotes/remotes");
 
     public LircScrapNGTest() {
     }

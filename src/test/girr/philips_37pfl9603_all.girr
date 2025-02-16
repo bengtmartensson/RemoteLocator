@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<remotes girrVersion="1.2" title="IrScrutinizer parametric export"
+         xsi:schemaLocation="http://www.harctoolbox.org/Girr http://www.harctoolbox.org/schemas/girr_ns-1.2.xsd"
+         xmlns="http://www.harctoolbox.org/Girr"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xi="http://www.w3.org/2001/XInclude">
+    <adminData>
+        <creationData creatingUser="Évariste Galois" creationDate="35-septober-2999" source="Whatever" tool="hand written" toolVersion="0.0.0" tool2="nuthin" tool2Version="who cares?"/>
+        <notes>
+            Lorem Ipsum. Or not.
+        </notes>
+
+    </adminData>
+
+    <remote deviceClass="tv" manufacturer="Philips" model="37PFL9603" name="philips_37pfl9603" comment="Full HD" displayName="Philips 37PFL9603" remoteName="untitled">
+        <notes>This basically demonstrates <html:a href="https://www.w3.org/TR/xinclude/">XInclude</html:a>
+            in Girr.
+        </notes>
+        <xi:include href="philips_37pfl9603_alt.girr" xpointer="element(/1/2/1)"/>
+        <xi:include href="philips_37pfl9603_alt.girr" xpointer="element(/1/2/2)"/>
+        <xi:include href="philips_37pfl9603_alt.girr" xpointer="element(/1/2/3)"/>
+    </remote>
+</remotes>

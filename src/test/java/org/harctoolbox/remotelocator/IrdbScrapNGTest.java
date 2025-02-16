@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class IrdbScrapNGTest {
-    private static final File LOCAL_IRDB_BASEDIR = new File("../irdb/codes");
+    private static final File LOCAL_IRDB_BASEDIR = new File("src/test/irdb/codes");
 
     public IrdbScrapNGTest() {
     }
@@ -60,8 +60,7 @@ public class IrdbScrapNGTest {
     @Test
     public void testParse_3args_1() throws IOException {
         System.out.println("parse");
-        File path = new File("../irdb/codes/Yamaha/Unknown_RX-V850/122,-1.csv");
-        //File path = new File("../irdb/codes/BnK Components/Tuner_preamp/11,79.csv");
+        File path = new File(LOCAL_IRDB_BASEDIR, "Yamaha/Unknown_RX-V850/122,-1.csv");
         String manufacturer = "Trabbi";
         String deviceType = "Tractor";
         Remote result = IrdbScrap.parse(path, manufacturer, deviceType);

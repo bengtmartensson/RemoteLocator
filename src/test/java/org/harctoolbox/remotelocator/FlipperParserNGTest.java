@@ -21,7 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class FlipperParserNGTest {
-    private static final File LOCAL_FLIPPER_BASEDIR = new File("../Flipper-IRDB");
+    private static final File LOCAL_FLIPPER_BASEDIR = new File("src/test/Flipper-IRDB");
 
     public FlipperParserNGTest() {
     }

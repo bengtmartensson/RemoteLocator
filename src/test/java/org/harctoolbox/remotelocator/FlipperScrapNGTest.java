@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class FlipperScrapNGTest {
-    private static final File LOCAL_FLIPPER_BASEDIR = new File("../Flipper-IRDB");
+    private static final File LOCAL_FLIPPER_BASEDIR = new File("src/test/Flipper-IRDB");
 
     public FlipperScrapNGTest() {
     }
