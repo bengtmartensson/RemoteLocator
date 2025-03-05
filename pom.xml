@@ -7,7 +7,7 @@
     <groupId>org.harctoolbox</groupId>
     <artifactId>RemoteLocator</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <licenses>
         <license>
