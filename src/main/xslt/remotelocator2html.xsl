@@ -19,7 +19,7 @@ this program. If not, see http://www.gnu.org/licenses/.
                     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                     xmlns:html="http://www.w3.org/1999/xhtml"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator http://www.harctoolbox.org/schemas/remotelocator-0.1.xsd"
+                    xsi:schemaLocation="http://www.harctoolbox.org/RemoteLocator https://www.harctoolbox.org/schemas/remotelocator-0.1.xsd"
                     xmlns:rl="http://www.harctoolbox.org/RemoteLocator">
 
     <xsl:output method="html"/>

@@ -94,7 +94,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     /**
      * Catalog URL
      */
-    public static final String REMOTELOCATOR_CATALOG_URL     = "http://www.harctoolbox.org/downloads/remotelocator-" + FORMATVERSION + ".xml";
+    public static final String REMOTELOCATOR_CATALOG_URL     = "https://www.harctoolbox.org/downloads/remotelocator-" + FORMATVERSION + ".xml";
 
     /**
      * Homepage URL.
@@ -104,7 +104,7 @@ public final class RemoteDatabase implements Iterable<ManufacturerDeviceClasses>
     /**
      * URL for schema file supporting name spaces.
      */
-    public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "http://www.harctoolbox.org/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
+    public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "https://www.harctoolbox.org/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
     //public static final String REMOTELOCATOR_SCHEMA_LOCATION_URI = "/home/bengt/harctoolbox/RemoteLocator/src/main/schemas/remotelocator-"  + FORMATVERSION + ".xsd";
 
     /**
