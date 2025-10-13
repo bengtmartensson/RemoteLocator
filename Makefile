@@ -116,7 +116,7 @@ $(REMOTELOCATOR_GIRR): $(PROJECT_JAR)
 	--out "$@" --sort \
 	--girrdir $(GIRR_PATH)
 
-$(REMOTELOCATOR_HTML): $(REMOTELOCATOR_XML)
+%.html: %.xml
 	$(XSLTPROC)  -o "$@" "${STYLESHEET}"  "$<"
 
 $(PROJECT_JAR) $(PROJECT_BIN):
@@ -129,13 +129,13 @@ $(COMMITIDS): $(IRDB_PATH)/../.git $(FLIPPER_PATH)/.git
 	cp /dev/null $@
 	@echo -n -e $(MYDIR) ": \t\t\t " >> $@
 	git log --format="%H" -n 1 >> $@
-	@echo -n -e $(IRDB_PATH) ": \t " >> $@ 
-	git -C $(IRDB_PATH) log --format="%H" -n 1 >> $@  
-	@echo -n -e $(GIRR_PATH) ": \t " >> $@ 
-	git -C $(GIRR_PATH) log --format="%H" -n 1 >> $@  
-	@echo -n -e $(FLIPPER_PATH) ": \t " >> $@ 
-	git -C $(FLIPPER_PATH) log --format="%H" -n 1 >> $@  
-	@echo -n -e $(LIRC_PATH) ": \t " >> $@ 
+	@echo -n -e $(IRDB_PATH) ": \t " >> $@
+	git -C $(IRDB_PATH) log --format="%H" -n 1 >> $@
+	@echo -n -e $(GIRR_PATH) ": \t " >> $@
+	git -C $(GIRR_PATH) log --format="%H" -n 1 >> $@
+	@echo -n -e $(FLIPPER_PATH) ": \t " >> $@
+	git -C $(FLIPPER_PATH) log --format="%H" -n 1 >> $@
+	@echo -n -e $(LIRC_PATH) ": \t " >> $@
 	git -C $(LIRC_PATH) log --format="%H" -n 1 >> $@
 	@echo -n -e $(JP1FILE) ": \t " >> $@
 	md5sum < $(JP1FILE)  >> $@
