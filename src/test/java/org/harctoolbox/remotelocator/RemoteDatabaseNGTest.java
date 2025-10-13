@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 public class RemoteDatabaseNGTest {
     private static final File LOCAL_IRDB_BASEDIR = new File("src/test/irdb/codes");
     private static final File LOCAL_GIRRLIB_BASEDIR = new File("src/test/GirrLib/Girr");
-    private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.17.fods");
+    private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.18.fods");
 
     private final RemoteDatabase remoteDatabase;
 
@@ -117,7 +117,7 @@ public class RemoteDatabaseNGTest {
     public void testGetManufacturers() {
         System.out.println("getManufacturers");
         List<String> result = remoteDatabase.getManufacturers(null);
-        assertEquals(result.size(), 1292);
+        assertEquals(result.size(), 1351);
         result = remoteDatabase.getManufacturers(ScrapKind.girr);
         assertEquals(result.size(), 3);
     }
@@ -131,7 +131,7 @@ public class RemoteDatabaseNGTest {
         System.out.println("getDeviceTypes");
         String manufacturer = "Philips";
         List<String> result = remoteDatabase.getDeviceTypes(null, manufacturer);
-        assertEquals(result.size(), 18);
+        assertEquals(result.size(), 19);
         result = remoteDatabase.getDeviceTypes(ScrapKind.girr, manufacturer);
         assertEquals(result.size(), 4);
         try {
@@ -151,7 +151,7 @@ public class RemoteDatabaseNGTest {
         String manufacturer = "Philips";
         String deviceType = "TV";
         List result = remoteDatabase.getRemotes(manufacturer, deviceType);
-        assertEquals(result.size(), 37);
+        assertEquals(result.size(), 38);
         try {
             remoteDatabase.getRemotes(manufacturer, "sdfsdfsdfdsf");
             fail();

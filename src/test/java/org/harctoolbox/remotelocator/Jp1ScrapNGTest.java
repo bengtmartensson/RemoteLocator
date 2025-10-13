@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public class Jp1ScrapNGTest {
 
-    private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.17.fods");
+    private static final File JP1_XML_FILE = new File("src/main/resources/jp1-master-1.18.fods");
 
     public Jp1ScrapNGTest() {
     }
@@ -54,10 +54,10 @@ public class Jp1ScrapNGTest {
         System.out.println("getRemote");
         Jp1Scrap instance = new Jp1Scrap();
         instance.add(JP1_XML_FILE);
-        String name = "Oppo Sonica DAC";
-        URL url = instance.getUrl("Oppo", "digital stbs", name);
+        String name = "Dbox dbox2 keyboard for dboxes from Nokia Sagem Philips";
+        URL url = instance.getUrl("Dbox", "Satellite", name);
         String result = url.toString();
-        String expResult = "http://www.hifi-remote.com/forums/dload.php?action=file&file_id=14576";
+        String expResult = "https://cdn.jsdelivr.net/gh/hifiremote/deviceupgrades@main/Satellite/dbox2_keyboard_urc-7781.rmdu";
         assertEquals(result, expResult);
     }
 }
