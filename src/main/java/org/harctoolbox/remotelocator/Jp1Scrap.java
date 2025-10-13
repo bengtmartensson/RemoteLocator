@@ -68,7 +68,7 @@ public class Jp1Scrap extends Scrapable {
         super();
     }
 
-    private void processRow(Element row) {
+    private void processRow(Element row) throws URISyntaxException {
         if (!row.getAttributeNS(TABLE_NAMESPACE_URI, "style-name").equals("ro1"))
             return;
         NodeList cells = row.getElementsByTagNameNS(TABLE_NAMESPACE_URI, "table-cell");
@@ -78,18 +78,13 @@ public class Jp1Scrap extends Scrapable {
         String str = viewCell.getAttributeNS(TABLE_NAMESPACE_URI, "formula");
         if (str.isEmpty())
             return;
-        String[] arr = str.split("\"");
-        URI uri;
-        try {
-            uri = new URI(arr[1]);
-        } catch (URISyntaxException ex) {
-            logger.log(Level.WARNING, "Invalid URI: {0}, ignoring", arr[1]);
-            return;
-        }
-        //String kind = Jp1Scrap.JP1_NAME; //getTextContent(cells.item(3)); // rmdu or txt
-        String deviceClass = getTextContent(cells.item(4));
+
+        String type = getTextContent(cells.item(3)); // rmdu or txt
+        String deviceClass = getTextContent(cells.item(4)).replace('/', '_');
         String manufacturer = getTextContent(cells.item(5));
-        String name = getTextContent(cells.item(6));
+        String name = getTextContent(cells.item(6)); /* "File Description (from web)" */
+        String fileName = getTextContent(cells.item(7));
+        URI uri = new URI("https", null, "cdn.jsdelivr.net", -1, "/gh/hifiremote/deviceupgrades@main/" + deviceClass + "/" + fileName, null, null);
         String protocol = getTextContent(cells.item(9));
         String device = getTextContent(cells.item(10));
         String subdevice = getTextContent(cells.item(11));
@@ -102,7 +97,11 @@ public class Jp1Scrap extends Scrapable {
         NodeList rows = document.getElementsByTagNameNS(TABLE_NAMESPACE_URI, "table-row");
         logger.log(Level.INFO, "Found {0} rows.", rows.getLength());
         for (int i = 0; i < rows.getLength(); i++) {
-            processRow((Element) rows.item(i));
+            try {
+                processRow((Element) rows.item(i));
+            } catch (URISyntaxException ex) {
+                logger.log(Level.WARNING, "Invalid URI: {0}, ignoring", ex.getMessage());
+            }
         }
     }
 
